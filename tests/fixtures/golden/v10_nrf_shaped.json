@@ -1,0 +1,882 @@
+{
+  "schema_version": "1.0",
+  "board": "nrf54l15dk_fixture",
+  "soc": "nrf54l15",
+  "types_inline": {
+    "nordic_header_10x2": {
+      "kind": "pin_array",
+      "based_on": "header_pin_array",
+      "rows": 2,
+      "cols": 10,
+      "description": "Nordic DK-style 10x2 GPIO header",
+      "default_electrical": {
+        "io_voltage": 3.3,
+        "bias": "none"
+      }
+    },
+    "nordic_header_7x2": {
+      "kind": "pin_array",
+      "based_on": "header_pin_array",
+      "rows": 2,
+      "cols": 7,
+      "description": "Nordic DK-style 7x2 GPIO header (PORT P2)",
+      "default_electrical": {
+        "io_voltage": 3.3,
+        "bias": "none"
+      }
+    },
+    "nordic_power_2x2": {
+      "kind": "pin_array",
+      "based_on": "header_pin_array",
+      "rows": 2,
+      "cols": 2,
+      "description": "Nordic P30/P31/P32 style 2x2 power aux",
+      "pin_ids": [
+        "rGND",
+        "VBUS",
+        "VDDIO",
+        "pad"
+      ],
+      "numbering": "custom"
+    },
+    "nordic_port_cluster_10x2": {
+      "kind": "group",
+      "description": "PORT Px cluster with main 10x2 header and 2x2 power aux",
+      "default_children": [
+        {
+          "id": "header",
+          "ref": "nordic_header_10x2",
+          "silk": "header"
+        },
+        {
+          "id": "aux",
+          "ref": "nordic_power_2x2",
+          "silk": "aux"
+        }
+      ]
+    },
+    "nordic_port_cluster_7x2": {
+      "kind": "group",
+      "description": "PORT P2 cluster with 7x2 header and 2x2 power aux",
+      "default_children": [
+        {
+          "id": "header",
+          "ref": "nordic_header_7x2",
+          "silk": "header"
+        },
+        {
+          "id": "aux",
+          "ref": "nordic_power_2x2",
+          "silk": "aux"
+        }
+      ]
+    }
+  },
+  "faces": {
+    "top": {
+      "underlay": "nrf54l15dk_nrf54l15.webp",
+      "outline": {
+        "polygon": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            0.85
+          ],
+          [
+            0.85,
+            0.85
+          ],
+          [
+            0.85,
+            1
+          ],
+          [
+            0,
+            1
+          ]
+        ]
+      },
+      "children": [
+        {
+          "id": "port_p0",
+          "ref": "nordic_port_cluster_10x2",
+          "silk": "PORT P0",
+          "point": [
+            0.5406,
+            0.208
+          ],
+          "kind": "group",
+          "children": [
+            {
+              "id": "port_p0_header",
+              "ref": "nordic_header_10x2",
+              "silk": "header",
+              "kind": "pin_array",
+              "rows": 2,
+              "cols": 10,
+              "numbering": "row_major",
+              "electrical": {
+                "io_voltage": 3.3,
+                "bias": "none"
+              },
+              "children": [
+                {
+                  "id": "port_p0_header_r0c0",
+                  "kind": "pin",
+                  "silk": "r0c0",
+                  "children": []
+                },
+                {
+                  "id": "port_p0_header_r0c1",
+                  "kind": "pin",
+                  "silk": "r0c1",
+                  "children": []
+                },
+                {
+                  "id": "port_p0_header_r0c2",
+                  "kind": "pin",
+                  "silk": "r0c2",
+                  "children": []
+                },
+                {
+                  "id": "port_p0_header_r0c3",
+                  "kind": "pin",
+                  "silk": "r0c3",
+                  "children": []
+                },
+                {
+                  "id": "port_p0_header_r0c4",
+                  "kind": "pin",
+                  "silk": "r0c4",
+                  "children": []
+                },
+                {
+                  "id": "port_p0_header_r0c5",
+                  "kind": "pin",
+                  "silk": "r0c5",
+                  "children": []
+                },
+                {
+                  "id": "port_p0_header_r0c6",
+                  "kind": "pin",
+                  "silk": "r0c6",
+                  "children": []
+                },
+                {
+                  "id": "port_p0_header_r0c7",
+                  "kind": "pin",
+                  "silk": "r0c7",
+                  "children": []
+                },
+                {
+                  "id": "port_p0_header_r0c8",
+                  "kind": "pin",
+                  "silk": "r0c8",
+                  "children": []
+                },
+                {
+                  "id": "port_p0_header_r0c9",
+                  "kind": "pin",
+                  "silk": "r0c9",
+                  "children": []
+                },
+                {
+                  "id": "port_p0_header_r1c0",
+                  "kind": "pin",
+                  "silk": "r1c0",
+                  "children": []
+                },
+                {
+                  "id": "port_p0_header_r1c1",
+                  "kind": "pin",
+                  "silk": "r1c1",
+                  "children": []
+                },
+                {
+                  "id": "port_p0_header_r1c2",
+                  "kind": "pin",
+                  "silk": "r1c2",
+                  "children": []
+                },
+                {
+                  "id": "port_p0_header_r1c3",
+                  "kind": "pin",
+                  "silk": "r1c3",
+                  "children": []
+                },
+                {
+                  "id": "port_p0_header_r1c4",
+                  "kind": "pin",
+                  "silk": "r1c4",
+                  "children": []
+                },
+                {
+                  "id": "port_p0_header_r1c5",
+                  "kind": "pin",
+                  "silk": "r1c5",
+                  "children": []
+                },
+                {
+                  "id": "port_p0_header_r1c6",
+                  "kind": "pin",
+                  "silk": "r1c6",
+                  "children": []
+                },
+                {
+                  "id": "port_p0_header_r1c7",
+                  "kind": "pin",
+                  "silk": "r1c7",
+                  "children": []
+                },
+                {
+                  "id": "port_p0_header_r1c8",
+                  "kind": "pin",
+                  "silk": "r1c8",
+                  "children": []
+                },
+                {
+                  "id": "port_p0_header_r1c9",
+                  "kind": "pin",
+                  "silk": "r1c9",
+                  "children": []
+                }
+              ]
+            },
+            {
+              "id": "port_p0_aux",
+              "ref": "nordic_power_2x2",
+              "silk": "aux",
+              "kind": "pin_array",
+              "rows": 2,
+              "cols": 2,
+              "numbering": "custom",
+              "pin_ids": [
+                "rGND",
+                "VBUS",
+                "VDDIO",
+                "pad"
+              ],
+              "children": [
+                {
+                  "id": "port_p0_aux_rGND",
+                  "kind": "pin",
+                  "silk": "rGND",
+                  "children": []
+                },
+                {
+                  "id": "port_p0_aux_VBUS",
+                  "kind": "pin",
+                  "silk": "VBUS",
+                  "children": []
+                },
+                {
+                  "id": "port_p0_aux_VDDIO",
+                  "kind": "pin",
+                  "silk": "VDDIO",
+                  "children": []
+                },
+                {
+                  "id": "port_p0_aux_pad",
+                  "kind": "pin",
+                  "silk": "pad",
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "port_p1",
+          "ref": "nordic_port_cluster_10x2",
+          "silk": "PORT P1",
+          "point": [
+            0.5329,
+            0.4039
+          ],
+          "kind": "group",
+          "children": [
+            {
+              "id": "port_p1_header",
+              "ref": "nordic_header_10x2",
+              "silk": "header",
+              "kind": "pin_array",
+              "rows": 2,
+              "cols": 10,
+              "numbering": "row_major",
+              "electrical": {
+                "io_voltage": 3.3,
+                "bias": "none"
+              },
+              "children": [
+                {
+                  "id": "port_p1_header_r0c0",
+                  "kind": "pin",
+                  "silk": "r0c0",
+                  "children": []
+                },
+                {
+                  "id": "port_p1_header_r0c1",
+                  "kind": "pin",
+                  "silk": "r0c1",
+                  "children": []
+                },
+                {
+                  "id": "port_p1_header_r0c2",
+                  "kind": "pin",
+                  "silk": "r0c2",
+                  "children": []
+                },
+                {
+                  "id": "port_p1_header_r0c3",
+                  "kind": "pin",
+                  "silk": "r0c3",
+                  "children": []
+                },
+                {
+                  "id": "port_p1_header_r0c4",
+                  "kind": "pin",
+                  "silk": "r0c4",
+                  "children": []
+                },
+                {
+                  "id": "port_p1_header_r0c5",
+                  "kind": "pin",
+                  "silk": "r0c5",
+                  "children": []
+                },
+                {
+                  "id": "port_p1_header_r0c6",
+                  "kind": "pin",
+                  "silk": "r0c6",
+                  "children": []
+                },
+                {
+                  "id": "port_p1_header_r0c7",
+                  "kind": "pin",
+                  "silk": "r0c7",
+                  "children": []
+                },
+                {
+                  "id": "port_p1_header_r0c8",
+                  "kind": "pin",
+                  "silk": "r0c8",
+                  "children": []
+                },
+                {
+                  "id": "port_p1_header_r0c9",
+                  "kind": "pin",
+                  "silk": "r0c9",
+                  "children": []
+                },
+                {
+                  "id": "port_p1_header_r1c0",
+                  "kind": "pin",
+                  "silk": "r1c0",
+                  "children": []
+                },
+                {
+                  "id": "port_p1_header_r1c1",
+                  "kind": "pin",
+                  "silk": "r1c1",
+                  "children": []
+                },
+                {
+                  "id": "port_p1_header_r1c2",
+                  "kind": "pin",
+                  "silk": "r1c2",
+                  "children": []
+                },
+                {
+                  "id": "port_p1_header_r1c3",
+                  "kind": "pin",
+                  "silk": "r1c3",
+                  "children": []
+                },
+                {
+                  "id": "port_p1_header_r1c4",
+                  "kind": "pin",
+                  "silk": "r1c4",
+                  "children": []
+                },
+                {
+                  "id": "port_p1_header_r1c5",
+                  "kind": "pin",
+                  "silk": "r1c5",
+                  "children": []
+                },
+                {
+                  "id": "port_p1_header_r1c6",
+                  "kind": "pin",
+                  "silk": "r1c6",
+                  "children": []
+                },
+                {
+                  "id": "port_p1_header_r1c7",
+                  "kind": "pin",
+                  "silk": "r1c7",
+                  "children": []
+                },
+                {
+                  "id": "port_p1_header_r1c8",
+                  "kind": "pin",
+                  "silk": "r1c8",
+                  "children": []
+                },
+                {
+                  "id": "port_p1_header_r1c9",
+                  "kind": "pin",
+                  "silk": "r1c9",
+                  "children": []
+                }
+              ]
+            },
+            {
+              "id": "port_p1_aux",
+              "ref": "nordic_power_2x2",
+              "silk": "aux",
+              "kind": "pin_array",
+              "rows": 2,
+              "cols": 2,
+              "numbering": "custom",
+              "pin_ids": [
+                "rGND",
+                "VBUS",
+                "VDDIO",
+                "pad"
+              ],
+              "children": [
+                {
+                  "id": "port_p1_aux_rGND",
+                  "kind": "pin",
+                  "silk": "rGND",
+                  "children": []
+                },
+                {
+                  "id": "port_p1_aux_VBUS",
+                  "kind": "pin",
+                  "silk": "VBUS",
+                  "children": []
+                },
+                {
+                  "id": "port_p1_aux_VDDIO",
+                  "kind": "pin",
+                  "silk": "VDDIO",
+                  "children": []
+                },
+                {
+                  "id": "port_p1_aux_pad",
+                  "kind": "pin",
+                  "silk": "pad",
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "port_p2",
+          "ref": "nordic_port_cluster_7x2",
+          "silk": "PORT P2",
+          "point": [
+            0.5359,
+            0.5887
+          ],
+          "kind": "group",
+          "children": [
+            {
+              "id": "port_p2_header",
+              "ref": "nordic_header_7x2",
+              "silk": "header",
+              "kind": "pin_array",
+              "rows": 2,
+              "cols": 7,
+              "numbering": "row_major",
+              "electrical": {
+                "io_voltage": 3.3,
+                "bias": "none"
+              },
+              "children": [
+                {
+                  "id": "port_p2_header_r0c0",
+                  "kind": "pin",
+                  "silk": "r0c0",
+                  "children": []
+                },
+                {
+                  "id": "port_p2_header_r0c1",
+                  "kind": "pin",
+                  "silk": "r0c1",
+                  "children": []
+                },
+                {
+                  "id": "port_p2_header_r0c2",
+                  "kind": "pin",
+                  "silk": "r0c2",
+                  "children": []
+                },
+                {
+                  "id": "port_p2_header_r0c3",
+                  "kind": "pin",
+                  "silk": "r0c3",
+                  "children": []
+                },
+                {
+                  "id": "port_p2_header_r0c4",
+                  "kind": "pin",
+                  "silk": "r0c4",
+                  "children": []
+                },
+                {
+                  "id": "port_p2_header_r0c5",
+                  "kind": "pin",
+                  "silk": "r0c5",
+                  "children": []
+                },
+                {
+                  "id": "port_p2_header_r0c6",
+                  "kind": "pin",
+                  "silk": "r0c6",
+                  "children": []
+                },
+                {
+                  "id": "port_p2_header_r1c0",
+                  "kind": "pin",
+                  "silk": "r1c0",
+                  "children": []
+                },
+                {
+                  "id": "port_p2_header_r1c1",
+                  "kind": "pin",
+                  "silk": "r1c1",
+                  "children": []
+                },
+                {
+                  "id": "port_p2_header_r1c2",
+                  "kind": "pin",
+                  "silk": "r1c2",
+                  "children": []
+                },
+                {
+                  "id": "port_p2_header_r1c3",
+                  "kind": "pin",
+                  "silk": "r1c3",
+                  "children": []
+                },
+                {
+                  "id": "port_p2_header_r1c4",
+                  "kind": "pin",
+                  "silk": "r1c4",
+                  "children": []
+                },
+                {
+                  "id": "port_p2_header_r1c5",
+                  "kind": "pin",
+                  "silk": "r1c5",
+                  "children": []
+                },
+                {
+                  "id": "port_p2_header_r1c6",
+                  "kind": "pin",
+                  "silk": "r1c6",
+                  "children": []
+                }
+              ]
+            },
+            {
+              "id": "port_p2_aux",
+              "ref": "nordic_power_2x2",
+              "silk": "aux",
+              "kind": "pin_array",
+              "rows": 2,
+              "cols": 2,
+              "numbering": "custom",
+              "pin_ids": [
+                "rGND",
+                "VBUS",
+                "VDDIO",
+                "pad"
+              ],
+              "children": [
+                {
+                  "id": "port_p2_aux_rGND",
+                  "kind": "pin",
+                  "silk": "rGND",
+                  "children": []
+                },
+                {
+                  "id": "port_p2_aux_VBUS",
+                  "kind": "pin",
+                  "silk": "VBUS",
+                  "children": []
+                },
+                {
+                  "id": "port_p2_aux_VDDIO",
+                  "kind": "pin",
+                  "silk": "VDDIO",
+                  "children": []
+                },
+                {
+                  "id": "port_p2_aux_pad",
+                  "kind": "pin",
+                  "silk": "pad",
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "buttons",
+          "kind": "group",
+          "silk": "BUTTONS",
+          "point": [
+            0.7858,
+            0.8336
+          ],
+          "children": [
+            {
+              "id": "button_0",
+              "ref": "tactile_button",
+              "silk": "BUTTON 0",
+              "point": [
+                0.7408,
+                0.765
+              ],
+              "kind": "gpio_control",
+              "control_type": "button",
+              "children": []
+            },
+            {
+              "id": "button_1",
+              "ref": "tactile_button",
+              "silk": "BUTTON 1",
+              "point": [
+                0.8265,
+                0.7538
+              ],
+              "kind": "gpio_control",
+              "control_type": "button",
+              "children": []
+            },
+            {
+              "id": "button_2",
+              "ref": "tactile_button",
+              "silk": "BUTTON 2",
+              "point": [
+                0.7387,
+                0.9028
+              ],
+              "kind": "gpio_control",
+              "control_type": "button",
+              "children": []
+            },
+            {
+              "id": "button_3",
+              "ref": "tactile_button",
+              "silk": "BUTTON 3",
+              "point": [
+                0.8277,
+                0.8973
+              ],
+              "kind": "gpio_control",
+              "control_type": "button",
+              "children": []
+            }
+          ]
+        },
+        {
+          "id": "leds",
+          "kind": "group",
+          "silk": "LEDS",
+          "point": [
+            0.863,
+            0.1128
+          ],
+          "children": [
+            {
+              "id": "led_0",
+              "ref": "led_indicator",
+              "silk": "LED0",
+              "point": [
+                0.8376,
+                0.0897
+              ],
+              "kind": "gpio_control",
+              "control_type": "led",
+              "children": []
+            },
+            {
+              "id": "led_1",
+              "ref": "led_indicator",
+              "silk": "LED1",
+              "point": [
+                0.8879,
+                0.0911
+              ],
+              "kind": "gpio_control",
+              "control_type": "led",
+              "children": []
+            },
+            {
+              "id": "led_2",
+              "ref": "led_indicator",
+              "silk": "LED2",
+              "point": [
+                0.8417,
+                0.14
+              ],
+              "kind": "gpio_control",
+              "control_type": "led",
+              "children": []
+            },
+            {
+              "id": "led_3",
+              "ref": "led_indicator",
+              "silk": "LED3",
+              "point": [
+                0.8805,
+                0.1414
+              ],
+              "kind": "gpio_control",
+              "control_type": "led",
+              "children": []
+            }
+          ]
+        },
+        {
+          "id": "usb_imcu",
+          "ref": "usb_c",
+          "silk": "J3",
+          "point": [
+            0.0459,
+            0.597
+          ],
+          "kind": "receptacle",
+          "receptacle_type": "usb-c",
+          "children": []
+        },
+        {
+          "id": "debug_out",
+          "ref": "header_2x5_swd",
+          "silk": "P19",
+          "point": [
+            0.15,
+            0.88
+          ],
+          "kind": "pin_array",
+          "rows": 2,
+          "cols": 5,
+          "numbering": "row_major",
+          "children": [
+            {
+              "id": "debug_out_r0c0",
+              "kind": "pin",
+              "silk": "r0c0",
+              "children": []
+            },
+            {
+              "id": "debug_out_r0c1",
+              "kind": "pin",
+              "silk": "r0c1",
+              "children": []
+            },
+            {
+              "id": "debug_out_r0c2",
+              "kind": "pin",
+              "silk": "r0c2",
+              "children": []
+            },
+            {
+              "id": "debug_out_r0c3",
+              "kind": "pin",
+              "silk": "r0c3",
+              "children": []
+            },
+            {
+              "id": "debug_out_r0c4",
+              "kind": "pin",
+              "silk": "r0c4",
+              "children": []
+            },
+            {
+              "id": "debug_out_r1c0",
+              "kind": "pin",
+              "silk": "r1c0",
+              "children": []
+            },
+            {
+              "id": "debug_out_r1c1",
+              "kind": "pin",
+              "silk": "r1c1",
+              "children": []
+            },
+            {
+              "id": "debug_out_r1c2",
+              "kind": "pin",
+              "silk": "r1c2",
+              "children": []
+            },
+            {
+              "id": "debug_out_r1c3",
+              "kind": "pin",
+              "silk": "r1c3",
+              "children": []
+            },
+            {
+              "id": "debug_out_r1c4",
+              "kind": "pin",
+              "silk": "r1c4",
+              "children": []
+            }
+          ]
+        },
+        {
+          "id": "reset",
+          "ref": "tactile_button",
+          "silk": "RESET",
+          "point": [
+            0.0553,
+            0.7636
+          ],
+          "kind": "gpio_control",
+          "control_type": "button",
+          "children": []
+        },
+        {
+          "id": "power",
+          "ref": "power_switch",
+          "silk": "POWER",
+          "point": [
+            0.0468,
+            0.1128
+          ],
+          "kind": "gpio_control",
+          "control_type": "switch",
+          "children": []
+        }
+      ]
+    }
+  },
+  "resolved": true,
+  "types_used": [
+    "header_2x5_swd",
+    "header_pin_array",
+    "led_indicator",
+    "nordic_header_10x2",
+    "nordic_header_7x2",
+    "nordic_port_cluster_10x2",
+    "nordic_port_cluster_7x2",
+    "nordic_power_2x2",
+    "pin_group",
+    "power_switch",
+    "tactile_button",
+    "usb_c"
+  ]
+}

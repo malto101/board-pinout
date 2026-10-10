@@ -1,0 +1,270 @@
+schema_version: "1.0"
+# Core part types. Editor palette rows come from types that declare `editor:`
+# (see types/README.md). Types without `editor` are resolve-only (aliases,
+# group targets, presets used via board YAML ref).
+types:
+  # --- Single parts (palette) ---
+  pin:
+    kind: pin
+    description: Single electrical contact
+    editor:
+      order: 10
+      label: Pin
+      silk: Pin
+      sym: io
+      group:
+        ref: pin_group
+        label: Pin group
+        silk: Pins
+        child_kind: pin
+        child_silk: "{n}"
+
+  lcd:
+    kind: pin
+    based_on: pin
+    description: Display / LCD signal (single)
+    editor:
+      order: 20
+      label: LCD
+      silk: LCD
+      sym: group
+      group:
+        ref: lcd_group
+        label: LCD group
+        silk: LCD
+        child_kind: pin
+        child_silk: "D{i}"
+
+  usb_c:
+    kind: receptacle
+    receptacle_type: usb-c
+    description: USB Type-C receptacle
+    editor:
+      order: 30
+      label: USB-C
+      silk: USB-C
+      sym: port
+      group:
+        ref: group
+        label: USB-C group
+        silk: USB-C
+        child_kind: receptacle
+        child_ref: usb_c
+        child_silk: "USB-C{n}"
+
+  usb_a:
+    kind: receptacle
+    receptacle_type: usb-a
+    description: USB Type-A receptacle
+    editor:
+      order: 40
+      label: USB-A
+      silk: USB-A
+      sym: port
+      group:
+        ref: group
+        label: USB-A group
+        silk: USB-A
+        child_kind: receptacle
+        child_ref: usb_a
+        child_silk: "USB-A{n}"
+
+  micro_usb:
+    kind: receptacle
+    receptacle_type: micro-usb
+    description: Micro-USB receptacle
+    editor:
+      order: 50
+      label: Micro-USB
+      silk: Micro-USB
+      sym: port
+      group:
+        ref: group
+        label: Micro-USB group
+        silk: Micro-USB
+        child_kind: receptacle
+        child_ref: micro_usb
+        child_silk: "µUSB{n}"
+
+  hdmi:
+    kind: receptacle
+    receptacle_type: hdmi
+    description: HDMI receptacle
+    editor:
+      order: 60
+      label: HDMI
+      silk: HDMI
+      sym: port
+      group:
+        ref: group
+        label: HDMI group
+        silk: HDMI
+        child_kind: receptacle
+        child_ref: hdmi
+        child_silk: "HDMI{n}"
+
+  eth_rj45:
+    kind: receptacle
+    receptacle_type: eth-rj45
+    description: Ethernet RJ45 jack
+    editor:
+      order: 70
+      label: Ethernet
+      silk: ETH
+      sym: port
+      group:
+        ref: group
+        label: Ethernet group
+        silk: ETH
+        child_kind: receptacle
+        child_ref: eth_rj45
+        child_silk: "ETH{n}"
+
+  tactile_button:
+    kind: gpio_control
+    control_type: button
+    description: Tactile / user button
+    editor:
+      order: 80
+      label: Button
+      silk: BTN
+      sym: button
+      group:
+        ref: button_group
+        label: Button group
+        silk: Buttons
+        child_kind: gpio_control
+        child_ref: tactile_button
+        child_silk: "BTN{n}"
+
+  led_indicator:
+    kind: gpio_control
+    control_type: led
+    description: Status LED
+    editor:
+      order: 90
+      label: LED
+      silk: LED
+      sym: led
+      group:
+        ref: led_group
+        label: LED group
+        silk: LEDs
+        child_kind: gpio_control
+        child_ref: led_indicator
+        child_silk: "LED{n}"
+
+  power_switch:
+    kind: gpio_control
+    control_type: switch
+    description: Power or mode switch
+    editor:
+      order: 100
+      label: Switch
+      silk: SW
+      sym: switch
+      group:
+        ref: group
+        label: Switch group
+        silk: Switches
+        child_kind: gpio_control
+        child_ref: power_switch
+        child_silk: "SW{n}"
+
+  gnd:
+    kind: pin
+    based_on: pin
+    description: Ground pin
+    default_net: {role: ground}
+    editor:
+      order: 110
+      label: GND
+      silk: GND
+      sym: gnd
+      group:
+        ref: group
+        label: GND group
+        silk: GND
+        child_kind: pin
+        child_ref: gnd
+        child_silk: "GND{n}"
+
+  power:
+    kind: pin
+    based_on: pin
+    description: Power / VCC pin
+    default_net: {role: power_out}
+    editor:
+      order: 120
+      label: Power
+      silk: VCC
+      sym: power
+      group:
+        ref: group
+        label: Power group
+        silk: PWR
+        child_kind: pin
+        child_ref: power
+        child_silk: "V{n}"
+
+  sensor:
+    kind: pin
+    based_on: pin
+    description: On-board sensor (marker)
+    editor:
+      order: 130
+      label: Sensor
+      silk: Sensor
+      sym: sensor
+      notes: sensor
+      group:
+        ref: group
+        label: Sensor group
+        silk: Sensors
+        child_kind: pin
+        child_ref: sensor
+        child_notes: sensor
+        child_silk: "S{n}"
+
+  # --- Parametric / structural (resolve + Group targets; not palette rows) ---
+  pin_group:
+    kind: pin_array
+    description: Configurable pin header / pad grid
+    numbering: row_major
+
+  lcd_group:
+    kind: group
+    description: Configurable LCD / display signal group
+
+  led_group:
+    kind: group
+    description: Configurable LED group
+
+  button_group:
+    kind: group
+    description: Configurable button group
+
+  group:
+    kind: group
+    description: Named cluster of child parts
+
+  header_pin_array:
+    kind: pin_array
+    based_on: pin_group
+    description: Parametric header grid (alias of pin_group)
+    numbering: row_major
+
+  header_2x5_swd:
+    kind: pin_array
+    based_on: pin_group
+    rows: 2
+    cols: 5
+    description: 10-pin 2x5 SWD/debug header
+    numbering: row_major
+    editor:
+      order: 140
+      label: SWD 2x5
+      silk: SWD
+      sym: io
+      # Fixed size — main click adds 2x5; no free-form Group picker
+      fixed_group: true

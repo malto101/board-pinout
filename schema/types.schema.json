@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:board-pinout:schema:types.schema.json",
+  "title": "Board pinout part type library",
+  "type": "object",
+  "required": ["types"],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": { "type": "string", "default": "1.0" },
+    "types": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {
+        "type": "object",
+        "required": ["kind"],
+        "properties": {
+          "kind": {
+            "type": "string",
+            "enum": ["group", "pin", "pin_array", "receptacle", "gpio_control"]
+          },
+          "based_on": { "type": "string" },
+          "description": { "type": "string" },
+          "rows": { "type": "integer", "minimum": 1 },
+          "cols": { "type": "integer", "minimum": 1 },
+          "numbering": {
+            "type": "string",
+            "enum": ["row_major", "col_major", "custom"]
+          },
+          "pin_ids": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "receptacle_type": { "type": "string" },
+          "control_type": { "type": "string" },
+          "default_children": { "type": "array" },
+          "default_electrical": { "type": "object" },
+          "default_net": { "type": "object" }
+        }
+      }
+    }
+  }
+}

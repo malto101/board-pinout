@@ -1,0 +1,726 @@
+{
+  "schema_version": "1.1",
+  "board": "esp32s3_devkitc",
+  "soc": "esp32s3",
+  "mux_source": "soc",
+  "modules": {
+    "u1": {
+      "module": "esp32s3_wroom1",
+      "refdes": "U1"
+    }
+  },
+  "faces": {
+    "top": {
+      "underlay": "esp32s3_devkitc.webp",
+      "children": [
+        {
+          "id": "j1",
+          "kind": "group",
+          "point": [
+            0.1,
+            0.5
+          ],
+          "connector": {
+            "binding": "espressif,esp32s3-devkitc-header",
+            "refdes": "J1"
+          },
+          "children": [
+            {
+              "id": "j1_1",
+              "kind": "pin",
+              "contact": "1",
+              "silk": "3V3",
+              "net": {
+                "role": "power_out",
+                "rail": "3V3",
+                "nominal_v": 3.3,
+                "max_current_ma": 500
+              },
+              "children": []
+            },
+            {
+              "id": "j1_4",
+              "kind": "pin",
+              "contact": "4",
+              "silk": "4",
+              "module_pin": {
+                "module": "u1",
+                "pin": "4"
+              },
+              "children": []
+            },
+            {
+              "id": "j1_5",
+              "kind": "pin",
+              "contact": "5",
+              "silk": "5",
+              "pad": "GPIO1",
+              "mux_exclude": [
+                "TOUCH.*"
+              ],
+              "children": [],
+              "mux": [
+                {
+                  "function": "GPIO1",
+                  "class": "gpio",
+                  "mode": 1,
+                  "source": "pad"
+                },
+                {
+                  "function": "ADC1_CH0",
+                  "peripheral": "ADC1",
+                  "signal": "CH0",
+                  "class": "analog",
+                  "mode": "ANALOG",
+                  "analog": {
+                    "channel": 0,
+                    "polarity": "single",
+                    "range_v": [
+                      0,
+                      2.9
+                    ]
+                  },
+                  "source": "pad"
+                }
+              ],
+              "routing": [
+                "esp32s3/0"
+              ],
+              "pad_info": {
+                "soc": "esp32s3",
+                "pad": "GPIO1",
+                "type": "io",
+                "domain": "VDD3P3_RTC",
+                "drive_options": [
+                  {
+                    "value": 5,
+                    "unit": "mA"
+                  },
+                  {
+                    "value": 10,
+                    "unit": "mA"
+                  },
+                  {
+                    "value": 20,
+                    "unit": "mA"
+                  },
+                  {
+                    "value": 40,
+                    "unit": "mA"
+                  }
+                ],
+                "pull": {
+                  "pu_ohm": 45000,
+                  "pd_ohm": 45000
+                },
+                "reset": {
+                  "mode": "input",
+                  "bias": "none"
+                },
+                "domain_info": {
+                  "io_voltages": [
+                    3.3
+                  ]
+                }
+              }
+            },
+            {
+              "id": "j1_11",
+              "kind": "pin",
+              "contact": "11",
+              "silk": "0",
+              "pad": "GPIO0",
+              "electrical": {
+                "bias": "pull_up",
+                "bias_source": "external",
+                "pull_ohm": 10000
+              },
+              "shared_with": [
+                {
+                  "part": "boot_btn",
+                  "kind": "button"
+                }
+              ],
+              "children": [],
+              "mux": [
+                {
+                  "function": "GPIO0",
+                  "class": "gpio",
+                  "mode": 1,
+                  "source": "pad"
+                },
+                {
+                  "function": "RTC_GPIO0",
+                  "class": "wakeup",
+                  "mode": "RTC",
+                  "source": "pad"
+                }
+              ],
+              "routing": [
+                "esp32s3/0"
+              ],
+              "pad_info": {
+                "soc": "esp32s3",
+                "pad": "GPIO0",
+                "type": "io",
+                "domain": "VDD3P3_RTC",
+                "drive_options": [
+                  {
+                    "value": 5,
+                    "unit": "mA"
+                  },
+                  {
+                    "value": 10,
+                    "unit": "mA"
+                  },
+                  {
+                    "value": 20,
+                    "unit": "mA"
+                  },
+                  {
+                    "value": 40,
+                    "unit": "mA"
+                  }
+                ],
+                "pull": {
+                  "pu_ohm": 45000,
+                  "pd_ohm": 45000
+                },
+                "reset": {
+                  "mode": "input",
+                  "bias": "pull_up"
+                },
+                "strap": {
+                  "function": "BOOT_MODE",
+                  "sampled_at": "reset",
+                  "level": "high",
+                  "notes": "Low enters download mode"
+                },
+                "domain_info": {
+                  "io_voltages": [
+                    3.3
+                  ]
+                }
+              }
+            },
+            {
+              "id": "j1_21",
+              "kind": "pin",
+              "contact": "21",
+              "silk": "GND",
+              "net": {
+                "role": "ground"
+              },
+              "children": []
+            }
+          ]
+        },
+        {
+          "id": "j3",
+          "kind": "group",
+          "point": [
+            0.9,
+            0.5
+          ],
+          "connector": {
+            "binding": "espressif,esp32s3-devkitc-header",
+            "refdes": "J3"
+          },
+          "children": [
+            {
+              "id": "j3_1",
+              "kind": "pin",
+              "contact": "1",
+              "silk": "GND",
+              "net": {
+                "role": "ground"
+              },
+              "children": []
+            },
+            {
+              "id": "j3_2",
+              "kind": "pin",
+              "contact": "2",
+              "silk": "TX",
+              "pad": "GPIO43",
+              "shared_with": [
+                {
+                  "kind": "usb_uart_bridge",
+                  "notes": "CP2102N RXD"
+                }
+              ],
+              "children": [],
+              "mux": [
+                {
+                  "function": "U0TXD",
+                  "peripheral": "UART0",
+                  "signal": "TXD",
+                  "class": "digital",
+                  "direction": "out",
+                  "mode": 0,
+                  "vendor": {
+                    "raw": "UART0_TX_GPIO43"
+                  },
+                  "source": "pad"
+                },
+                {
+                  "function": "GPIO43",
+                  "class": "gpio",
+                  "mode": 1,
+                  "source": "pad"
+                }
+              ],
+              "routing": [
+                "esp32s3/0"
+              ],
+              "pad_info": {
+                "soc": "esp32s3",
+                "pad": "GPIO43",
+                "type": "io",
+                "domain": "VDD3P3_RTC",
+                "drive_options": [
+                  {
+                    "value": 5,
+                    "unit": "mA"
+                  },
+                  {
+                    "value": 10,
+                    "unit": "mA"
+                  },
+                  {
+                    "value": 20,
+                    "unit": "mA"
+                  },
+                  {
+                    "value": 40,
+                    "unit": "mA"
+                  }
+                ],
+                "pull": {
+                  "pu_ohm": 45000,
+                  "pd_ohm": 45000
+                },
+                "reset": {
+                  "mode": "function",
+                  "bias": "none",
+                  "function": "U0TXD"
+                },
+                "domain_info": {
+                  "io_voltages": [
+                    3.3
+                  ]
+                }
+              }
+            },
+            {
+              "id": "j3_3",
+              "kind": "pin",
+              "contact": "3",
+              "silk": "RX",
+              "pad": "GPIO44",
+              "children": [],
+              "mux": [
+                {
+                  "function": "U0RXD",
+                  "peripheral": "UART0",
+                  "signal": "RXD",
+                  "class": "digital",
+                  "direction": "in",
+                  "mode": 0,
+                  "source": "pad"
+                },
+                {
+                  "function": "GPIO44",
+                  "class": "gpio",
+                  "mode": 1,
+                  "source": "pad"
+                }
+              ],
+              "routing": [
+                "esp32s3/0"
+              ],
+              "pad_info": {
+                "soc": "esp32s3",
+                "pad": "GPIO44",
+                "type": "io",
+                "domain": "VDD3P3_RTC",
+                "drive_options": [
+                  {
+                    "value": 5,
+                    "unit": "mA"
+                  },
+                  {
+                    "value": 10,
+                    "unit": "mA"
+                  },
+                  {
+                    "value": 20,
+                    "unit": "mA"
+                  },
+                  {
+                    "value": 40,
+                    "unit": "mA"
+                  }
+                ],
+                "pull": {
+                  "pu_ohm": 45000,
+                  "pd_ohm": 45000
+                },
+                "reset": {
+                  "mode": "function",
+                  "bias": "pull_up",
+                  "function": "U0RXD"
+                },
+                "domain_info": {
+                  "io_voltages": [
+                    3.3
+                  ]
+                }
+              }
+            },
+            {
+              "id": "j3_17",
+              "kind": "pin",
+              "contact": "17",
+              "silk": "48",
+              "pad": "GPIO48",
+              "mux_policy": "extend",
+              "mux": [
+                {
+                  "function": "GPIO48",
+                  "class": "gpio",
+                  "mode": 1,
+                  "source": "pad"
+                },
+                {
+                  "function": "RGB_LED",
+                  "class": "digital",
+                  "direction": "out",
+                  "source": "board"
+                }
+              ],
+              "shared_with": [
+                {
+                  "part": "rgb_led",
+                  "kind": "led"
+                }
+              ],
+              "children": [],
+              "routing": [
+                "esp32s3/0"
+              ],
+              "pad_info": {
+                "soc": "esp32s3",
+                "pad": "GPIO48",
+                "type": "io",
+                "domain": "VDD3P3_RTC",
+                "drive_options": [
+                  {
+                    "value": 5,
+                    "unit": "mA"
+                  },
+                  {
+                    "value": 10,
+                    "unit": "mA"
+                  },
+                  {
+                    "value": 20,
+                    "unit": "mA"
+                  },
+                  {
+                    "value": 40,
+                    "unit": "mA"
+                  }
+                ],
+                "pull": {
+                  "pu_ohm": 45000,
+                  "pd_ohm": 45000
+                },
+                "reset": {
+                  "mode": "input",
+                  "bias": "none"
+                },
+                "domain_info": {
+                  "io_voltages": [
+                    3.3
+                  ]
+                }
+              }
+            },
+            {
+              "id": "j3_20",
+              "kind": "pin",
+              "contact": "20",
+              "silk": "5V",
+              "net": {
+                "role": "power_bidir",
+                "rail": "5V0",
+                "nominal_v": 5.0
+              },
+              "children": []
+            },
+            {
+              "id": "j3_22",
+              "kind": "pin",
+              "contact": "22",
+              "silk": "RST",
+              "pad": "CHIP_PU",
+              "electrical": {
+                "active_level": "low",
+                "bias": "pull_up",
+                "bias_source": "external"
+              },
+              "children": [],
+              "mux": [
+                {
+                  "function": "CHIP_PU",
+                  "class": "system",
+                  "direction": "in",
+                  "source": "pad"
+                }
+              ],
+              "pad_info": {
+                "soc": "esp32s3",
+                "pad": "CHIP_PU",
+                "type": "special",
+                "domain": "VDD3P3_RTC",
+                "drive_options": [
+                  {
+                    "value": 5,
+                    "unit": "mA"
+                  },
+                  {
+                    "value": 10,
+                    "unit": "mA"
+                  },
+                  {
+                    "value": 20,
+                    "unit": "mA"
+                  },
+                  {
+                    "value": 40,
+                    "unit": "mA"
+                  }
+                ],
+                "pull": {
+                  "pu_ohm": 45000,
+                  "pd_ohm": 45000
+                },
+                "reset": {
+                  "mode": "input",
+                  "bias": "none"
+                },
+                "domain_info": {
+                  "io_voltages": [
+                    3.3
+                  ]
+                }
+              }
+            },
+            {
+              "id": "j3_nc",
+              "kind": "pin",
+              "contact": "18",
+              "silk": "NC",
+              "net": {
+                "role": "nc"
+              },
+              "children": []
+            }
+          ]
+        },
+        {
+          "id": "boot_btn",
+          "ref": "tactile_button",
+          "silk": "BOOT",
+          "point": [
+            0.4,
+            0.9
+          ],
+          "pad": "GPIO0",
+          "mux_routable": false,
+          "electrical": {
+            "active_level": "low"
+          },
+          "kind": "gpio_control",
+          "control_type": "button",
+          "children": [],
+          "mux": [
+            {
+              "function": "GPIO0",
+              "class": "gpio",
+              "mode": 1,
+              "source": "pad"
+            },
+            {
+              "function": "RTC_GPIO0",
+              "class": "wakeup",
+              "mode": "RTC",
+              "source": "pad"
+            }
+          ],
+          "pad_info": {
+            "soc": "esp32s3",
+            "pad": "GPIO0",
+            "type": "io",
+            "domain": "VDD3P3_RTC",
+            "drive_options": [
+              {
+                "value": 5,
+                "unit": "mA"
+              },
+              {
+                "value": 10,
+                "unit": "mA"
+              },
+              {
+                "value": 20,
+                "unit": "mA"
+              },
+              {
+                "value": 40,
+                "unit": "mA"
+              }
+            ],
+            "pull": {
+              "pu_ohm": 45000,
+              "pd_ohm": 45000
+            },
+            "reset": {
+              "mode": "input",
+              "bias": "pull_up"
+            },
+            "strap": {
+              "function": "BOOT_MODE",
+              "sampled_at": "reset",
+              "level": "high",
+              "notes": "Low enters download mode"
+            },
+            "domain_info": {
+              "io_voltages": [
+                3.3
+              ]
+            }
+          }
+        },
+        {
+          "id": "rgb_led",
+          "ref": "led_indicator",
+          "silk": "RGB",
+          "point": [
+            0.6,
+            0.2
+          ],
+          "pad": "GPIO48",
+          "kind": "gpio_control",
+          "control_type": "led",
+          "children": [],
+          "mux": [
+            {
+              "function": "GPIO48",
+              "class": "gpio",
+              "mode": 1,
+              "source": "pad"
+            }
+          ],
+          "routing": [
+            "esp32s3/0"
+          ],
+          "pad_info": {
+            "soc": "esp32s3",
+            "pad": "GPIO48",
+            "type": "io",
+            "domain": "VDD3P3_RTC",
+            "drive_options": [
+              {
+                "value": 5,
+                "unit": "mA"
+              },
+              {
+                "value": 10,
+                "unit": "mA"
+              },
+              {
+                "value": 20,
+                "unit": "mA"
+              },
+              {
+                "value": 40,
+                "unit": "mA"
+              }
+            ],
+            "pull": {
+              "pu_ohm": 45000,
+              "pd_ohm": 45000
+            },
+            "reset": {
+              "mode": "input",
+              "bias": "none"
+            },
+            "domain_info": {
+              "io_voltages": [
+                3.3
+              ]
+            }
+          }
+        }
+      ]
+    }
+  },
+  "resolved": true,
+  "types_used": [
+    "led_indicator",
+    "tactile_button"
+  ],
+  "soc_routing": {
+    "esp32s3/0": {
+      "kind": "any_pin",
+      "label": "GPIO matrix",
+      "notes": "Any matrix signal can be routed to any listed pad via GPIO_FUNCn_OUT_SEL / GPIO_FUNCy_IN_SEL",
+      "functions": [
+        {
+          "function": "U1TXD",
+          "peripheral": "UART1",
+          "signal": "TXD",
+          "direction": "out",
+          "vendor": {
+            "signal_index": 15
+          }
+        },
+        {
+          "function": "U1RXD",
+          "peripheral": "UART1",
+          "signal": "RXD",
+          "direction": "in",
+          "vendor": {
+            "signal_index": 15
+          }
+        },
+        {
+          "function": "I2CEXT0_SCL",
+          "peripheral": "I2C0",
+          "signal": "SCL",
+          "direction": "inout"
+        },
+        {
+          "function": "I2CEXT0_SDA",
+          "peripheral": "I2C0",
+          "signal": "SDA",
+          "direction": "inout"
+        },
+        {
+          "function": "FSPICLK",
+          "peripheral": "SPI2",
+          "signal": "CLK",
+          "direction": "out"
+        },
+        {
+          "function": "LEDC_LS_SIG0",
+          "peripheral": "LEDC",
+          "signal": "CH0",
+          "direction": "out"
+        }
+      ]
+    }
+  }
+}
