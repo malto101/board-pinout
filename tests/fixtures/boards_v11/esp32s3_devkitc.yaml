@@ -1,0 +1,43 @@
+# Single SoC on a module; board inherits mux from the esp32s3 table.
+schema_version: "1.1"
+board: esp32s3_devkitc
+soc: esp32s3
+mux_source: soc
+modules:
+  u1: {module: esp32s3_wroom1, refdes: U1}
+faces:
+  top:
+    underlay: esp32s3_devkitc.webp
+    children:
+      - id: j1
+        kind: group
+        point: [0.1, 0.5]
+        connector: {binding: "espressif,esp32s3-devkitc-header", refdes: J1}
+        children:
+          - {id: j1_1, kind: pin, contact: "1", silk: 3V3,
+             net: {role: power_out, rail: 3V3, nominal_v: 3.3, max_current_ma: 500}}
+          - {id: j1_4, kind: pin, contact: "4", silk: "4", module_pin: {module: u1, pin: "4"}}
+          - {id: j1_5, kind: pin, contact: "5", silk: "5", pad: GPIO1, mux_exclude: ["TOUCH.*"]}
+          - {id: j1_11, kind: pin, contact: "11", silk: "0", pad: GPIO0,
+             electrical: {bias: pull_up, bias_source: external, pull_ohm: 10000},
+             shared_with: [{part: boot_btn, kind: button}]}
+          - {id: j1_21, kind: pin, contact: "21", silk: GND, net: {role: ground}}
+      - id: j3
+        kind: group
+        point: [0.9, 0.5]
+        connector: {binding: "espressif,esp32s3-devkitc-header", refdes: J3}
+        children:
+          - {id: j3_1, kind: pin, contact: "1", silk: GND, net: {role: ground}}
+          - {id: j3_2, kind: pin, contact: "2", silk: TX, pad: GPIO43,
+             shared_with: [{kind: usb_uart_bridge, notes: CP2102N RXD}]}
+          - {id: j3_3, kind: pin, contact: "3", silk: RX, pad: GPIO44}
+          - {id: j3_17, kind: pin, contact: "17", silk: "48", pad: GPIO48,
+             mux_policy: extend, mux: [{function: RGB_LED, class: digital, direction: out}],
+             shared_with: [{part: rgb_led, kind: led}]}
+          - {id: j3_20, kind: pin, contact: "20", silk: "5V", net: {role: power_bidir, rail: 5V0, nominal_v: 5.0}}
+          - {id: j3_22, kind: pin, contact: "22", silk: RST, pad: CHIP_PU,
+             electrical: {active_level: low, bias: pull_up, bias_source: external}}
+          - {id: j3_nc, kind: pin, contact: "18", silk: NC, net: {role: nc}}
+      - {id: boot_btn, ref: tactile_button, silk: BOOT, point: [0.4, 0.9], pad: GPIO0,
+         mux_routable: false, electrical: {active_level: low}}
+      - {id: rgb_led, ref: led_indicator, silk: RGB, point: [0.6, 0.2], pad: GPIO48}

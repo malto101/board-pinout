@@ -1,0 +1,65 @@
+[build-system]
+requires = ["hatchling>=1.25"]
+build-backend = "hatchling.build"
+
+[project]
+name = "board-pinout"
+version = "0.1.0"
+description = "Vendor-neutral schema, resolve, editor, and Sphinx widget for interactive board pinouts"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { file = "LICENSE" }
+authors = [
+  { name = "Dhruv Menon", email = "reach.dhruvmenon@gmail.com" }
+]
+keywords = ["hardware", "pinout", "sphinx-extension", "jsonschema"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+dependencies = [
+  "jsonschema>=4.18",
+  "PyYAML>=6.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/malto101/board-pinout"
+Repository = "https://github.com/malto101/board-pinout.git"
+Issues = "https://github.com/malto101/board-pinout/issues"
+
+[project.optional-dependencies]
+dev = ["pytest>=7.0", "ruff>=0.6"]
+sphinx = ["Sphinx>=6.0"]
+# Optional ~10x faster schema validation for large docs trees.
+fast = ["fastjsonschema>=2.16"]
+
+[project.scripts]
+board-pinout = "board_pinout.cli:main"
+
+[project.entry-points."sphinx.extension"]
+board_pinout = "board_pinout.sphinx_ext"
+
+# src/board_pinout is discovered automatically by hatchling.
+[tool.hatch.build.targets.wheel.force-include]
+"schema" = "board_pinout/schema"
+"types" = "board_pinout/types"
+
+[tool.hatch.build.targets.sdist]
+include = [
+  "/src/board_pinout",
+  "/schema",
+  "/types",
+  "/tests",
+  "/LICENSE",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+
+[tool.uv]
+package = true

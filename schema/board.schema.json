@@ -1,0 +1,713 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:board-pinout:schema:board.schema.json",
+  "title": "Board pinout document",
+  "type": "object",
+  "required": ["board"],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "description": "Document schema version (1.0 or 1.1)",
+      "default": "1.0"
+    },
+    "board": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Board, shield or module name"
+    },
+    "kind": {
+      "type": "string",
+      "enum": ["board", "shield", "module"],
+      "default": "board",
+      "description": "board (default), shield (plugs into a connector binding) or module (reusable pin table)"
+    },
+    "soc": {
+      "description": "SoC join key: the soc id of a SoC pad table, or a list for multi-chip boards",
+      "oneOf": [
+        { "type": "string", "minLength": 1 },
+        {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/socRef" }
+        }
+      ]
+    },
+    "soc_package": {
+      "type": "string",
+      "description": "Package of a single-string soc (selects the table's package pad subset)"
+    },
+    "soc_alternatives": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Interchangeable SoCs the board can carry (informational)"
+    },
+    "mux_source": {
+      "type": "string",
+      "enum": ["inline", "soc"],
+      "default": "inline",
+      "description": "inline: mux comes from parts only (1.0). soc: parts inherit mux from the SoC pad table"
+    },
+    "faces": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": { "$ref": "#/$defs/face" }
+    },
+    "software": { "$ref": "#/$defs/software" },
+    "types_inline": {
+      "type": "object",
+      "description": "Optional inline part types (normally loaded from types/)",
+      "additionalProperties": { "$ref": "#/$defs/partType" }
+    },
+    "modules": {
+      "type": "object",
+      "description": "Module instances used by module_pin, keyed by instance id",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["module"],
+        "additionalProperties": false,
+        "properties": {
+          "module": { "type": "string" },
+          "refdes": { "type": "string" },
+          "notes": { "type": "string" }
+        }
+      }
+    },
+    "expanders": {
+      "type": "object",
+      "description": "IO expanders used by part expander sources, keyed by expander id",
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "compatible": { "type": "string" },
+          "dt_node": { "type": "string" },
+          "refdes": { "type": "string" },
+          "pins": { "type": "integer", "minimum": 1 },
+          "bus": { "$ref": "#/$defs/padRef" },
+          "notes": { "type": "string" }
+        }
+      }
+    },
+    "plugs_into": {
+      "type": "array",
+      "minItems": 1,
+      "description": "Connector bindings a shield plugs into",
+      "items": {
+        "type": "object",
+        "required": ["binding"],
+        "additionalProperties": false,
+        "properties": {
+          "binding": { "type": "string" },
+          "label": { "type": "string" }
+        }
+      }
+    },
+    "pins": {
+      "type": "object",
+      "description": "Module pin table: module pin id -> SoC pad or net",
+      "additionalProperties": { "$ref": "#/$defs/modulePin" }
+    },
+    "revisions": {
+      "type": "object",
+      "description": "Per-revision patches keyed by revision name",
+      "additionalProperties": { "$ref": "#/$defs/patch" }
+    },
+    "revision_default": {
+      "type": "string",
+      "description": "Revision shown by default (default: last listed)"
+    },
+    "variants": {
+      "type": "object",
+      "description": "Several shields/boards sharing one file, keyed by name",
+      "additionalProperties": { "$ref": "#/$defs/patch" }
+    },
+    "host_overrides": {
+      "type": "object",
+      "description": "Reserved: per-host-board patches for shields",
+      "additionalProperties": { "$ref": "#/$defs/patch" }
+    }
+  },
+  "$defs": {
+    "point": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "items": { "type": "number" },
+      "description": "Normalized [x, y] in underlay space (typically 0..1)"
+    },
+    "electrical": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "io_voltage": {
+          "type": "number",
+          "description": "I/O voltage in volts (e.g. 1.8, 3.3, 5)"
+        },
+        "io_voltage_configurable": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "Board-selectable I/O voltage (nRF DK VDD, Arduino IOREF)",
+          "properties": {
+            "range": { "$ref": "#/$defs/voltageRange" },
+            "values": {
+              "type": "array",
+              "items": { "type": "number" }
+            },
+            "control": { "type": "string" }
+          }
+        },
+        "bias": { "$ref": "#/$defs/bias" },
+        "bias_source": { "type": "string", "enum": ["internal", "external"] },
+        "pull_ohm": { "type": "number", "minimum": 0 },
+        "drive": {
+          "type": "string",
+          "enum": ["push_pull", "open_drain", "open_source", "disconnect"]
+        },
+        "drive_strength": { "$ref": "#/$defs/quantity" },
+        "slew_rate": {
+          "type": "string",
+          "enum": ["slow", "medium", "fast", "very_fast"]
+        },
+        "schmitt": { "type": "boolean" },
+        "boot_state": {
+          "type": "string",
+          "enum": ["hog_high", "hog_low", "input", "output_high", "output_low"],
+          "description": "State the board forces at boot (e.g. gpio-hog)"
+        },
+        "active_level": { "type": "string", "enum": ["high", "low"] },
+        "level_shifted": {
+          "type": "boolean",
+          "description": "Signal passes a level shifter before the connector"
+        },
+        "vendor": { "$ref": "#/$defs/vendor" },
+        "notes": { "type": "string" }
+      }
+    },
+    "software": {
+      "type": "object",
+      "description": "Software stacks (OS, RTOS, firmware) that configure pins on this board, keyed by id. Pin assignments reference these ids with 'by'.",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["name"],
+        "additionalProperties": false,
+        "properties": {
+          "name": { "type": "string", "minLength": 1, "description": "Display name (e.g. Linux, FreeRTOS)" },
+          "kind": {
+            "type": "string",
+            "enum": ["os", "rtos", "firmware", "bootloader", "bare_metal", "other"]
+          },
+          "runs_on": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Cores or SoC ids this software runs on"
+          },
+          "url": { "type": "string" },
+          "config": { "type": "object", "description": "Free-form, software-specific; displayed, not interpreted" },
+          "notes": { "type": "string" }
+        }
+      }
+    },
+    "assignment": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "How one software stack uses the pin",
+      "properties": {
+        "by": {
+          "type": "string",
+          "description": "Key under software; optional when exactly one software is declared"
+        },
+        "function": {
+          "type": "string",
+          "description": "Mux function the software selects (e.g. I2C0_SCL); joins to the pad's mux or routing entries by name"
+        },
+        "owner": {
+          "type": "string",
+          "description": "Driver or peripheral instance in the software's own naming (e.g. i2c0, /dev/ttyS1)"
+        },
+        "role": { "type": "string", "description": "Signal role within the owner (e.g. SCL, TX)" },
+        "status": {
+          "type": "string",
+          "enum": ["enabled", "available", "unused", "unknown"],
+          "description": "enabled: configured and active by default; available: configured but off by default"
+        },
+        "config": { "type": "object", "description": "Free-form, software-specific; displayed, not interpreted" }
+      }
+    },
+    "muxMode": {
+      "type": "object",
+      "required": ["function"],
+      "additionalProperties": false,
+      "description": "One alternate function on a pin. Use peripheral+signal (or a function name like I2C0_SDA) so docs can group/filter by peripheral.",
+      "properties": {
+        "mode": {
+          "type": ["integer", "string"],
+          "description": "SoC mux mode / alt-function index when known"
+        },
+        "function": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Full function name (e.g. I2C0_SDA) or short signal (e.g. SDA) when peripheral is set"
+        },
+        "peripheral": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Peripheral instance id for grouping/filter (e.g. i2c0, uart2). Inferred from function when omitted."
+        },
+        "signal": {
+          "type": "string",
+          "description": "Signal within the peripheral (e.g. SDA, SCL, TX). Inferred from function when omitted."
+        },
+        "class": {
+          "type": "string",
+          "enum": ["digital", "analog", "gpio", "debug", "clock", "system", "wakeup", "power"]
+        },
+        "direction": { "type": "string", "enum": ["in", "out", "inout"] },
+        "role_options": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Compound signal roles (e.g. Flexcomm TXD_SCL_MISO_WS -> [TXD, SCL, MISO, WS])"
+        },
+        "group": {
+          "type": "string",
+          "description": "Pin group or _A/_B set the function belongs to"
+        },
+        "analog": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "channel": { "type": ["integer", "string"] },
+            "polarity": {
+              "type": "string",
+              "enum": ["single", "positive", "negative"]
+            },
+            "range_v": { "$ref": "#/$defs/voltageRange" }
+          }
+        },
+        "input_select": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "Peripheral-side input select (i.MX daisy, S32K IMCR, XMC DX)",
+          "properties": {
+            "register": { "type": "string" },
+            "value": { "type": ["integer", "string"] }
+          }
+        },
+        "requires": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Extra settings this function needs (GCR/GPR writes, clear masks) as text"
+        },
+        "packages": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Restrict to these packages"
+        },
+        "vendor": { "$ref": "#/$defs/vendor" }
+      }
+    },
+    "partType": {
+      "type": "object",
+      "required": ["kind"],
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": ["group", "pin", "pin_array", "receptacle", "gpio_control"]
+        },
+        "based_on": { "type": "string" },
+        "description": { "type": "string" },
+        "rows": { "type": "integer", "minimum": 1 },
+        "cols": { "type": "integer", "minimum": 1 },
+        "numbering": {
+          "type": "string",
+          "enum": ["row_major", "col_major", "custom"],
+          "default": "row_major"
+        },
+        "pin_ids": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Explicit pin slot ids when numbering is custom"
+        },
+        "receptacle_type": {
+          "type": "string",
+          "enum": ["usb-a", "usb-c", "micro-usb", "mini-usb", "hdmi", "eth-rj45", "swd", "jtag", "uart-dbg", "nfc", "other"]
+        },
+        "control_type": {
+          "type": "string",
+          "enum": ["button", "led", "switch", "other"]
+        },
+        "default_children": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/partInstance" }
+        },
+        "default_electrical": { "$ref": "#/$defs/electrical" },
+        "default_net": { "$ref": "#/$defs/net" }
+      }
+    },
+    "partInstance": {
+      "type": "object",
+      "required": ["id"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^[A-Za-z][A-Za-z0-9_-]*$"
+        },
+        "kind": {
+          "type": "string",
+          "enum": ["group", "pin", "pin_array", "receptacle", "gpio_control"]
+        },
+        "ref": {
+          "type": "string",
+          "description": "Part type id from the type library"
+        },
+        "silk": { "type": "string" },
+        "point": { "$ref": "#/$defs/point" },
+        "label_offset": { "$ref": "#/$defs/point" },
+        "label_rotation": {
+          "type": "number",
+          "description": "Label rotation in degrees (SVG; positive is clockwise). Typical values: 0, 90, -90, 180."
+        },
+        "leader_vertices": {
+          "type": "array",
+          "description": "Optional leader-line waypoints as normalized absolute [x,y] between point and label",
+          "items": { "$ref": "#/$defs/point" }
+        },
+        "rows": { "type": "integer", "minimum": 1 },
+        "cols": { "type": "integer", "minimum": 1 },
+        "pad": { "type": "string" },
+        "soc": {
+          "type": "string",
+          "description": "Which SoC the pad belongs to (multi-SoC boards)"
+        },
+        "module_pin": {
+          "type": "object",
+          "required": ["module", "pin"],
+          "additionalProperties": false,
+          "properties": {
+            "module": {
+              "type": "string",
+              "description": "Instance id under modules"
+            },
+            "pin": { "type": "string" }
+          }
+        },
+        "expander": {
+          "type": "object",
+          "required": ["id", "pin"],
+          "additionalProperties": false,
+          "properties": {
+            "id": {
+              "type": "string",
+              "description": "Key under expanders"
+            },
+            "pin": { "type": "integer", "minimum": 0 }
+          }
+        },
+        "net": { "$ref": "#/$defs/net" },
+        "connector": {
+          "type": "object",
+          "required": ["binding"],
+          "additionalProperties": false,
+          "description": "Marks the part as a connector of a named connector binding",
+          "properties": {
+            "binding": { "type": "string" },
+            "refdes": { "type": "string" },
+            "dt_node": { "type": "string" }
+          }
+        },
+        "contact": {
+          "type": "string",
+          "description": "Physical contact id on its connector (A1, 14, D15)"
+        },
+        "nexus_index": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Slot index in the connector's logical pin map"
+        },
+        "plug": {
+          "type": "object",
+          "required": ["binding"],
+          "additionalProperties": false,
+          "description": "Shield pin: the host connector pin it mates with",
+          "properties": {
+            "binding": { "type": "string" },
+            "contact": { "type": "string" },
+            "nexus_index": { "type": "integer", "minimum": 0 }
+          }
+        },
+        "electrical": { "$ref": "#/$defs/electrical" },
+        "gating": { "$ref": "#/$defs/gating" },
+        "shared_with": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["kind"],
+            "additionalProperties": false,
+            "properties": {
+              "part": { "type": "string" },
+              "kind": { "type": "string" },
+              "notes": { "type": "string" }
+            }
+          }
+        },
+        "mux": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/muxMode" }
+        },
+        "mux_policy": {
+          "type": "string",
+          "enum": ["replace", "extend"],
+          "description": "With mux_source soc: replace (default when mux is set) or extend the table"
+        },
+        "mux_exclude": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Table functions to hide (exact name or PERIPH.* pattern)"
+        },
+        "mux_routable": {
+          "type": "boolean",
+          "description": "false hides crossbar/routing entries"
+        },
+        "assignments": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/assignment" }
+        },
+        "notes": { "type": "string" },
+        "revisions": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Revisions this part exists in (default: all)"
+        },
+        "children": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/partInstance" }
+        }
+      },
+      "anyOf": [
+        { "required": ["ref"] },
+        { "required": ["kind"] }
+      ]
+    },
+    "face": {
+      "type": "object",
+      "required": ["children"],
+      "additionalProperties": false,
+      "properties": {
+        "underlay": {
+          "type": "string",
+          "description": "Relative path to WebP/PNG/SVG underlay"
+        },
+        "underlay_rotation": {
+          "type": "number",
+          "description": "Default underlay view rotation in degrees (90° steps; SVG clockwise)."
+        },
+        "outline": {
+          "description": "Optional board outline",
+          "oneOf": [
+            {
+              "type": "object",
+              "required": ["svg_path"],
+              "properties": {
+                "svg_path": { "type": "string" }
+              },
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "required": ["polygon"],
+              "properties": {
+                "polygon": {
+                  "type": "array",
+                  "minItems": 3,
+                  "items": { "$ref": "#/$defs/point" }
+                }
+              },
+              "additionalProperties": false
+            }
+          ]
+        },
+        "children": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/partInstance" }
+        }
+      }
+    },
+    "quantity": {
+      "type": "object",
+      "required": ["value", "unit"],
+      "additionalProperties": false,
+      "description": "Value with unit; 'level' and 'code' carry vendor steps (e.g. Nordic S0D1)",
+      "properties": {
+        "value": { "type": ["number", "string"] },
+        "unit": {
+          "type": "string",
+          "enum": ["mA", "uA", "ohm", "V", "level", "code"]
+        }
+      }
+    },
+    "voltageRange": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "items": { "type": "number" },
+      "description": "[min, max] volts"
+    },
+    "vendor": {
+      "type": "object",
+      "description": "Raw vendor encoding; shown, never validated",
+      "additionalProperties": true
+    },
+    "bias": {
+      "type": "string",
+      "enum": ["none", "pull_up", "pull_down", "bus_hold", "hiz"]
+    },
+    "socRef": {
+      "type": "object",
+      "required": ["id"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "package": { "type": "string" },
+        "role": {
+          "type": "string",
+          "enum": ["primary", "board_controller", "coprocessor", "radio"]
+        },
+        "label": { "type": "string" }
+      }
+    },
+    "padRef": {
+      "type": "object",
+      "required": ["pad"],
+      "additionalProperties": false,
+      "description": "A SoC pad; soc is required when the board lists several SoCs",
+      "properties": {
+        "soc": { "type": "string" },
+        "pad": { "type": "string" }
+      }
+    },
+    "net": {
+      "type": "object",
+      "required": ["role"],
+      "additionalProperties": false,
+      "properties": {
+        "role": {
+          "type": "string",
+          "enum": ["power_out", "power_in", "power_bidir", "ground", "reset", "ref", "enable", "nc", "reserved"]
+        },
+        "rail": { "type": "string" },
+        "nominal_v": { "type": "number" },
+        "v_range": { "$ref": "#/$defs/voltageRange" },
+        "max_current_ma": { "type": "number", "minimum": 0 },
+        "active_level": { "type": "string", "enum": ["high", "low"] },
+        "notes": { "type": "string" }
+      }
+    },
+    "gating": {
+      "type": "object",
+      "required": ["kind"],
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": ["solder_bridge", "jumper", "switch", "resistor_dnp", "mux_ic", "gpio_switch"]
+        },
+        "ref": {
+          "type": "string",
+          "description": "Reference designator (SB62, J5, U12)"
+        },
+        "default": {
+          "type": "string",
+          "description": "Default state (open, closed, or a named position)"
+        },
+        "alternate": {
+          "type": "string",
+          "description": "Part id reached in the non-default state"
+        },
+        "control": { "$ref": "#/$defs/padRef" },
+        "notes": { "type": "string" }
+      }
+    },
+    "modulePin": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "soc": { "type": "string" },
+        "pad": { "type": "string" },
+        "net": { "$ref": "#/$defs/net" },
+        "silk": { "type": "string" },
+        "electrical": { "$ref": "#/$defs/electrical" },
+        "notes": { "type": "string" }
+      }
+    },
+    "patch": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Changes applied on top of the base document",
+      "properties": {
+        "description": { "type": "string" },
+        "remove": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Part ids to drop"
+        },
+        "set": {
+          "type": "object",
+          "description": "Part id -> fields to override",
+          "additionalProperties": { "type": "object" }
+        },
+        "add": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["parent", "part"],
+            "additionalProperties": false,
+            "properties": {
+              "parent": {
+                "type": "string",
+                "description": "Parent part id, or face:<name>"
+              },
+              "part": { "$ref": "#/$defs/partInstance" }
+            }
+          }
+        },
+        "expanders": {
+          "type": "object",
+          "additionalProperties": { "type": "object" }
+        }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "mux_source": { "enum": ["soc"] }
+        },
+        "required": ["mux_source"]
+      },
+      "then": { "required": ["soc"] }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": { "enum": ["module"] }
+        },
+        "required": ["kind"]
+      },
+      "then": { "required": ["pins"] },
+      "else": { "required": ["faces"] }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": { "enum": ["shield"] }
+        },
+        "required": ["kind"]
+      },
+      "then": { "required": ["plugs_into"] }
+    }
+  ]
+}

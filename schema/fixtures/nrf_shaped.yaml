@@ -1,0 +1,176 @@
+schema_version: '1.0'
+board: nrf54l15dk_fixture
+soc: nrf54l15
+types_inline:
+  nordic_header_10x2:
+    kind: pin_array
+    based_on: header_pin_array
+    rows: 2
+    cols: 10
+    description: Nordic DK-style 10x2 GPIO header
+    default_electrical:
+      io_voltage: 3.3
+      bias: none
+  nordic_header_7x2:
+    kind: pin_array
+    based_on: header_pin_array
+    rows: 2
+    cols: 7
+    description: Nordic DK-style 7x2 GPIO header (PORT P2)
+    default_electrical:
+      io_voltage: 3.3
+      bias: none
+  nordic_power_2x2:
+    kind: pin_array
+    based_on: header_pin_array
+    rows: 2
+    cols: 2
+    description: Nordic P30/P31/P32 style 2x2 power aux
+    pin_ids:
+    - rGND
+    - VBUS
+    - VDDIO
+    - pad
+    numbering: custom
+  nordic_port_cluster_10x2:
+    kind: group
+    description: PORT Px cluster with main 10x2 header and 2x2 power aux
+    default_children:
+    - id: header
+      ref: nordic_header_10x2
+      silk: header
+    - id: aux
+      ref: nordic_power_2x2
+      silk: aux
+  nordic_port_cluster_7x2:
+    kind: group
+    description: PORT P2 cluster with 7x2 header and 2x2 power aux
+    default_children:
+    - id: header
+      ref: nordic_header_7x2
+      silk: header
+    - id: aux
+      ref: nordic_power_2x2
+      silk: aux
+faces:
+  top:
+    underlay: nrf54l15dk_nrf54l15.webp
+    outline:
+      polygon:
+      - - 0
+        - 0
+      - - 1
+        - 0
+      - - 1
+        - 0.85
+      - - 0.85
+        - 0.85
+      - - 0.85
+        - 1
+      - - 0
+        - 1
+    children:
+    - id: port_p0
+      ref: nordic_port_cluster_10x2
+      silk: PORT P0
+      point:
+      - 0.5406
+      - 0.208
+    - id: port_p1
+      ref: nordic_port_cluster_10x2
+      silk: PORT P1
+      point:
+      - 0.5329
+      - 0.4039
+    - id: port_p2
+      ref: nordic_port_cluster_7x2
+      silk: PORT P2
+      point:
+      - 0.5359
+      - 0.5887
+    - id: buttons
+      kind: group
+      silk: BUTTONS
+      point:
+      - 0.7858
+      - 0.8336
+      children:
+      - id: button_0
+        ref: tactile_button
+        silk: BUTTON 0
+        point:
+        - 0.7408
+        - 0.765
+      - id: button_1
+        ref: tactile_button
+        silk: BUTTON 1
+        point:
+        - 0.8265
+        - 0.7538
+      - id: button_2
+        ref: tactile_button
+        silk: BUTTON 2
+        point:
+        - 0.7387
+        - 0.9028
+      - id: button_3
+        ref: tactile_button
+        silk: BUTTON 3
+        point:
+        - 0.8277
+        - 0.8973
+    - id: leds
+      kind: group
+      silk: LEDS
+      point:
+      - 0.863
+      - 0.1128
+      children:
+      - id: led_0
+        ref: led_indicator
+        silk: LED0
+        point:
+        - 0.8376
+        - 0.0897
+      - id: led_1
+        ref: led_indicator
+        silk: LED1
+        point:
+        - 0.8879
+        - 0.0911
+      - id: led_2
+        ref: led_indicator
+        silk: LED2
+        point:
+        - 0.8417
+        - 0.14
+      - id: led_3
+        ref: led_indicator
+        silk: LED3
+        point:
+        - 0.8805
+        - 0.1414
+    - id: usb_imcu
+      ref: usb_c
+      silk: J3
+      point:
+      - 0.0459
+      - 0.597
+    - id: debug_out
+      ref: header_2x5_swd
+      silk: P19
+      point:
+      - 0.15
+      - 0.88
+    - id: reset
+      ref: tactile_button
+      silk: RESET
+      point:
+      - 0.0553
+      - 0.7636
+    - id: power
+      ref: power_switch
+      silk: POWER
+      point:
+      - 0.0468
+      - 0.1128

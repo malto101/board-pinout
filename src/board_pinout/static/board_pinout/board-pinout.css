@@ -1,0 +1,669 @@
+:is(.board-pinout, .zephyr-board-pinout) {
+  --zbp-marker: #f5a623;
+  --zbp-marker-active: #2dd4bf;
+  --zbp-line: rgba(245, 166, 35, 0.75);
+  --zbp-label-bg: rgba(15, 20, 25, 0.88);
+  --zbp-border: color-mix(in srgb, currentColor 18%, transparent);
+  border: 1px solid var(--zbp-border, #d0d7de);
+  border-radius: 10px;
+  padding: 0.65rem;
+  margin: 0.85rem 0 1.25rem;
+  background: color-mix(in srgb, currentColor 3%, transparent);
+}
+
+:is(.board-pinout, .zephyr-board-pinout) .zbp-toolbar {
+  display: flex;
+  gap: 0.6rem;
+  align-items: center;
+  margin-bottom: 0.55rem;
+  flex-wrap: wrap;
+}
+
+:is(.board-pinout, .zephyr-board-pinout) .zbp-search-wrap {
+  position: relative;
+  flex: 1;
+  min-width: 10rem;
+  display: flex;
+  align-items: center;
+}
+
+:is(.board-pinout, .zephyr-board-pinout) .zbp-search {
+  width: 100%;
+  padding: 0.3rem 1.85rem 0.3rem 0.5rem;
+  border-radius: 6px;
+  border: 1px solid var(--zbp-border, #d0d7de);
+  background: transparent;
+  color: inherit;
+  font: inherit;
+}
+
+:is(.board-pinout, .zephyr-board-pinout) .zbp-search-clear {
+  appearance: none;
+  position: absolute;
+  right: 0.2rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 1.55rem;
+  height: 1.55rem;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  color: inherit;
+  opacity: 0.55;
+  cursor: pointer;
+  font: inherit;
+  font-size: 1.05rem;
+  line-height: 1;
+  padding: 0;
+}
+
+:is(.board-pinout, .zephyr-board-pinout) .zbp-search-clear:hover {
+  opacity: 1;
+  background: color-mix(in srgb, currentColor 10%, transparent);
+}
+
+:is(.board-pinout, .zephyr-board-pinout) .zbp-side-tools {
+  margin-bottom: 0.55rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--zbp-border, #d0d7de);
+}
+
+:is(.board-pinout, .zephyr-board-pinout) .zbp-peri-label {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.3rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  opacity: 0.95;
+}
+
+:is(.board-pinout, .zephyr-board-pinout) .zbp-peripheral {
+  width: 100%;
+  padding: 0.4rem 0.55rem;
+  border-radius: 8px;
+  border: 1px solid color-mix(in srgb, currentColor 28%, transparent);
+  background: #121821;
+  color: #e8eef7;
+  font: inherit;
+  font-weight: 400;
+  font-size: 0.86rem;
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.35),
+    0 4px 14px rgba(0, 0, 0, 0.28),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+  cursor: pointer;
+}
+
+:is(.board-pinout, .zephyr-board-pinout) .zbp-peripheral:hover {
+  border-color: #3d8bfd;
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.4),
+    0 6px 18px rgba(0, 0, 0, 0.32),
+    0 0 0 1px rgba(61, 139, 253, 0.35);
+}
+
+:is(.board-pinout, .zephyr-board-pinout) .zbp-peripheral:focus {
+  outline: none;
+  border-color: #3d8bfd;
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.4),
+    0 6px 18px rgba(0, 0, 0, 0.32),
+    0 0 0 2px rgba(61, 139, 253, 0.45);
+}
+
+:is(.board-pinout, .zephyr-board-pinout) .zbp-peripheral option {
+  background: #121821;
+  color: #e8eef7;
+}
+
+:is(.board-pinout, .zephyr-board-pinout) .zbp-peri-hint {
+  margin: 0.3rem 0 0;
+  font-size: 0.72rem;
+  opacity: 0.6;
+  font-weight: 400;
+}
+
+:is(.board-pinout, .zephyr-board-pinout) .zbp-hit.zbp-mux-hit circle {
+  fill: var(--zbp-marker-active, #2dd4bf);
+  stroke: #99f6e4;
+  stroke-width: 2.25;
+  filter: drop-shadow(0 0 4px rgba(45, 212, 191, 0.85));
+}
+
+:is(.board-pinout, .zephyr-board-pinout) .zbp-hit.zbp-mux-hit path {
+  stroke: rgba(45, 212, 191, 0.9);
+  stroke-width: 1.35;
+}
+
+:is(.board-pinout, .zephyr-board-pinout) .zbp-mux-list {
+  margin: 0.45rem 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.8rem;
+}
+
+:is(.board-pinout, .zephyr-board-pinout) .zbp-mux-list li {
+  gap: 0.4rem;
+  padding: 0.15rem 0;
+  border-bottom: 1px solid var(--zbp-border, #d0d7de);
+}
+
+:is(.board-pinout, .zephyr-board-pinout) .zbp-mux-list .zbp-mux-sig {
+  font-weight: 600;
+  min-width: 3.5rem;
+}
+
+:is(.board-pinout, .zephyr-board-pinout) .zbp-mux-empty {
+  font-size: 0.78rem;
+  opacity: 0.6;
+  margin: 0.35rem 0 0;
+}
+
+:is(.board-pinout, .zephyr-board-pinout) .zbp-hint {
+  font-size: 0.78rem;
+  opacity: 0.65;
+}
+
+:is(.board-pinout, .zephyr-board-pinout) .zbp-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.55fr) minmax(200px, 0.85fr);
+  gap: 0.65rem;
+  align-items: stretch;
+}
+
+@media (max-width: 800px) {
+  :is(.board-pinout, .zephyr-board-pinout) .zbp-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+:is(.board-pinout, .zephyr-board-pinout) .zbp-stage {
+  position: relative;
+  min-height: 320px;
+  height: min(56vh, 480px);
+  border-radius: 8px;
+  overflow: hidden;
+  background: #0b1016;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  touch-action: none;
+  cursor: grab;
+  /* Prevent browser image/text selection flash on double-click. */
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-user-drag: none;
+  -webkit-touch-callout: none;
+}
+
+:is(.board-pinout, .zephyr-board-pinout) .zbp-stage::selection,
+:is(.board-pinout, .zephyr-board-pinout) .zbp-stage *::selection {
+  background: transparent;
+}
+
+:is(.board-pinout, .zephyr-board-pinout) .zbp-stage.zbp-panning {
+  cursor: grabbing;
+}
+
+:is(.board-pinout, .zephyr-board-pinout) .zbp-viewport {
+  position: absolute;
+  inset: 0;
+  transform-origin: 0 0;
+  will-change: transform;
+}
+
+:is(.board-pinout, .zephyr-board-pinout) .zbp-rotator {
+  position: absolute;
+  inset: 0;
+  transform-origin: center center;
+  will-change: transform;
+}
+
+:is(.board-pinout, .zephyr-board-pinout) .zbp-viewport,
+:is(.board-pinout, .zephyr-board-pinout) .zbp-rotator,
+:is(.board-pinout, .zephyr-board-pinout) .zbp-underlay,
+:is(.board-pinout, .zephyr-board-pinout) .zbp-overlay {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+:is(.board-pinout, .zephyr-board-pinout) .zbp-underlay {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  pointer-events: none;
+  -webkit-touch-callout: none;
+}
+
+:is(.board-pinout, .zephyr-board-pinout) .zbp-overlay {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+:is(.board-pinout, .zephyr-board-pinout) .zbp-hit {
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+:is(.board-pinout, .zephyr-board-pinout) .zbp-view-controls {
+  position: absolute;
+  right: 0.45rem;
+  bottom: 0.45rem;
+  z-index: 6;
+  display: flex;
+  gap: 0.25rem;
+  pointer-events: auto;
+}
+
+:is(.board-pinout, .zephyr-board-pinout) .zbp-view-btn {
+  appearance: none;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 7px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(12, 16, 22, 0.88);
+  color: #e8eef7;
+  font: inherit;
+  font-size: 1.05rem;
+  line-height: 1;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+:is(.board-pinout, .zephyr-board-pinout) .zbp-view-btn:hover {
+  border-color: #3d8bfd;
+  background: rgba(20, 32, 48, 0.95);
+}
+
+:is(.board-pinout, .zephyr-board-pinout) .zbp-side {
+  border: 1px solid var(--zbp-border, #d0d7de);
+  border-radius: 8px;
+  padding: 0.5rem 0.55rem;
+  max-height: min(56vh, 480px);
+  overflow: auto;
+  font-size: 0.86rem;
+}
+
+:is(.board-pinout, .zephyr-board-pinout) .zbp-breadcrumb {
+  font-size: 0.75rem;
+  opacity: 0.75;
+  margin-bottom: 0.4rem;
+  word-break: break-word;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  align-items: center;
+}
+
+:is(.board-pinout, .zephyr-board-pinout) .zbp-crumb {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  padding: 0;
+  text-decoration: underline;
+  font: inherit;
+  opacity: 0.85;
+}
+
+:is(.board-pinout, .zephyr-board-pinout) .zbp-tree {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+:is(.board-pinout, .zephyr-board-pinout) .zbp-tree ul {
+  list-style: none;
+  margin: 0;
+  padding: 0 0 0 0.85rem;
+  border-left: 1px solid var(--zbp-border, #d0d7de);
+}
+
+:is(.board-pinout, .zephyr-board-pinout) .zbp-tree-row,
+:is(.board-pinout, .zephyr-board-pinout) .zbp-mux-row {
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+  padding: 0.12rem 0;
+}
+
+:is(.board-pinout, .zephyr-board-pinout) .zbp-info {
+  appearance: none;
+  flex-shrink: 0;
+  width: 1.45rem;
+  height: 1.45rem;
+  margin-left: auto;
+  border: 0;
+  border-radius: 999px;
+  background: color-mix(in srgb, #3d8bfd 18%, transparent);
+  color: inherit;
+  cursor: pointer;
+  padding: 0;
+  font: inherit;
+  font-size: 0.78rem;
+  line-height: 1;
+  opacity: 0;
+  pointer-events: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.12s ease;
+}
+
+:is(.board-pinout, .zephyr-board-pinout) .zbp-tree-row:hover .zbp-info,
+:is(.board-pinout, .zephyr-board-pinout) .zbp-tree-row:focus-within .zbp-info,
+:is(.board-pinout, .zephyr-board-pinout) .zbp-tree-row:has(.zbp-tlabel.active) .zbp-info,
+:is(.board-pinout, .zephyr-board-pinout) .zbp-mux-row:hover .zbp-info,
+:is(.board-pinout, .zephyr-board-pinout) .zbp-mux-row:focus-within .zbp-info,
+:is(.board-pinout, .zephyr-board-pinout) .zbp-mux-row.active .zbp-info {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+:is(.board-pinout, .zephyr-board-pinout) .zbp-info:hover {
+  background: #3d8bfd;
+  color: #fff;
+}
+
+:is(.board-pinout, .zephyr-board-pinout) .zbp-twisty,
+:is(.board-pinout, .zephyr-board-pinout) .zbp-leaf {
+  width: 1.55rem;
+  height: 1.55rem;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  padding: 0;
+  font-size: 1rem;
+  line-height: 1;
+  opacity: 0.85;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+}
+
+:is(.board-pinout, .zephyr-board-pinout) .zbp-twisty:hover {
+  background: color-mix(in srgb, currentColor 12%, transparent);
+  opacity: 1;
+}
+
+:is(.board-pinout, .zephyr-board-pinout) .zbp-tlabel {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  text-align: left;
+  font: inherit;
+  padding: 0.1rem 0.25rem;
+  border-radius: 4px;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+:is(.board-pinout, .zephyr-board-pinout) .zbp-tlabel:hover,
+:is(.board-pinout, .zephyr-board-pinout) .zbp-tlabel.active {
+  background: color-mix(in srgb, #3d8bfd 22%, transparent);
+}
+
+:is(.board-pinout, .zephyr-board-pinout) .zbp-kind {
+  font-size: 0.68rem;
+  opacity: 0.45;
+  flex-shrink: 0;
+}
+
+:is(.board-pinout, .zephyr-board-pinout) .zbp-actions {
+  display: flex;
+  gap: 0.35rem;
+  margin: 0.45rem 0 0.55rem;
+  flex-wrap: wrap;
+}
+
+:is(.board-pinout, .zephyr-board-pinout) .zbp-actions-inline {
+  margin: 0;
+  justify-content: flex-end;
+}
+
+:is(.board-pinout, .zephyr-board-pinout) .zbp-act {
+  appearance: none;
+  border: 1px solid var(--zbp-border, #d0d7de);
+  background: transparent;
+  color: inherit;
+  border-radius: 999px;
+  padding: 0.2rem 0.55rem;
+  font: inherit;
+  font-size: 0.78rem;
+  cursor: pointer;
+}
+
+:is(.board-pinout, .zephyr-board-pinout) .zbp-act:hover {
+  border-color: #3d8bfd;
+}
+
+:is(.board-pinout, .zephyr-board-pinout) .zbp-act:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+:is(.board-pinout, .zephyr-board-pinout) .zbp-browse-head,
+:is(.board-pinout, .zephyr-board-pinout) .zbp-info-head,
+:is(.board-pinout, .zephyr-board-pinout) .zbp-peri-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin: 0.15rem 0 0.45rem;
+}
+
+:is(.board-pinout, .zephyr-board-pinout) .zbp-info-titles {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
+}
+
+:is(.board-pinout, .zephyr-board-pinout) .zbp-info-sub {
+  font-size: 0.72rem;
+  opacity: 0.55;
+  font-weight: 400;
+}
+
+:is(.board-pinout, .zephyr-board-pinout) .zbp-info-card {
+  margin: 0 0 0.65rem;
+  padding: 0.55rem 0.65rem 0.45rem;
+  border: 1px solid color-mix(in srgb, #2dd4bf 35%, var(--zbp-border, #d0d7de));
+  border-radius: 8px;
+  background: color-mix(in srgb, #2dd4bf 6%, transparent);
+}
+
+:is(.board-pinout, .zephyr-board-pinout) .zbp-peri-block {
+  margin: 0.25rem 0 0.5rem;
+}
+
+:is(.board-pinout, .zephyr-board-pinout) .zbp-list-label {
+  margin: 0.55rem 0 0.25rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  opacity: 0.55;
+}
+
+:is(.board-pinout, .zephyr-board-pinout) .zbp-meta {
+  margin-top: 0.35rem;
+  font-size: 0.78rem;
+  line-height: 1.35;
+}
+
+:is(.board-pinout, .zephyr-board-pinout) .zbp-meta-sec {
+  margin: 0 0 0.55rem;
+}
+
+:is(.board-pinout, .zephyr-board-pinout) .zbp-meta-sec:last-child {
+  margin-bottom: 0.15rem;
+}
+
+:is(.board-pinout, .zephyr-board-pinout) .zbp-meta-h {
+  margin: 0 0 0.25rem;
+  font-size: 0.68rem;
+  font-weight: 650;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  opacity: 0.5;
+}
+
+:is(.board-pinout, .zephyr-board-pinout) .zbp-meta-dl {
+  margin: 0;
+  display: grid;
+  gap: 0.2rem;
+}
+
+:is(.board-pinout, .zephyr-board-pinout) .zbp-meta-row {
+  display: grid;
+  grid-template-columns: 5.5rem minmax(0, 1fr);
+  gap: 0.4rem;
+  align-items: baseline;
+}
+
+:is(.board-pinout, .zephyr-board-pinout) .zbp-meta-row dt {
+  margin: 0;
+  font-size: 0.72rem;
+  opacity: 0.5;
+}
+
+:is(.board-pinout, .zephyr-board-pinout) .zbp-meta-row dd {
+  margin: 0;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.74rem;
+  overflow-wrap: anywhere;
+}
+
+:is(.board-pinout, .zephyr-board-pinout) .zbp-meta-mux {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.28rem;
+}
+
+:is(.board-pinout, .zephyr-board-pinout) .zbp-meta-mux li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+:is(.board-pinout, .zephyr-board-pinout) .zbp-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.05rem 0.4rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, #3d8bfd 22%, transparent);
+  font-size: 0.68rem;
+  font-weight: 600;
+}
+
+:is(.board-pinout, .zephyr-board-pinout) .zbp-meta-mux-sig {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.74rem;
+  font-weight: 600;
+}
+
+:is(.board-pinout, .zephyr-board-pinout) .zbp-meta-mux-extra,
+:is(.board-pinout, .zephyr-board-pinout) .zbp-meta-empty {
+  font-size: 0.7rem;
+  opacity: 0.5;
+}
+
+:is(.board-pinout, .zephyr-board-pinout) .zbp-meta-notes {
+  margin: 0;
+  font-size: 0.78rem;
+  opacity: 0.85;
+}
+
+:is(.board-pinout, .zephyr-board-pinout) .zbp-mux-row.active {
+  background: color-mix(in srgb, #3d8bfd 12%, transparent);
+  border-radius: 4px;
+}
+
+:is(.board-pinout, .zephyr-board-pinout) .zbp-pin-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(3.6rem, 1fr));
+  gap: 0.25rem;
+  margin-top: 0.35rem;
+}
+
+:is(.board-pinout, .zephyr-board-pinout) .zbp-pin {
+  border: 1px solid var(--zbp-border, #d0d7de);
+  border-radius: 4px;
+  padding: 0.2rem 0.25rem;
+  cursor: pointer;
+  background: transparent;
+  color: inherit;
+  text-align: center;
+  font: inherit;
+  font-size: 0.72rem;
+}
+
+:is(.board-pinout, .zephyr-board-pinout) .zbp-pin:hover,
+:is(.board-pinout, .zephyr-board-pinout) .zbp-pin.active {
+  border-color: #3d8bfd;
+}
+
+:is(.board-pinout, .zephyr-board-pinout) .zbp-label-bg {
+  fill: var(--zbp-label-bg);
+  stroke: rgba(255, 255, 255, 0.12);
+  stroke-width: 1;
+}
+
+:is(.board-pinout, .zephyr-board-pinout) .zbp-popover {
+  position: absolute;
+  z-index: 5;
+  min-width: 9rem;
+  background: #121821;
+  color: #e8eef7;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
+  padding: 0.35rem;
+  pointer-events: auto;
+}
+
+:is(.board-pinout, .zephyr-board-pinout) .zbp-popover button {
+  display: block;
+  width: 100%;
+  text-align: left;
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: 0.8rem;
+  padding: 0.35rem 0.45rem;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+:is(.board-pinout, .zephyr-board-pinout) .zbp-popover button:hover {
+  background: rgba(61, 139, 253, 0.22);
+}
+
+:is(.board-pinout, .zephyr-board-pinout) .zbp-popover button:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}

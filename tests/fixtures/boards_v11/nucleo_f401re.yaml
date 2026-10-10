@@ -1,0 +1,65 @@
+# Morpho + Arduino on the same pads, solder-bridge gating, package selection,
+# contact vs gpio-map nexus index, IOREF and NC pins.
+schema_version: "1.1"
+board: nucleo_f401re
+soc: stm32f401xe
+soc_package: LQFP64
+mux_source: soc
+faces:
+  top:
+    underlay: nucleo_f401re.webp
+    children:
+      - id: cn5
+        kind: group
+        point: [0.7, 0.2]
+        connector: {binding: arduino-header-r3, refdes: CN5, dt_node: arduino_header}
+        children:
+          - {id: cn5_d14, kind: pin, contact: "9", silk: D14, nexus_index: 20, pad: PB9}
+          - {id: cn5_d15, kind: pin, contact: "10", silk: D15, nexus_index: 21, pad: PB8}
+          - {id: cn5_gnd, kind: pin, contact: "7", silk: GND, net: {role: ground}}
+          - {id: cn5_aref, kind: pin, contact: "8", silk: AVDD, net: {role: ref, rail: VREF+, nominal_v: 3.3}}
+      - id: cn9
+        kind: group
+        point: [0.7, 0.8]
+        connector: {binding: arduino-header-r3, refdes: CN9}
+        children:
+          - id: cn9_d0
+            kind: pin
+            contact: "1"
+            silk: D0
+            nexus_index: 6
+            pad: PA3
+            gating: {kind: solder_bridge, ref: SB62, default: open, alternate: cn10_35,
+                     notes: SB13/SB14 route PA3 to ST-LINK VCP by default}
+          - id: cn9_d1
+            kind: pin
+            contact: "2"
+            silk: D1
+            nexus_index: 7
+            pad: PA2
+            gating: {kind: solder_bridge, ref: SB63, default: open}
+      - id: cn6
+        kind: group
+        point: [0.7, 0.5]
+        connector: {binding: arduino-header-r3, refdes: CN6}
+        children:
+          - {id: cn6_nc, kind: pin, contact: "1", silk: NC, net: {role: nc}}
+          - {id: cn6_ioref, kind: pin, contact: "2", silk: IOREF, net: {role: ref, rail: VDD, nominal_v: 3.3}}
+          - {id: cn6_reset, kind: pin, contact: "3", silk: RESET, net: {role: reset, active_level: low}}
+          - {id: cn6_5v, kind: pin, contact: "5", silk: 5V, net: {role: power_out, rail: 5V, nominal_v: 5.0}}
+          - {id: cn6_vin, kind: pin, contact: "8", silk: VIN, net: {role: power_in, rail: VIN, v_range: [7, 12]}}
+      - id: cn10
+        kind: group
+        point: [0.9, 0.5]
+        connector: {binding: "st,morpho-header", refdes: CN10}
+        children:
+          - {id: cn10_3, kind: pin, contact: "3", silk: PB8, pad: PB8}
+          - {id: cn10_5, kind: pin, contact: "5", silk: PB9, pad: PB9}
+          - {id: cn10_11, kind: pin, contact: "11", silk: PA5, pad: PA5,
+             shared_with: [{part: ld2, kind: led}]}
+          - {id: cn10_35, kind: pin, contact: "35", silk: PA3, pad: PA3,
+             gating: {kind: solder_bridge, ref: SB62, default: open, alternate: cn9_d0}}
+      - {id: ld2, ref: led_indicator, silk: LD2, point: [0.5, 0.5], pad: PA5,
+         electrical: {active_level: high, drive: push_pull}}
+      - {id: b1, ref: tactile_button, silk: B1, point: [0.3, 0.5], pad: PC13,
+         electrical: {active_level: low, bias: pull_up, bias_source: external, pull_ohm: 4700}}

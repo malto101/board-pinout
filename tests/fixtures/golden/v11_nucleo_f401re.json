@@ -1,0 +1,1101 @@
+{
+  "schema_version": "1.1",
+  "board": "nucleo_f401re",
+  "soc": "stm32f401xe",
+  "soc_package": "LQFP64",
+  "mux_source": "soc",
+  "faces": {
+    "top": {
+      "underlay": "nucleo_f401re.webp",
+      "children": [
+        {
+          "id": "cn5",
+          "kind": "group",
+          "point": [
+            0.7,
+            0.2
+          ],
+          "connector": {
+            "binding": "arduino-header-r3",
+            "refdes": "CN5",
+            "dt_node": "arduino_header"
+          },
+          "children": [
+            {
+              "id": "cn5_d14",
+              "kind": "pin",
+              "contact": "9",
+              "silk": "D14",
+              "nexus_index": 20,
+              "pad": "PB9",
+              "children": [],
+              "mux": [
+                {
+                  "function": "I2C1_SDA",
+                  "peripheral": "I2C1",
+                  "signal": "SDA",
+                  "mode": "AF4",
+                  "source": "pad"
+                }
+              ],
+              "pad_info": {
+                "soc": "stm32f401xe",
+                "pad": "PB9",
+                "type": "io",
+                "domain": "VDD",
+                "tolerance": {
+                  "class": "FT",
+                  "max_v": 5.5,
+                  "lost_in_analog": true
+                },
+                "drive_options": [
+                  {
+                    "value": 0,
+                    "unit": "level",
+                    "label": "low"
+                  },
+                  {
+                    "value": 1,
+                    "unit": "level",
+                    "label": "medium"
+                  },
+                  {
+                    "value": 2,
+                    "unit": "level",
+                    "label": "fast"
+                  },
+                  {
+                    "value": 3,
+                    "unit": "level",
+                    "label": "high"
+                  }
+                ],
+                "slew_options": [
+                  "slow",
+                  "medium",
+                  "fast",
+                  "very_fast"
+                ],
+                "pull": {
+                  "pu_ohm": [
+                    30000,
+                    50000
+                  ],
+                  "pd_ohm": [
+                    30000,
+                    50000
+                  ]
+                },
+                "schmitt": true,
+                "max_current_ma": 25,
+                "reset": {
+                  "mode": "input",
+                  "bias": "none"
+                },
+                "domain_info": {
+                  "range": [
+                    1.7,
+                    3.6
+                  ],
+                  "io_voltages": [
+                    3.3
+                  ]
+                },
+                "package": {
+                  "name": "LQFP64",
+                  "pin": "62"
+                }
+              }
+            },
+            {
+              "id": "cn5_d15",
+              "kind": "pin",
+              "contact": "10",
+              "silk": "D15",
+              "nexus_index": 21,
+              "pad": "PB8",
+              "children": [],
+              "mux": [
+                {
+                  "function": "I2C1_SCL",
+                  "peripheral": "I2C1",
+                  "signal": "SCL",
+                  "mode": "AF4",
+                  "source": "pad"
+                },
+                {
+                  "function": "SDIO_D4",
+                  "peripheral": "SDIO",
+                  "signal": "D4",
+                  "mode": "AF12",
+                  "source": "pad"
+                }
+              ],
+              "pad_info": {
+                "soc": "stm32f401xe",
+                "pad": "PB8",
+                "type": "io",
+                "domain": "VDD",
+                "tolerance": {
+                  "class": "FT",
+                  "max_v": 5.5,
+                  "lost_in_analog": true
+                },
+                "drive_options": [
+                  {
+                    "value": 0,
+                    "unit": "level",
+                    "label": "low"
+                  },
+                  {
+                    "value": 1,
+                    "unit": "level",
+                    "label": "medium"
+                  },
+                  {
+                    "value": 2,
+                    "unit": "level",
+                    "label": "fast"
+                  },
+                  {
+                    "value": 3,
+                    "unit": "level",
+                    "label": "high"
+                  }
+                ],
+                "slew_options": [
+                  "slow",
+                  "medium",
+                  "fast",
+                  "very_fast"
+                ],
+                "pull": {
+                  "pu_ohm": [
+                    30000,
+                    50000
+                  ],
+                  "pd_ohm": [
+                    30000,
+                    50000
+                  ]
+                },
+                "schmitt": true,
+                "max_current_ma": 25,
+                "reset": {
+                  "mode": "input",
+                  "bias": "none"
+                },
+                "domain_info": {
+                  "range": [
+                    1.7,
+                    3.6
+                  ],
+                  "io_voltages": [
+                    3.3
+                  ]
+                },
+                "package": {
+                  "name": "LQFP64",
+                  "pin": "61"
+                }
+              }
+            },
+            {
+              "id": "cn5_gnd",
+              "kind": "pin",
+              "contact": "7",
+              "silk": "GND",
+              "net": {
+                "role": "ground"
+              },
+              "children": []
+            },
+            {
+              "id": "cn5_aref",
+              "kind": "pin",
+              "contact": "8",
+              "silk": "AVDD",
+              "net": {
+                "role": "ref",
+                "rail": "VREF+",
+                "nominal_v": 3.3
+              },
+              "children": []
+            }
+          ]
+        },
+        {
+          "id": "cn9",
+          "kind": "group",
+          "point": [
+            0.7,
+            0.8
+          ],
+          "connector": {
+            "binding": "arduino-header-r3",
+            "refdes": "CN9"
+          },
+          "children": [
+            {
+              "id": "cn9_d0",
+              "kind": "pin",
+              "contact": "1",
+              "silk": "D0",
+              "nexus_index": 6,
+              "pad": "PA3",
+              "gating": {
+                "kind": "solder_bridge",
+                "ref": "SB62",
+                "default": "open",
+                "alternate": "cn10_35",
+                "notes": "SB13/SB14 route PA3 to ST-LINK VCP by default"
+              },
+              "children": [],
+              "mux": [
+                {
+                  "function": "USART2_RX",
+                  "peripheral": "USART2",
+                  "signal": "RX",
+                  "mode": "AF7",
+                  "direction": "in",
+                  "source": "pad"
+                },
+                {
+                  "function": "ADC1_IN3",
+                  "peripheral": "ADC1",
+                  "signal": "IN3",
+                  "mode": "ANALOG",
+                  "class": "analog",
+                  "analog": {
+                    "channel": 3
+                  },
+                  "source": "pad"
+                }
+              ],
+              "pad_info": {
+                "soc": "stm32f401xe",
+                "pad": "PA3",
+                "type": "io",
+                "domain": "VDD",
+                "tolerance": {
+                  "class": "FT",
+                  "max_v": 5.5,
+                  "lost_in_analog": true
+                },
+                "drive_options": [
+                  {
+                    "value": 0,
+                    "unit": "level",
+                    "label": "low"
+                  },
+                  {
+                    "value": 1,
+                    "unit": "level",
+                    "label": "medium"
+                  },
+                  {
+                    "value": 2,
+                    "unit": "level",
+                    "label": "fast"
+                  },
+                  {
+                    "value": 3,
+                    "unit": "level",
+                    "label": "high"
+                  }
+                ],
+                "slew_options": [
+                  "slow",
+                  "medium",
+                  "fast",
+                  "very_fast"
+                ],
+                "pull": {
+                  "pu_ohm": [
+                    30000,
+                    50000
+                  ],
+                  "pd_ohm": [
+                    30000,
+                    50000
+                  ]
+                },
+                "schmitt": true,
+                "max_current_ma": 25,
+                "reset": {
+                  "mode": "input",
+                  "bias": "none"
+                },
+                "domain_info": {
+                  "range": [
+                    1.7,
+                    3.6
+                  ],
+                  "io_voltages": [
+                    3.3
+                  ]
+                },
+                "package": {
+                  "name": "LQFP64",
+                  "pin": "17"
+                }
+              }
+            },
+            {
+              "id": "cn9_d1",
+              "kind": "pin",
+              "contact": "2",
+              "silk": "D1",
+              "nexus_index": 7,
+              "pad": "PA2",
+              "gating": {
+                "kind": "solder_bridge",
+                "ref": "SB63",
+                "default": "open"
+              },
+              "children": [],
+              "mux": [
+                {
+                  "function": "USART2_TX",
+                  "peripheral": "USART2",
+                  "signal": "TX",
+                  "mode": "AF7",
+                  "direction": "out",
+                  "source": "pad"
+                },
+                {
+                  "function": "ADC1_IN2",
+                  "peripheral": "ADC1",
+                  "signal": "IN2",
+                  "mode": "ANALOG",
+                  "class": "analog",
+                  "analog": {
+                    "channel": 2
+                  },
+                  "source": "pad"
+                }
+              ],
+              "pad_info": {
+                "soc": "stm32f401xe",
+                "pad": "PA2",
+                "type": "io",
+                "domain": "VDD",
+                "tolerance": {
+                  "class": "FT",
+                  "max_v": 5.5,
+                  "lost_in_analog": true
+                },
+                "drive_options": [
+                  {
+                    "value": 0,
+                    "unit": "level",
+                    "label": "low"
+                  },
+                  {
+                    "value": 1,
+                    "unit": "level",
+                    "label": "medium"
+                  },
+                  {
+                    "value": 2,
+                    "unit": "level",
+                    "label": "fast"
+                  },
+                  {
+                    "value": 3,
+                    "unit": "level",
+                    "label": "high"
+                  }
+                ],
+                "slew_options": [
+                  "slow",
+                  "medium",
+                  "fast",
+                  "very_fast"
+                ],
+                "pull": {
+                  "pu_ohm": [
+                    30000,
+                    50000
+                  ],
+                  "pd_ohm": [
+                    30000,
+                    50000
+                  ]
+                },
+                "schmitt": true,
+                "max_current_ma": 25,
+                "reset": {
+                  "mode": "input",
+                  "bias": "none"
+                },
+                "domain_info": {
+                  "range": [
+                    1.7,
+                    3.6
+                  ],
+                  "io_voltages": [
+                    3.3
+                  ]
+                },
+                "package": {
+                  "name": "LQFP64",
+                  "pin": "16"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "cn6",
+          "kind": "group",
+          "point": [
+            0.7,
+            0.5
+          ],
+          "connector": {
+            "binding": "arduino-header-r3",
+            "refdes": "CN6"
+          },
+          "children": [
+            {
+              "id": "cn6_nc",
+              "kind": "pin",
+              "contact": "1",
+              "silk": "NC",
+              "net": {
+                "role": "nc"
+              },
+              "children": []
+            },
+            {
+              "id": "cn6_ioref",
+              "kind": "pin",
+              "contact": "2",
+              "silk": "IOREF",
+              "net": {
+                "role": "ref",
+                "rail": "VDD",
+                "nominal_v": 3.3
+              },
+              "children": []
+            },
+            {
+              "id": "cn6_reset",
+              "kind": "pin",
+              "contact": "3",
+              "silk": "RESET",
+              "net": {
+                "role": "reset",
+                "active_level": "low"
+              },
+              "children": []
+            },
+            {
+              "id": "cn6_5v",
+              "kind": "pin",
+              "contact": "5",
+              "silk": "5V",
+              "net": {
+                "role": "power_out",
+                "rail": "5V",
+                "nominal_v": 5.0
+              },
+              "children": []
+            },
+            {
+              "id": "cn6_vin",
+              "kind": "pin",
+              "contact": "8",
+              "silk": "VIN",
+              "net": {
+                "role": "power_in",
+                "rail": "VIN",
+                "v_range": [
+                  7,
+                  12
+                ]
+              },
+              "children": []
+            }
+          ]
+        },
+        {
+          "id": "cn10",
+          "kind": "group",
+          "point": [
+            0.9,
+            0.5
+          ],
+          "connector": {
+            "binding": "st,morpho-header",
+            "refdes": "CN10"
+          },
+          "children": [
+            {
+              "id": "cn10_3",
+              "kind": "pin",
+              "contact": "3",
+              "silk": "PB8",
+              "pad": "PB8",
+              "children": [],
+              "mux": [
+                {
+                  "function": "I2C1_SCL",
+                  "peripheral": "I2C1",
+                  "signal": "SCL",
+                  "mode": "AF4",
+                  "source": "pad"
+                },
+                {
+                  "function": "SDIO_D4",
+                  "peripheral": "SDIO",
+                  "signal": "D4",
+                  "mode": "AF12",
+                  "source": "pad"
+                }
+              ],
+              "pad_info": {
+                "soc": "stm32f401xe",
+                "pad": "PB8",
+                "type": "io",
+                "domain": "VDD",
+                "tolerance": {
+                  "class": "FT",
+                  "max_v": 5.5,
+                  "lost_in_analog": true
+                },
+                "drive_options": [
+                  {
+                    "value": 0,
+                    "unit": "level",
+                    "label": "low"
+                  },
+                  {
+                    "value": 1,
+                    "unit": "level",
+                    "label": "medium"
+                  },
+                  {
+                    "value": 2,
+                    "unit": "level",
+                    "label": "fast"
+                  },
+                  {
+                    "value": 3,
+                    "unit": "level",
+                    "label": "high"
+                  }
+                ],
+                "slew_options": [
+                  "slow",
+                  "medium",
+                  "fast",
+                  "very_fast"
+                ],
+                "pull": {
+                  "pu_ohm": [
+                    30000,
+                    50000
+                  ],
+                  "pd_ohm": [
+                    30000,
+                    50000
+                  ]
+                },
+                "schmitt": true,
+                "max_current_ma": 25,
+                "reset": {
+                  "mode": "input",
+                  "bias": "none"
+                },
+                "domain_info": {
+                  "range": [
+                    1.7,
+                    3.6
+                  ],
+                  "io_voltages": [
+                    3.3
+                  ]
+                },
+                "package": {
+                  "name": "LQFP64",
+                  "pin": "61"
+                }
+              }
+            },
+            {
+              "id": "cn10_5",
+              "kind": "pin",
+              "contact": "5",
+              "silk": "PB9",
+              "pad": "PB9",
+              "children": [],
+              "mux": [
+                {
+                  "function": "I2C1_SDA",
+                  "peripheral": "I2C1",
+                  "signal": "SDA",
+                  "mode": "AF4",
+                  "source": "pad"
+                }
+              ],
+              "pad_info": {
+                "soc": "stm32f401xe",
+                "pad": "PB9",
+                "type": "io",
+                "domain": "VDD",
+                "tolerance": {
+                  "class": "FT",
+                  "max_v": 5.5,
+                  "lost_in_analog": true
+                },
+                "drive_options": [
+                  {
+                    "value": 0,
+                    "unit": "level",
+                    "label": "low"
+                  },
+                  {
+                    "value": 1,
+                    "unit": "level",
+                    "label": "medium"
+                  },
+                  {
+                    "value": 2,
+                    "unit": "level",
+                    "label": "fast"
+                  },
+                  {
+                    "value": 3,
+                    "unit": "level",
+                    "label": "high"
+                  }
+                ],
+                "slew_options": [
+                  "slow",
+                  "medium",
+                  "fast",
+                  "very_fast"
+                ],
+                "pull": {
+                  "pu_ohm": [
+                    30000,
+                    50000
+                  ],
+                  "pd_ohm": [
+                    30000,
+                    50000
+                  ]
+                },
+                "schmitt": true,
+                "max_current_ma": 25,
+                "reset": {
+                  "mode": "input",
+                  "bias": "none"
+                },
+                "domain_info": {
+                  "range": [
+                    1.7,
+                    3.6
+                  ],
+                  "io_voltages": [
+                    3.3
+                  ]
+                },
+                "package": {
+                  "name": "LQFP64",
+                  "pin": "62"
+                }
+              }
+            },
+            {
+              "id": "cn10_11",
+              "kind": "pin",
+              "contact": "11",
+              "silk": "PA5",
+              "pad": "PA5",
+              "shared_with": [
+                {
+                  "part": "ld2",
+                  "kind": "led"
+                }
+              ],
+              "children": [],
+              "mux": [
+                {
+                  "function": "SPI1_SCK",
+                  "peripheral": "SPI1",
+                  "signal": "SCK",
+                  "mode": "AF5",
+                  "source": "pad"
+                },
+                {
+                  "function": "TIM2_CH1_ETR",
+                  "peripheral": "TIM2",
+                  "signal": "CH1",
+                  "mode": "AF1",
+                  "group": "ETR",
+                  "source": "pad"
+                }
+              ],
+              "pad_info": {
+                "soc": "stm32f401xe",
+                "pad": "PA5",
+                "type": "io",
+                "domain": "VDD",
+                "tolerance": {
+                  "class": "FT",
+                  "max_v": 5.5,
+                  "lost_in_analog": true
+                },
+                "drive_options": [
+                  {
+                    "value": 0,
+                    "unit": "level",
+                    "label": "low"
+                  },
+                  {
+                    "value": 1,
+                    "unit": "level",
+                    "label": "medium"
+                  },
+                  {
+                    "value": 2,
+                    "unit": "level",
+                    "label": "fast"
+                  },
+                  {
+                    "value": 3,
+                    "unit": "level",
+                    "label": "high"
+                  }
+                ],
+                "slew_options": [
+                  "slow",
+                  "medium",
+                  "fast",
+                  "very_fast"
+                ],
+                "pull": {
+                  "pu_ohm": [
+                    30000,
+                    50000
+                  ],
+                  "pd_ohm": [
+                    30000,
+                    50000
+                  ]
+                },
+                "schmitt": true,
+                "max_current_ma": 25,
+                "reset": {
+                  "mode": "input",
+                  "bias": "none"
+                },
+                "domain_info": {
+                  "range": [
+                    1.7,
+                    3.6
+                  ],
+                  "io_voltages": [
+                    3.3
+                  ]
+                },
+                "package": {
+                  "name": "LQFP64",
+                  "pin": "21"
+                }
+              }
+            },
+            {
+              "id": "cn10_35",
+              "kind": "pin",
+              "contact": "35",
+              "silk": "PA3",
+              "pad": "PA3",
+              "gating": {
+                "kind": "solder_bridge",
+                "ref": "SB62",
+                "default": "open",
+                "alternate": "cn9_d0"
+              },
+              "children": [],
+              "mux": [
+                {
+                  "function": "USART2_RX",
+                  "peripheral": "USART2",
+                  "signal": "RX",
+                  "mode": "AF7",
+                  "direction": "in",
+                  "source": "pad"
+                },
+                {
+                  "function": "ADC1_IN3",
+                  "peripheral": "ADC1",
+                  "signal": "IN3",
+                  "mode": "ANALOG",
+                  "class": "analog",
+                  "analog": {
+                    "channel": 3
+                  },
+                  "source": "pad"
+                }
+              ],
+              "pad_info": {
+                "soc": "stm32f401xe",
+                "pad": "PA3",
+                "type": "io",
+                "domain": "VDD",
+                "tolerance": {
+                  "class": "FT",
+                  "max_v": 5.5,
+                  "lost_in_analog": true
+                },
+                "drive_options": [
+                  {
+                    "value": 0,
+                    "unit": "level",
+                    "label": "low"
+                  },
+                  {
+                    "value": 1,
+                    "unit": "level",
+                    "label": "medium"
+                  },
+                  {
+                    "value": 2,
+                    "unit": "level",
+                    "label": "fast"
+                  },
+                  {
+                    "value": 3,
+                    "unit": "level",
+                    "label": "high"
+                  }
+                ],
+                "slew_options": [
+                  "slow",
+                  "medium",
+                  "fast",
+                  "very_fast"
+                ],
+                "pull": {
+                  "pu_ohm": [
+                    30000,
+                    50000
+                  ],
+                  "pd_ohm": [
+                    30000,
+                    50000
+                  ]
+                },
+                "schmitt": true,
+                "max_current_ma": 25,
+                "reset": {
+                  "mode": "input",
+                  "bias": "none"
+                },
+                "domain_info": {
+                  "range": [
+                    1.7,
+                    3.6
+                  ],
+                  "io_voltages": [
+                    3.3
+                  ]
+                },
+                "package": {
+                  "name": "LQFP64",
+                  "pin": "17"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "ld2",
+          "ref": "led_indicator",
+          "silk": "LD2",
+          "point": [
+            0.5,
+            0.5
+          ],
+          "pad": "PA5",
+          "electrical": {
+            "active_level": "high",
+            "drive": "push_pull"
+          },
+          "kind": "gpio_control",
+          "control_type": "led",
+          "children": [],
+          "mux": [
+            {
+              "function": "SPI1_SCK",
+              "peripheral": "SPI1",
+              "signal": "SCK",
+              "mode": "AF5",
+              "source": "pad"
+            },
+            {
+              "function": "TIM2_CH1_ETR",
+              "peripheral": "TIM2",
+              "signal": "CH1",
+              "mode": "AF1",
+              "group": "ETR",
+              "source": "pad"
+            }
+          ],
+          "pad_info": {
+            "soc": "stm32f401xe",
+            "pad": "PA5",
+            "type": "io",
+            "domain": "VDD",
+            "tolerance": {
+              "class": "FT",
+              "max_v": 5.5,
+              "lost_in_analog": true
+            },
+            "drive_options": [
+              {
+                "value": 0,
+                "unit": "level",
+                "label": "low"
+              },
+              {
+                "value": 1,
+                "unit": "level",
+                "label": "medium"
+              },
+              {
+                "value": 2,
+                "unit": "level",
+                "label": "fast"
+              },
+              {
+                "value": 3,
+                "unit": "level",
+                "label": "high"
+              }
+            ],
+            "slew_options": [
+              "slow",
+              "medium",
+              "fast",
+              "very_fast"
+            ],
+            "pull": {
+              "pu_ohm": [
+                30000,
+                50000
+              ],
+              "pd_ohm": [
+                30000,
+                50000
+              ]
+            },
+            "schmitt": true,
+            "max_current_ma": 25,
+            "reset": {
+              "mode": "input",
+              "bias": "none"
+            },
+            "domain_info": {
+              "range": [
+                1.7,
+                3.6
+              ],
+              "io_voltages": [
+                3.3
+              ]
+            },
+            "package": {
+              "name": "LQFP64",
+              "pin": "21"
+            }
+          }
+        },
+        {
+          "id": "b1",
+          "ref": "tactile_button",
+          "silk": "B1",
+          "point": [
+            0.3,
+            0.5
+          ],
+          "pad": "PC13",
+          "electrical": {
+            "active_level": "low",
+            "bias": "pull_up",
+            "bias_source": "external",
+            "pull_ohm": 4700
+          },
+          "kind": "gpio_control",
+          "control_type": "button",
+          "children": [],
+          "mux": [
+            {
+              "function": "RTC_AF1",
+              "class": "wakeup",
+              "mode": "SYS",
+              "source": "pad"
+            }
+          ],
+          "pad_info": {
+            "soc": "stm32f401xe",
+            "pad": "PC13",
+            "type": "io",
+            "domain": "VBAT",
+            "tolerance": {
+              "class": "FT",
+              "max_v": 5.5
+            },
+            "drive_options": [
+              {
+                "value": 3,
+                "unit": "mA"
+              }
+            ],
+            "slew_options": [
+              "slow",
+              "medium",
+              "fast",
+              "very_fast"
+            ],
+            "pull": {
+              "pu_ohm": [
+                30000,
+                50000
+              ],
+              "pd_ohm": [
+                30000,
+                50000
+              ]
+            },
+            "schmitt": true,
+            "max_current_ma": 3,
+            "reset": {
+              "mode": "input",
+              "bias": "none"
+            },
+            "domain_info": {
+              "range": [
+                1.65,
+                3.6
+              ]
+            },
+            "package": {
+              "name": "LQFP64",
+              "pin": "2"
+            }
+          }
+        }
+      ]
+    }
+  },
+  "resolved": true,
+  "types_used": [
+    "led_indicator",
+    "tactile_button"
+  ]
+}

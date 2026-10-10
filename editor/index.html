@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Board Pinout Editor</title>
+    <link rel="stylesheet" href="/src/styles.css" />
+  </head>
+  <body>
+    <div id="app">
+      <header class="topbar">
+        <div class="brand" title="Board Pinout Editor">Pinout</div>
+        <div class="topbar-cluster" title="History">
+          <button id="undoBtn" class="icon-btn" type="button" title="Undo (⌘Z)">↶</button>
+          <button id="redoBtn" class="icon-btn" type="button" title="Redo (⌘⇧Z)">↷</button>
+        </div>
+        <div class="topbar-cluster" title="File">
+          <label class="text-btn" title="Upload board underlay image">
+            Underlay
+            <input id="underlayInput" type="file" accept="image/*,.svg,.webp,.png,.jpg" hidden />
+          </label>
+          <label class="text-btn" title="Import pinout.yaml">
+            Import
+            <input id="importInput" type="file" accept=".yaml,.yml,.json" hidden />
+          </label>
+          <button id="exportBtn" class="text-btn" type="button" title="Export pinout.yaml">Export</button>
+          <button id="loadEsp32SampleBtn" class="text-btn" type="button" title="Load ESP32-S3 DevKitC sample pinout + underlay">
+            ESP32 sample
+          </button>
+        </div>
+        <button id="previewToggle" class="text-btn" type="button" title="Toggle docs-style preview (⌘P)">Preview</button>
+        <div class="topbar-cluster snap-cluster" title="Snapping">
+          <button id="snapToggle" class="text-btn" type="button" title="Snap to grid (⌘;)">Grid</button>
+          <select id="snapStep" class="snap-step" title="Grid snap resolution" aria-label="Snap resolution">
+            <option value="0.01">0.01</option>
+            <option value="0.025" selected>0.025</option>
+            <option value="0.05">0.05</option>
+            <option value="0.1">0.1</option>
+          </select>
+          <button id="snapObjectsToggle" class="text-btn" type="button" title="Snap to other points &amp; labels">Objects</button>
+        </div>
+        <input id="searchInput" type="search" placeholder="Search parts…" class="search" title="Search parts" />
+        <button id="cheatSheetBtn" class="icon-btn" type="button" title="Keyboard shortcuts (?)" aria-haspopup="dialog">?</button>
+      </header>
+
+      <div id="cheatSheet" class="cheat-sheet" hidden role="dialog" aria-modal="true" aria-labelledby="cheatSheetTitle">
+        <div class="cheat-sheet-backdrop" data-cheat-close></div>
+        <div class="cheat-sheet-panel">
+          <div class="cheat-sheet-head">
+            <h2 id="cheatSheetTitle">Keyboard shortcuts</h2>
+            <button type="button" class="icon-btn" data-cheat-close title="Close (Esc)">×</button>
+          </div>
+          <div id="cheatSheetBody" class="cheat-sheet-body"></div>
+        </div>
+      </div>
+
+      <div class="workspace">
+        <aside class="rail" aria-label="Tools">
+          <button id="toolSelectBtn" class="icon-btn rail-btn active" type="button" title="Select · box-select on empty drag (V)">⌜</button>
+          <button id="toolHandBtn" class="icon-btn rail-btn" type="button" title="Hand · pan canvas (H) · or hold Space">✋</button>
+          <div class="rail-sep"></div>
+          <button id="viewRotCcwBtn" class="icon-btn rail-btn" type="button" title="Rotate underlay −90°">↺</button>
+          <button id="viewRotCwBtn" class="icon-btn rail-btn" type="button" title="Rotate underlay +90°">↻</button>
+          <button id="viewResetBtn" class="icon-btn rail-btn" type="button" title="Reset pan/zoom/rotation">⟲</button>
+          <div class="rail-sep"></div>
+          <button id="addPartBtn" class="icon-btn rail-btn" type="button" title="Add empty group (⌘N)">＋</button>
+          <button id="groupSelectedBtn" class="icon-btn rail-btn" type="button" title="Group selection (⌘G)">⧉</button>
+          <button id="deletePartBtn" class="icon-btn rail-btn danger" type="button" title="Delete (⌫)">⌫</button>
+        </aside>
+
+        <aside class="sidebar left">
+          <div class="panel thin library-panel">
+            <button id="libraryToggle" class="library-toggle" type="button" aria-expanded="false">
+              <span class="library-toggle-plus">+</span> New part
+            </button>
+            <div id="libraryBody" class="library-body" hidden>
+              <div id="libraryList" class="library-list"></div>
+            </div>
+          </div>
+          <div class="panel thin grow">
+            <div class="panel-head"><span class="panel-title">Parts</span></div>
+            <p class="hint-mini">Double-click name to rename · drag to nest · ⌘/Ctrl multi-select · ⌘G group</p>
+            <div id="symLegend" class="sym-legend" title="Part symbols"></div>
+            <div id="partTree" class="tree"></div>
+          </div>
+          <div class="panel thin peri-panel">
+            <div class="panel-head"><span class="panel-title">Peripherals</span></div>
+            <p class="hint-mini">Mux grouping · click to filter canvas</p>
+            <div id="periList" class="peri-list"></div>
+          </div>
+        </aside>
+        <div id="ctxMenu" class="ctx-menu" hidden></div>
+
+        <main class="canvas-wrap">
+          <div
+            id="canvasStage"
+            class="canvas-stage"
+            title="Click to upload underlay when empty"
+          >
+            <div id="canvasWorld" class="canvas-world">
+              <div id="canvasRotator" class="canvas-rotator">
+                <img id="underlayImg" alt="" />
+                <svg id="overlay" xmlns="http://www.w3.org/2000/svg"></svg>
+              </div>
+            </div>
+            <div id="marquee" class="marquee" hidden></div>
+          </div>
+        </main>
+
+        <aside class="sidebar right">
+          <div id="gridPicker" class="panel thin grid-picker-panel" hidden>
+            <div class="grid-picker-head">
+              <span id="gridPickerTitle">Group size</span>
+              <button type="button" id="gridPickerClose" class="icon-btn" title="Close">×</button>
+            </div>
+            <p class="hint-mini">Hover to size · click filled cells to place</p>
+            <div id="gridPickerMatrix" class="grid-matrix" role="grid" aria-label="Size picker"></div>
+            <div id="gridSizeLabel" class="grid-size-label">1 × 1</div>
+            <p class="hint-mini" id="gridCapHint">Need more than 15×15? Type rows × cols below.</p>
+            <div class="grid-size-inputs">
+              <label>Rows <input id="gridRows" type="number" min="1" max="40" value="1" /></label>
+              <label>Cols <input id="gridCols" type="number" min="1" max="40" value="1" /></label>
+            </div>
+            <button id="gridPickerAdd" class="text-btn block" type="button">Add typed size</button>
+          </div>
+          <div class="panel thin">
+            <div class="panel-head"><span class="panel-title">Board</span></div>
+            <label title="Board name">Name <input id="boardName" type="text" /></label>
+            <label title="SoC id">SoC <input id="boardSoc" type="text" /></label>
+            <label title="Default underlay rotation when opening docs / reset view">
+              Underlay °
+              <input id="underlayRotation" type="number" step="90" value="0" />
+            </label>
+          </div>
+          <div class="panel thin">
+            <div class="panel-head"><span class="panel-title">Selected</span></div>
+            <div id="metaForm" class="meta-form">
+              <p class="muted">Nothing selected</p>
+            </div>
+          </div>
+          <div class="panel thin" id="drillPanel" hidden>
+            <div class="panel-head"><span class="panel-title">Preview</span></div>
+            <div id="breadcrumb" class="breadcrumb"></div>
+            <div id="drillContent"></div>
+          </div>
+        </aside>
+      </div>
+    </div>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

@@ -1,0 +1,966 @@
+schema_version: '1.0'
+board: esp32s3_devkitc
+soc: esp32s3
+faces:
+  top:
+    underlay: esp32s3_devkitc.webp
+    children:
+      - id: j1
+        kind: pin_array
+        silk: J1
+        rows: 22
+        cols: 1
+        electrical:
+          io_voltage: 3.3
+        notes: Left pin header; Espressif J1 numbering top → bottom
+        point:
+          - 0.2726
+          - 0.4696
+        children:
+          - id: j1_01
+            kind: pin
+            silk: 3V3
+            net: {role: power_out, rail: 3V3, nominal_v: 3.3}
+            notes: 3.3 V rail
+            point:
+              - 0.2838
+              - 0.155
+            label_offset:
+              - -0.0367
+              - 0
+          - id: j1_02
+            kind: pin
+            silk: 3V3
+            net: {role: power_out, rail: 3V3, nominal_v: 3.3}
+            notes: 3.3 V rail
+            point:
+              - 0.2838
+              - 0.1874
+            label_offset:
+              - -0.0367
+              - 0
+          - id: j1_03
+            kind: pin
+            silk: RST EN
+            pad: EN
+            mux:
+              - function: CHIP_PU
+                peripheral: system
+                signal: EN
+            notes: CHIP_PU / reset; hold low to reset
+            point:
+              - 0.2838
+              - 0.221
+            label_offset:
+              - -0.0367
+              - 0
+          - id: j1_04
+            kind: pin
+            silk: '4'
+            pad: GPIO4
+            mux:
+              - function: ADC1_CH3
+                peripheral: adc1
+                signal: CH3
+              - function: TOUCH4
+                peripheral: touch
+                signal: TOUCH4
+              - function: I2C1_SDA
+                peripheral: i2c1
+                signal: SDA
+              - function: I2S1_O_WS
+                peripheral: i2s1
+                signal: O_WS
+            point:
+              - 0.2838
+              - 0.2516
+            label_offset:
+              - -0.0367
+              - 0
+          - id: j1_05
+            kind: pin
+            silk: '5'
+            pad: GPIO5
+            mux:
+              - function: ADC1_CH4
+                peripheral: adc1
+                signal: CH4
+              - function: TOUCH5
+                peripheral: touch
+                signal: TOUCH5
+              - function: I2C1_SCL
+                peripheral: i2c1
+                signal: SCL
+              - function: TWAI_TX
+                peripheral: twai
+                signal: TX
+              - function: I2S1_O_BCK
+                peripheral: i2s1
+                signal: O_BCK
+            point:
+              - 0.2838
+              - 0.2864
+            label_offset:
+              - -0.0367
+              - 0
+          - id: j1_06
+            kind: pin
+            silk: '6'
+            pad: GPIO6
+            mux:
+              - function: ADC1_CH5
+                peripheral: adc1
+                signal: CH5
+              - function: TOUCH6
+                peripheral: touch
+                signal: TOUCH6
+              - function: TWAI_RX
+                peripheral: twai
+                signal: RX
+              - function: I2S1_O_SD
+                peripheral: i2s1
+                signal: O_SD
+            point:
+              - 0.2838
+              - 0.319
+            label_offset:
+              - -0.0367
+              - 0
+          - id: j1_07
+            kind: pin
+            silk: '7'
+            pad: GPIO7
+            mux:
+              - function: ADC1_CH6
+                peripheral: adc1
+                signal: CH6
+              - function: TOUCH7
+                peripheral: touch
+                signal: TOUCH7
+            point:
+              - 0.2838
+              - 0.3506
+            label_offset:
+              - -0.0367
+              - 0
+          - id: j1_08
+            kind: pin
+            silk: '15'
+            pad: GPIO15
+            mux:
+              - function: ADC2_CH4
+                peripheral: adc2
+                signal: CH4
+              - function: UART0_RTS
+                peripheral: uart0
+                signal: RTS
+              - function: XTAL_32K_P
+                peripheral: lfxo
+                signal: XTAL_32K_P
+            notes: May be XTAL_32K_P if external crystal used
+            point:
+              - 0.2838
+              - 0.3832
+            label_offset:
+              - -0.0367
+              - 0
+          - id: j1_09
+            kind: pin
+            silk: '16'
+            pad: GPIO16
+            mux:
+              - function: ADC2_CH5
+                peripheral: adc2
+                signal: CH5
+              - function: UART0_CTS
+                peripheral: uart0
+                signal: CTS
+              - function: XTAL_32K_N
+                peripheral: lfxo
+                signal: XTAL_32K_N
+            notes: May be XTAL_32K_N if external crystal used
+            point:
+              - 0.2838
+              - 0.4182
+            label_offset:
+              - -0.0367
+              - 0
+          - id: j1_10
+            kind: pin
+            silk: '17'
+            pad: GPIO17
+            mux:
+              - function: ADC2_CH6
+                peripheral: adc2
+                signal: CH6
+              - function: UART1_TXD
+                peripheral: uart1
+                signal: TX
+            notes: Zephyr uart1 TX default
+            point:
+              - 0.2838
+              - 0.4512
+            label_offset:
+              - -0.0367
+              - 0
+          - id: j1_11
+            kind: pin
+            silk: '18'
+            pad: GPIO18
+            mux:
+              - function: ADC2_CH7
+                peripheral: adc2
+                signal: CH7
+              - function: UART1_RXD
+                peripheral: uart1
+                signal: RX
+              - function: CLK_OUT3
+                peripheral: system
+                signal: CLK_OUT3
+            notes: Zephyr uart1 RX default
+            point:
+              - 0.2838
+              - 0.4812
+            label_offset:
+              - -0.0367
+              - 0
+          - id: j1_12
+            kind: pin
+            silk: '8'
+            pad: GPIO8
+            mux:
+              - function: ADC1_CH7
+                peripheral: adc1
+                signal: CH7
+              - function: TOUCH8
+                peripheral: touch
+                signal: TOUCH8
+              - function: SUBSPICS1
+                peripheral: spi
+                signal: SUBSPICS1
+              - function: RMT_OUT3
+                peripheral: rmt
+                signal: OUT3
+            notes: Zephyr rmt TX default (RMT_OUT3)
+            point:
+              - 0.2838
+              - 0.513
+            label_offset:
+              - -0.0367
+              - 0
+          - id: j1_13
+            kind: pin
+            silk: '3'
+            pad: GPIO3
+            mux:
+              - function: ADC1_CH2
+                peripheral: adc1
+                signal: CH2
+              - function: TOUCH3
+                peripheral: touch
+                signal: TOUCH3
+            point:
+              - 0.2838
+              - 0.5456
+            label_offset:
+              - -0.0367
+              - 0
+          - id: j1_14
+            kind: pin
+            silk: '46'
+            pad: GPIO46
+            mux:
+              - function: STRAP
+                peripheral: system
+                signal: STRAP_GPIO46
+            notes: Strapping pin; sample at reset — avoid accidental pulldown
+            point:
+              - 0.2838
+              - 0.5786
+            label_offset:
+              - -0.0367
+              - 0
+          - id: j1_15
+            kind: pin
+            silk: '9'
+            pad: GPIO9
+            mux:
+              - function: ADC1_CH8
+                peripheral: adc1
+                signal: CH8
+              - function: TOUCH9
+                peripheral: touch
+                signal: TOUCH9
+              - function: FSPIHD
+                peripheral: spi
+                signal: FSPIHD
+              - function: SUBSPIHD
+                peripheral: spi
+                signal: SUBSPIHD
+              - function: RMT_IN3
+                peripheral: rmt
+                signal: IN3
+            notes: Zephyr rmt RX default (RMT_IN3)
+            point:
+              - 0.2838
+              - 0.6128
+            label_offset:
+              - -0.0367
+              - 0
+          - id: j1_16
+            kind: pin
+            silk: '10'
+            pad: GPIO10
+            mux:
+              - function: ADC1_CH9
+                peripheral: adc1
+                signal: CH9
+              - function: TOUCH10
+                peripheral: touch
+                signal: TOUCH10
+              - function: FSPICS0
+                peripheral: spi
+                signal: FSPICS0
+              - function: FSPIIO4
+                peripheral: spi
+                signal: FSPIIO4
+              - function: SPIM2_CSEL
+                peripheral: spi2
+                signal: CS
+            notes: Zephyr spi2 CS default
+            point:
+              - 0.2838
+              - 0.6484
+            label_offset:
+              - -0.0367
+              - 0
+          - id: j1_17
+            kind: pin
+            silk: '11'
+            pad: GPIO11
+            mux:
+              - function: ADC2_CH0
+                peripheral: adc2
+                signal: CH0
+              - function: TOUCH11
+                peripheral: touch
+                signal: TOUCH11
+              - function: FSPID
+                peripheral: spi
+                signal: FSPID
+              - function: FSPIIO5
+                peripheral: spi
+                signal: FSPIIO5
+              - function: SPIM2_MOSI
+                peripheral: spi2
+                signal: MOSI
+            notes: Zephyr spi2 MOSI default
+            point:
+              - 0.2838
+              - 0.6779
+            label_offset:
+              - -0.0367
+              - 0
+          - id: j1_18
+            kind: pin
+            silk: '12'
+            pad: GPIO12
+            mux:
+              - function: ADC2_CH1
+                peripheral: adc2
+                signal: CH1
+              - function: TOUCH12
+                peripheral: touch
+                signal: TOUCH12
+              - function: FSPICLK
+                peripheral: spi
+                signal: FSPICLK
+              - function: FSPIIO6
+                peripheral: spi
+                signal: FSPIIO6
+              - function: SPIM2_SCLK
+                peripheral: spi2
+                signal: SCK
+              - function: I2S1_I_SD
+                peripheral: i2s1
+                signal: I_SD
+            notes: Zephyr spi2 SCLK / i2s1 SD-in default
+            point:
+              - 0.2838
+              - 0.711
+            label_offset:
+              - -0.0367
+              - 0
+          - id: j1_19
+            kind: pin
+            silk: '13'
+            pad: GPIO13
+            mux:
+              - function: ADC2_CH2
+                peripheral: adc2
+                signal: CH2
+              - function: TOUCH13
+                peripheral: touch
+                signal: TOUCH13
+              - function: FSPIQ
+                peripheral: spi
+                signal: FSPIQ
+              - function: FSPIIO7
+                peripheral: spi
+                signal: FSPIIO7
+              - function: SPIM2_MISO
+                peripheral: spi2
+                signal: MISO
+            notes: Zephyr spi2 MISO default
+            point:
+              - 0.2838
+              - 0.7422
+            label_offset:
+              - -0.0367
+              - 0
+          - id: j1_20
+            kind: pin
+            silk: '14'
+            pad: GPIO14
+            mux:
+              - function: ADC2_CH3
+                peripheral: adc2
+                signal: CH3
+              - function: TOUCH14
+                peripheral: touch
+                signal: TOUCH14
+              - function: FSPIWP
+                peripheral: spi
+                signal: FSPIWP
+              - function: FSPIDQS
+                peripheral: spi
+                signal: FSPIDQS
+              - function: SPIM3_CSEL
+                peripheral: spi3
+                signal: CS
+            notes: Zephyr spi3 CS default
+            point:
+              - 0.2838
+              - 0.7762
+            label_offset:
+              - -0.0367
+              - 0
+          - id: j1_21
+            kind: pin
+            silk: 5V
+            net: {role: power_bidir, rail: 5V, nominal_v: 5.0}
+            notes: 5 V rail (USB VBUS when powered from USB)
+            point:
+              - 0.2838
+              - 0.8106
+            label_offset:
+              - -0.0367
+              - 0
+          - id: j1_22
+            kind: pin
+            silk: G
+            net: {role: ground}
+            point:
+              - 0.2838
+              - 0.8434
+            label_offset:
+              - -0.0367
+              - 0
+        label_offset:
+          - 0.0406
+          - 0
+      - id: j3
+        kind: pin_array
+        silk: J3
+        rows: 22
+        cols: 1
+        electrical:
+          io_voltage: 3.3
+        notes: Right pin header; Espressif J3 numbering top → bottom
+        point:
+          - 0.74
+          - 0.4696
+        children:
+          - id: j3_01
+            kind: pin
+            silk: G
+            net: {role: ground}
+            point:
+              - 0.7173
+              - 0.155
+            label_offset:
+              - 0.0362
+              - 0
+          - id: j3_02
+            kind: pin
+            silk: TX
+            pad: GPIO43
+            mux:
+              - function: UART0_TXD
+                peripheral: uart0
+                signal: TX
+              - function: CLK_OUT1
+                peripheral: system
+                signal: CLK_OUT1
+            notes: U0TXD; Zephyr uart0 / console TX
+            point:
+              - 0.7173
+              - 0.1874
+            label_offset:
+              - 0.0362
+              - 0
+          - id: j3_03
+            kind: pin
+            silk: RX
+            pad: GPIO44
+            mux:
+              - function: UART0_RXD
+                peripheral: uart0
+                signal: RX
+              - function: CLK_OUT2
+                peripheral: system
+                signal: CLK_OUT2
+            notes: U0RXD; Zephyr uart0 / console RX
+            point:
+              - 0.7173
+              - 0.221
+            label_offset:
+              - 0.0362
+              - 0
+          - id: j3_04
+            kind: pin
+            silk: '1'
+            pad: GPIO1
+            mux:
+              - function: ADC1_CH0
+                peripheral: adc1
+                signal: CH0
+              - function: TOUCH1
+                peripheral: touch
+                signal: TOUCH1
+              - function: I2C0_SDA
+                peripheral: i2c0
+                signal: SDA
+            notes: Zephyr i2c0 SDA default
+            point:
+              - 0.7173
+              - 0.2516
+            label_offset:
+              - 0.0362
+              - 0
+          - id: j3_05
+            kind: pin
+            silk: '2'
+            pad: GPIO2
+            mux:
+              - function: ADC1_CH1
+                peripheral: adc1
+                signal: CH1
+              - function: TOUCH2
+                peripheral: touch
+                signal: TOUCH2
+              - function: I2C0_SCL
+                peripheral: i2c0
+                signal: SCL
+            notes: Zephyr i2c0 SCL default
+            point:
+              - 0.7173
+              - 0.2864
+            label_offset:
+              - 0.0362
+              - 0
+          - id: j3_06
+            kind: pin
+            silk: '42'
+            pad: GPIO42
+            mux:
+              - function: MTMS
+                peripheral: jtag
+                signal: TMS
+              - function: I2S0_MCLK
+                peripheral: i2s0
+                signal: MCLK
+            notes: JTAG MTMS; Zephyr i2s0 MCLK default
+            point:
+              - 0.7173
+              - 0.319
+            label_offset:
+              - 0.0362
+              - 0
+          - id: j3_07
+            kind: pin
+            silk: '41'
+            pad: GPIO41
+            mux:
+              - function: MTDI
+                peripheral: jtag
+                signal: TDI
+              - function: CLK_OUT1
+                peripheral: system
+                signal: CLK_OUT1
+              - function: I2S0_I_SD
+                peripheral: i2s0
+                signal: I_SD
+              - function: SPIM3_MOSI
+                peripheral: spi3
+                signal: MOSI
+            notes: JTAG MTDI; Zephyr i2s0 SD-in / spi3 MOSI
+            point:
+              - 0.7173
+              - 0.3506
+            label_offset:
+              - 0.0362
+              - 0
+          - id: j3_08
+            kind: pin
+            silk: '40'
+            pad: GPIO40
+            mux:
+              - function: MTDO
+                peripheral: jtag
+                signal: TDO
+              - function: CLK_OUT2
+                peripheral: system
+                signal: CLK_OUT2
+              - function: SPIM3_MISO
+                peripheral: spi3
+                signal: MISO
+            notes: JTAG MTDO; Zephyr spi3 MISO default
+            point:
+              - 0.7173
+              - 0.3832
+            label_offset:
+              - 0.0362
+              - 0
+          - id: j3_09
+            kind: pin
+            silk: '39'
+            pad: GPIO39
+            mux:
+              - function: MTCK
+                peripheral: jtag
+                signal: TCK
+              - function: CLK_OUT3
+                peripheral: system
+                signal: CLK_OUT3
+              - function: SUBSPICS1
+                peripheral: spi
+                signal: SUBSPICS1
+            notes: JTAG MTCK
+            point:
+              - 0.7173
+              - 0.4182
+            label_offset:
+              - 0.0362
+              - 0
+          - id: j3_10
+            kind: pin
+            silk: '38'
+            pad: GPIO38
+            mux:
+              - function: FSPIWP
+                peripheral: spi
+                signal: FSPIWP
+              - function: SUBSPIWP
+                peripheral: spi
+                signal: SUBSPIWP
+              - function: I2S0_O_SD
+                peripheral: i2s0
+                signal: O_SD
+              - function: RGB_LED
+                peripheral: led_strip
+                signal: DIN
+            notes: >-
+              RGB LED on DevKitC-1 v1.1; this underlay silk is RGB@IO48 (rev 1.0). Zephyr i2s0
+              SD-out default
+            point:
+              - 0.7173
+              - 0.4512
+            label_offset:
+              - 0.0362
+              - 0
+          - id: j3_11
+            kind: pin
+            silk: '37'
+            pad: GPIO37
+            mux:
+              - function: SPIDQS
+                peripheral: spi
+                signal: SPIDQS
+              - function: FSPIQ
+                peripheral: spi
+                signal: FSPIQ
+              - function: I2S0_O_BCK
+                peripheral: i2s0
+                signal: O_BCK
+            notes: Used for octal SPI flash/PSRAM on N8R8 / WROOM-2 modules — not for external use
+            point:
+              - 0.7173
+              - 0.4812
+            label_offset:
+              - 0.0362
+              - 0
+          - id: j3_12
+            kind: pin
+            silk: '36'
+            pad: GPIO36
+            mux:
+              - function: SPIIO7
+                peripheral: spi
+                signal: SPIIO7
+              - function: FSPICLK
+                peripheral: spi
+                signal: FSPICLK
+              - function: I2S0_O_WS
+                peripheral: i2s0
+                signal: O_WS
+            notes: Used for octal SPI flash/PSRAM on N8R8 / WROOM-2 modules — not for external use
+            point:
+              - 0.7173
+              - 0.513
+            label_offset:
+              - 0.0362
+              - 0
+          - id: j3_13
+            kind: pin
+            silk: '35'
+            pad: GPIO35
+            mux:
+              - function: SPIIO6
+                peripheral: spi
+                signal: SPIIO6
+              - function: FSPID
+                peripheral: spi
+                signal: FSPID
+            notes: Used for octal SPI flash/PSRAM on N8R8 / WROOM-2 modules — not for external use
+            point:
+              - 0.7173
+              - 0.5456
+            label_offset:
+              - 0.0362
+              - 0
+          - id: j3_14
+            kind: pin
+            silk: '0'
+            pad: GPIO0
+            mux:
+              - function: STRAP
+                peripheral: system
+                signal: STRAP_GPIO0
+              - function: GPIO_BOOT
+                peripheral: button0
+                signal: IN
+            notes: BOOT button (active low); strapping pin
+            point:
+              - 0.7173
+              - 0.5786
+            label_offset:
+              - 0.0362
+              - 0
+          - id: j3_15
+            kind: pin
+            silk: '45'
+            pad: GPIO45
+            mux:
+              - function: STRAP
+                peripheral: system
+                signal: STRAP_GPIO45
+            notes: Strapping pin; sample at reset
+            point:
+              - 0.7173
+              - 0.6128
+            label_offset:
+              - 0.0362
+              - 0
+          - id: j3_16
+            kind: pin
+            silk: '48'
+            pad: GPIO48
+            mux:
+              - function: SPICLK_N
+                peripheral: spi
+                signal: SPICLK_N
+              - function: I2S1_MCLK
+                peripheral: i2s1
+                signal: MCLK
+              - function: RGB_LED
+                peripheral: led_strip
+                signal: DIN
+            notes: RGB LED on this underlay (RGB@IO48 / rev 1.0). Zephyr i2s1 MCLK default
+            point:
+              - 0.7173
+              - 0.6484
+            label_offset:
+              - 0.0362
+              - 0
+          - id: j3_17
+            kind: pin
+            silk: '47'
+            pad: GPIO47
+            mux:
+              - function: SPICLK_P
+                peripheral: spi
+                signal: SPICLK_P
+            point:
+              - 0.7173
+              - 0.6779
+            label_offset:
+              - 0.0362
+              - 0
+          - id: j3_18
+            kind: pin
+            silk: '21'
+            pad: GPIO21
+            mux:
+              - function: SPIM3_SCLK
+                peripheral: spi3
+                signal: SCK
+            notes: Zephyr spi3 SCLK default; avoid heavy load if using Wi-Fi TX
+            point:
+              - 0.7173
+              - 0.711
+            label_offset:
+              - 0.0362
+              - 0
+          - id: j3_19
+            kind: pin
+            silk: '20'
+            pad: GPIO20
+            mux:
+              - function: USB_D_P
+                peripheral: usb
+                signal: D+
+              - function: ADC2_CH9
+                peripheral: adc2
+                signal: CH9
+              - function: UART1_CTS
+                peripheral: uart1
+                signal: CTS
+              - function: CLK_OUT1
+                peripheral: system
+                signal: CLK_OUT1
+            notes: USB_D+ (native USB); also ADC2_CH9 / U1CTS
+            point:
+              - 0.7173
+              - 0.7422
+            label_offset:
+              - 0.0362
+              - 0
+          - id: j3_20
+            kind: pin
+            silk: '19'
+            pad: GPIO19
+            mux:
+              - function: USB_D_N
+                peripheral: usb
+                signal: D-
+              - function: ADC2_CH8
+                peripheral: adc2
+                signal: CH8
+              - function: UART1_RTS
+                peripheral: uart1
+                signal: RTS
+              - function: CLK_OUT2
+                peripheral: system
+                signal: CLK_OUT2
+            notes: USB_D- (native USB); also ADC2_CH8 / U1RTS
+            point:
+              - 0.7173
+              - 0.7762
+            label_offset:
+              - 0.0362
+              - 0
+          - id: j3_21
+            kind: pin
+            silk: G
+            net: {role: ground}
+            point:
+              - 0.7173
+              - 0.8106
+            label_offset:
+              - 0.0362
+              - 0
+          - id: j3_22
+            kind: pin
+            silk: G
+            net: {role: ground}
+            point:
+              - 0.7173
+              - 0.8434
+            label_offset:
+              - 0.0362
+              - 0
+        label_offset:
+          - -0.0525
+          - 0
+      - id: buttons
+        kind: group
+        silk: BUTTONS
+        point:
+          - 0.4997
+          - 0.7653
+        children:
+          - id: button_boot
+            ref: tactile_button
+            silk: BOOT
+            pad: GPIO0
+            point:
+              - 0.4019
+              - 0.7694
+            mux:
+              - function: GPIO_BOOT
+                peripheral: button0
+                signal: IN
+            notes: Download / BOOT; hold + RESET for serial download mode
+            label_offset:
+              - 0
+              - -0.0373
+          - id: button_reset
+            ref: tactile_button
+            silk: RESET
+            pad: EN
+            point:
+              - 0.6004
+              - 0.7694
+            notes: Board reset (CHIP_PU)
+            label_offset:
+              - 0
+              - -0.0373
+        label_offset:
+          - 0
+          - 0.0109
+      - id: rgb_led
+        kind: pin
+        silk: RGB@IO48
+        pad: GPIO48
+        point:
+          - 0.4019
+          - 0.5715
+        mux:
+          - function: RGB_LED
+            peripheral: led_strip
+            signal: DIN
+        notes: Addressable RGB; underlay silk IO48 (rev 1.0). Rev 1.1 boards use GPIO38.
+        label_offset:
+          - 0.034
+          - 0
+      - id: usb_uart
+        ref: usb_c
+        silk: UART
+        point:
+          - 0.3723
+          - 0.9005
+        notes: USB-to-UART bridge (console / flash); powers board
+        label_offset:
+          - 0
+          - 0.035
+      - id: usb_otg
+        ref: usb_c
+        silk: USB
+        point:
+          - 0.6313
+          - 0.9005
+        notes: ESP32-S3 native USB OTG / JTAG (GPIO19/20)
+        label_offset:
+          - 0
+          - 0.035
