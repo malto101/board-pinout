@@ -1,0 +1,19 @@
+# Board built on a module (u-blox NINA-B3 = nrf52840): connector -> module pin -> pad.
+schema_version: "1.1"
+board: ubx_evkninab3
+soc: nrf52840
+mux_source: soc
+modules:
+  u1: {module: ublox_nina_b3, refdes: U1}
+faces:
+  top:
+    underlay: evk.webp
+    children:
+      - id: j1
+        kind: group
+        point: [0.5, 0.5]
+        connector: {binding: arduino-header-r3, refdes: J1}
+        children:
+          - {id: j1_d0, kind: pin, contact: "1", nexus_index: 6, module_pin: {module: u1, pin: "J2"}}
+          - {id: j1_d1, kind: pin, contact: "2", nexus_index: 7, module_pin: {module: u1, pin: "J4"}}
+          - {id: j1_gnd, kind: pin, contact: "6", net: {role: ground}}

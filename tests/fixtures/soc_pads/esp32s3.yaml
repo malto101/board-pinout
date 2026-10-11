@@ -1,0 +1,88 @@
+# Archetypes: 1 (IO_MUX fixed function per pad) + 5 (GPIO matrix crossbar).
+# Also: strapping pins, input-only/no pads, per-domain voltage, aliases.
+schema_version: "1.0"
+soc: esp32s3
+reference: {title: ESP32-S3 Technical Reference Manual, revision: "1.6", section: "6 IO MUX and GPIO Matrix"}
+domains:
+  VDD3P3_RTC: {io_voltages: [3.3]}
+  VDD_SPI: {io_voltages: [1.8, 3.3], configurable: true, notes: Selected by eFuse/VDD_SPI strap}
+pad_defaults:
+  type: io
+  domain: VDD3P3_RTC
+  drive_options: [{value: 5, unit: mA}, {value: 10, unit: mA}, {value: 20, unit: mA}, {value: 40, unit: mA}]
+  pull: {pu_ohm: 45000, pd_ohm: 45000}
+  reset: {mode: input, bias: none}
+pads:
+  GPIO0:
+    aliases: [IO0]
+    reset: {mode: input, bias: pull_up}
+    strap: {function: BOOT_MODE, sampled_at: reset, level: high, notes: Low enters download mode}
+    functions:
+      - {function: GPIO0, class: gpio, mode: 1}
+      - {function: RTC_GPIO0, class: wakeup, mode: RTC}
+  GPIO1:
+    functions:
+      - {function: GPIO1, class: gpio, mode: 1}
+      - {function: ADC1_CH0, peripheral: ADC1, signal: CH0, class: analog, mode: ANALOG,
+         analog: {channel: 0, polarity: single, range_v: [0, 2.9]}}
+      - {function: TOUCH1, peripheral: TOUCH, signal: CH1, class: analog, mode: RTC}
+  GPIO3:
+    strap: {function: JTAG_SEL, sampled_at: reset, level: any}
+    functions:
+      - {function: GPIO3, class: gpio, mode: 1}
+      - {function: ADC1_CH2, peripheral: ADC1, signal: CH2, class: analog, mode: ANALOG, analog: {channel: 2}}
+  GPIO19:
+    functions:
+      - {function: USB_D-, peripheral: USB_SERIAL_JTAG, signal: D-, class: digital, direction: inout, mode: ANALOG}
+      - {function: GPIO19, class: gpio, mode: 1}
+  GPIO20:
+    functions:
+      - {function: USB_D+, peripheral: USB_SERIAL_JTAG, signal: D+, class: digital, direction: inout, mode: ANALOG}
+      - {function: GPIO20, class: gpio, mode: 1}
+  GPIO26:
+    domain: VDD_SPI
+    notes: Connected to in-package flash/PSRAM on most modules
+    functions:
+      - {function: SPICS1, peripheral: SPI0, signal: CS1, mode: 0, class: digital, direction: out}
+      - {function: GPIO26, class: gpio, mode: 1}
+  GPIO39:
+    functions:
+      - {function: MTCK, peripheral: JTAG, signal: TCK, class: debug, direction: in, mode: 0}
+      - {function: GPIO39, class: gpio, mode: 1}
+  GPIO43:
+    aliases: [U0TXD_PAD]
+    reset: {mode: function, bias: none, function: U0TXD}
+    functions:
+      - {function: U0TXD, peripheral: UART0, signal: TXD, class: digital, direction: out, mode: 0,
+         vendor: {raw: "UART0_TX_GPIO43"}}
+      - {function: GPIO43, class: gpio, mode: 1}
+  GPIO44:
+    reset: {mode: function, bias: pull_up, function: U0RXD}
+    functions:
+      - {function: U0RXD, peripheral: UART0, signal: RXD, class: digital, direction: in, mode: 0}
+      - {function: GPIO44, class: gpio, mode: 1}
+  GPIO45:
+    strap: {function: VDD_SPI_VOLTAGE, sampled_at: reset, level: low}
+    reset: {mode: input, bias: pull_down}
+    functions: [{function: GPIO45, class: gpio, mode: 1}]
+  GPIO46:
+    strap: {function: BOOT_MODE, sampled_at: reset, level: low}
+    reset: {mode: input, bias: pull_down}
+    functions: [{function: GPIO46, class: gpio, mode: 1}]
+  GPIO48:
+    functions: [{function: GPIO48, class: gpio, mode: 1}]
+  CHIP_PU:
+    type: special
+    functions: [{function: CHIP_PU, class: system, direction: in}]
+routing:
+  - kind: any_pin
+    label: GPIO matrix
+    pads: {range: [GPIO0, GPIO48], exclude: [GPIO26]}
+    notes: Any matrix signal can be routed to any listed pad via GPIO_FUNCn_OUT_SEL / GPIO_FUNCy_IN_SEL
+    functions:
+      - {function: U1TXD, peripheral: UART1, signal: TXD, direction: out, vendor: {signal_index: 15}}
+      - {function: U1RXD, peripheral: UART1, signal: RXD, direction: in, vendor: {signal_index: 15}}
+      - {function: I2CEXT0_SCL, peripheral: I2C0, signal: SCL, direction: inout}
+      - {function: I2CEXT0_SDA, peripheral: I2C0, signal: SDA, direction: inout}
+      - {function: FSPICLK, peripheral: SPI2, signal: CLK, direction: out}
+      - {function: LEDC_LS_SIG0, peripheral: LEDC, signal: CH0, direction: out}

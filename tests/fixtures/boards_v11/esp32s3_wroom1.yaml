@@ -1,0 +1,14 @@
+# Module: reusable pin table (module pin -> SoC pad or net).
+schema_version: "1.1"
+board: esp32s3_wroom1
+kind: module
+soc: esp32s3
+pins:
+  "1": {net: {role: ground}}
+  "2": {net: {role: power_in, rail: 3V3, v_range: [3.0, 3.6]}}
+  "3": {pad: CHIP_PU, silk: EN}
+  "4": {pad: GPIO1}
+  "27": {pad: GPIO0}
+  "36": {pad: GPIO44, silk: RXD0}
+  "37": {pad: GPIO43, silk: TXD0}
+  "40": {net: {role: ground}}

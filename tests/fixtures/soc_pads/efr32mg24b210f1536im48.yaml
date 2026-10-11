@@ -1,0 +1,58 @@
+# Archetypes 6 + 7: DBUS port-restricted routing and ABUS analog bus allocation.
+schema_version: "1.0"
+soc: efr32mg24b210f1536im48
+reference: {title: EFR32xG24 Reference Manual, revision: "1.1", section: "GPIO DBUS/ABUS"}
+packages:
+  QFN48: {}
+domains:
+  IOVDD: {range: [1.71, 3.8]}
+pad_defaults:
+  type: io
+  domain: IOVDD
+  drive_options: [{value: 0, unit: level, label: weak}, {value: 1, unit: level, label: strong}]
+  reset: {mode: hiz}
+pads:
+  PA00: {port: PA, index: 0}
+  PA03: {port: PA, index: 3}
+  PA05: {port: PA, index: 5}
+  PA08: {port: PA, index: 8}
+  PB00: {port: PB, index: 0}
+  PB01: {port: PB, index: 1}
+  PC00: {port: PC, index: 0}
+  PC01: {port: PC, index: 1}
+  PD00: {port: PD, index: 0, functions: [{function: LFXO_XI, class: clock, direction: in}]}
+  PD02: {port: PD, index: 2}
+  PA01:
+    port: PA
+    index: 1
+    reset: {mode: function, bias: pull_down, function: SWCLK}
+    functions: [{function: GPIO_SWCLK, class: debug, direction: in}]
+  PA02:
+    port: PA
+    index: 2
+    reset: {mode: function, bias: pull_up, function: SWDIO}
+    functions: [{function: GPIO_SWDIO, class: debug, direction: inout}]
+routing:
+  - kind: port_restricted
+    label: DBUS (EUSART0)
+    pads: {ports: [PA, PB, PC, PD]}
+    functions:
+      - {function: EUSART0_TX, peripheral: EUSART0, signal: TX, direction: out}
+      - {function: EUSART0_RX, peripheral: EUSART0, signal: RX, direction: in}
+  - kind: port_restricted
+    label: DBUS (I2C0, any port)
+    pads: {ports: [PA, PB, PC, PD]}
+    functions: [{function: I2C0_SCL, peripheral: I2C0, signal: SCL}, {function: I2C0_SDA, peripheral: I2C0, signal: SDA}]
+  - kind: port_restricted
+    label: DBUS (PRS async, A/B only)
+    pads: {ports: [PA, PB]}
+    functions: [{function: PRS0_ASYNCH0, peripheral: PRS0, signal: ASYNCH0}]
+  - kind: analog_bus
+    bus: AEVEN0
+    label: ABUS A even
+    pads: {ports: [PA], parity: even, exclude: [PA02]}
+    functions: [{function: IADC0_POS, peripheral: IADC0, signal: POS, class: analog}]
+  - kind: analog_bus
+    bus: CDODD0
+    pads: {ports: [PC, PD], parity: odd}
+    functions: [{function: ACMP0_NEG, peripheral: ACMP0, signal: NEG, class: analog}]

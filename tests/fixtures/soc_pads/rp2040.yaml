@@ -1,0 +1,57 @@
+# Archetype 1 with periodic repeats: FUNCSEL per pad, peripherals repeat every
+# few GPIOs. Also ADC-capable pads and fixed QSPI/SWD/USB special pins.
+schema_version: "1.0"
+soc: rp2040
+reference: {title: RP2040 Datasheet, revision: "2.1", section: "2.19.2 Function Select"}
+domains:
+  IOVDD: {range: [1.62, 3.63]}
+  QSPI_IOVDD: {range: [1.62, 3.63]}
+pad_defaults:
+  type: io
+  domain: IOVDD
+  drive_options: [{value: 2, unit: mA}, {value: 4, unit: mA}, {value: 8, unit: mA}, {value: 12, unit: mA}]
+  pull: {pu_ohm: [50000, 80000], pd_ohm: [50000, 80000], bus_hold: true}
+  schmitt: true
+  slew_options: [slow, fast]
+  reset: {mode: input, bias: pull_down}
+pads:
+  GPIO0:
+    functions:
+      - {function: SPI0_RX, peripheral: SPI0, signal: RX, mode: 1}
+      - {function: UART0_TX, peripheral: UART0, signal: TX, mode: 2, direction: out}
+      - {function: I2C0_SDA, peripheral: I2C0, signal: SDA, mode: 3}
+      - {function: PWM0_A, peripheral: PWM0, signal: A, mode: 4}
+      - {function: SIO, class: gpio, mode: 5}
+      - {function: PIO0, peripheral: PIO0, mode: 6}
+      - {function: PIO1, peripheral: PIO1, mode: 7}
+      - {function: USB_OVCUR_DET, peripheral: USB, signal: OVCUR_DET, mode: 9, direction: in}
+  GPIO1:
+    functions:
+      - {function: SPI0_CSn, peripheral: SPI0, signal: CSn, mode: 1}
+      - {function: UART0_RX, peripheral: UART0, signal: RX, mode: 2, direction: in}
+      - {function: I2C0_SCL, peripheral: I2C0, signal: SCL, mode: 3}
+      - {function: SIO, class: gpio, mode: 5}
+  GPIO12:
+    functions:
+      - {function: UART0_TX, peripheral: UART0, signal: TX, mode: 2, direction: out, group: repeat_12}
+      - {function: I2C0_SDA, peripheral: I2C0, signal: SDA, mode: 3, group: repeat_12}
+      - {function: SIO, class: gpio, mode: 5}
+      - {function: PIO0, peripheral: PIO0, mode: 6}
+      - {function: PIO1, peripheral: PIO1, mode: 7}
+  GPIO26:
+    functions:
+      - {function: ADC0, peripheral: ADC, signal: AIN0, class: analog, analog: {channel: 0, range_v: [0, 3.3]}}
+      - {function: I2C1_SDA, peripheral: I2C1, signal: SDA, mode: 3}
+      - {function: SIO, class: gpio, mode: 5}
+  QSPI_SCLK:
+    type: special
+    domain: QSPI_IOVDD
+    functions: [{function: XIP_SCLK, class: system, direction: out}]
+  QSPI_SS:
+    type: special
+    domain: QSPI_IOVDD
+    strap: {function: BOOTSEL, sampled_at: boot, level: high, notes: Held low at boot enters USB bootloader}
+  SWCLK: {type: special, functions: [{function: SWCLK, class: debug, direction: in}]}
+  SWDIO: {type: special, functions: [{function: SWDIO, class: debug, direction: inout}]}
+  RUN: {type: input_only, functions: [{function: RUN, class: system, direction: in}]}
+  USB_DP: {type: special, functions: [{function: USB_DP, peripheral: USB, class: digital}]}

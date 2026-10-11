@@ -1,0 +1,66 @@
+# Two SoCs (nrf9160 + nrf52840 board controller), IO expander added in a
+# revision, board-configured I/O voltage, Nordic drive codes, gpio-hog, and
+# two software stacks that each own the pins of one SoC.
+schema_version: "1.1"
+board: nrf9160dk
+soc:
+  - {id: nrf9160, package: aQFN102, role: primary}
+  - {id: nrf52840, role: board_controller}
+mux_source: soc
+software:
+  app: {name: Application RTOS, kind: rtos, runs_on: [nrf9160]}
+  bc: {name: Board controller firmware, kind: firmware, runs_on: [nrf52840]}
+expanders:
+  u5: {compatible: "nxp,pcal6408a", dt_node: pcal6408a@20, pins: 8, bus: {soc: nrf9160, pad: P0.30}}
+revision_default: "0.14.0"
+revisions:
+  "0.7.0":
+    description: Initial release
+    remove: [led1_exp]
+  "0.14.0":
+    description: Adds pcal6408a IO expander for buttons/LEDs
+    set:
+      led1: {pad: P0.02, notes: Moved behind expander in 0.14.0}
+    add:
+      - parent: face:top
+        part: {id: led1_exp, kind: pin, silk: LED1, point: [0.2, 0.2], expander: {id: u5, pin: 4}}
+faces:
+  top:
+    underlay: nrf9160dk.webp
+    children:
+      - id: p6
+        kind: group
+        point: [0.1, 0.5]
+        connector: {binding: arduino-header-r3, refdes: P6}
+        children:
+          - id: p6_d0
+            kind: pin
+            contact: "1"
+            nexus_index: 6
+            soc: nrf9160
+            pad: P0.00
+            electrical:
+              io_voltage_configurable: {values: [1.8, 3.0], control: SW9 VDD_IO}
+              drive_strength: {value: H0H1, unit: code}
+              vendor: {"nordic,drive-mode": H0H1}
+            assignments:
+              - {by: app, function: UARTE0_TXD, owner: uart0, role: TXD, status: enabled,
+                 config: {pinctrl: uart0_default}}
+          - id: p6_reset_ctrl
+            kind: pin
+            contact: "2"
+            soc: nrf52840
+            pad: P0.13
+            electrical: {boot_state: hog_high, active_level: low}
+            assignments:
+              - {by: bc, owner: reset_ctrl, status: enabled, config: {gpio_hog: output-high}}
+            notes: board-control GPIO routing switch
+      - {id: led1, ref: led_indicator, silk: LED1, point: [0.2, 0.3], soc: nrf9160, pad: P0.02,
+         revisions: ["0.7.0"]}
+      - id: sw_route
+        ref: power_switch
+        silk: SW10
+        point: [0.5, 0.9]
+        soc: nrf52840
+        pad: P1.00
+        gating: {kind: gpio_switch, ref: U12, default: nrf9160, control: {soc: nrf52840, pad: P1.00}}

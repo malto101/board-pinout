@@ -1,0 +1,307 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:board-pinout:schema:soc_pads.schema.json",
+  "title": "SoC pad table",
+  "description": "What one SoC's pads can do, written from its reference manual. Boards reference pads by name; nothing here is board specific.",
+  "type": "object",
+  "required": ["soc"],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": { "type": "string", "default": "1.0" },
+    "soc": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Exact join key: the SoC id boards reference in their soc field"
+    },
+    "description": { "type": "string" },
+    "based_on": {
+      "type": "string",
+      "description": "SoC id this table inherits from; the fields below are applied as deltas"
+    },
+    "pads_include": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "With based_on: keep only these inherited pads"
+    },
+    "pads_exclude": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "With based_on: drop these inherited pads"
+    },
+    "functions_exclude": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Drop these functions everywhere (exact name or PERIPH.* pattern)"
+    },
+    "reference": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "title": { "type": "string" },
+        "revision": { "type": "string" },
+        "section": { "type": "string" },
+        "url": { "type": "string" }
+      }
+    },
+    "packages": {
+      "type": "object",
+      "description": "Package name -> pad subset and package pin/ball names",
+      "additionalProperties": { "$ref": "#/$defs/package" }
+    },
+    "domains": {
+      "type": "object",
+      "description": "Supply domains referenced by pads",
+      "additionalProperties": { "$ref": "#/$defs/domain" }
+    },
+    "pad_defaults": {
+      "$ref": "#/$defs/padIntrinsic",
+      "description": "Intrinsic values applied to every pad unless the pad overrides them"
+    },
+    "pads": {
+      "type": "object",
+      "description": "Pad name -> intrinsic data and fixed functions",
+      "additionalProperties": { "$ref": "#/$defs/pad" }
+    },
+    "routing": {
+      "type": "array",
+      "description": "Rules for crossbar, port-restricted and analog-bus routing; never expanded in storage",
+      "items": { "$ref": "#/$defs/routingRule" }
+    },
+    "remaps": {
+      "type": "object",
+      "description": "Peripheral-wide remap (STM32F1 AFIO, GD32-afio): peripheral -> remap options",
+      "additionalProperties": {
+        "type": "array",
+        "minItems": 1,
+        "items": { "$ref": "#/$defs/remapOption" }
+      }
+    },
+    "signal_select": {
+      "type": "object",
+      "description": "Signal-owned select bits (NPCX DEVALT, RW61x Flexcomm, R-Car IPSR): function -> candidate pads",
+      "additionalProperties": {
+        "type": "array",
+        "minItems": 1,
+        "items": { "$ref": "#/$defs/signalOption" }
+      }
+    }
+  },
+  "$defs": {
+    "vendor": {
+      "type": "object",
+      "description": "Raw vendor encoding; shown, never validated",
+      "additionalProperties": true
+    },
+    "quantity": {
+      "type": "object",
+      "required": ["value", "unit"],
+      "additionalProperties": false,
+      "properties": {
+        "value": { "type": ["number", "string"] },
+        "unit": { "type": "string", "enum": ["mA", "uA", "ohm", "V", "level", "code"] },
+        "label": { "type": "string" }
+      }
+    },
+    "voltageRange": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "items": { "type": "number" }
+    },
+    "bias": { "type": "string", "enum": ["none", "pull_up", "pull_down", "bus_hold", "hiz"] },
+    "package": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "description": { "type": "string" },
+        "pads": {
+          "type": "object",
+          "description": "Pads bonded out in this package -> package pin/ball (omit to keep all pads)",
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "pin": { "type": "string" },
+              "ball": { "type": "string" }
+            }
+          }
+        },
+        "functions_exclude": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "domain": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "io_voltages": { "type": "array", "items": { "type": "number" }, "description": "Supported I/O levels" },
+        "range": { "$ref": "#/$defs/voltageRange" },
+        "configurable": { "type": "boolean", "description": "Level chosen per board/firmware (HSLV, power-source)" },
+        "notes": { "type": "string" }
+      }
+    },
+    "padIntrinsic": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["io", "input_only", "output_only", "analog_only", "power", "ground", "special"]
+        },
+        "domain": { "type": "string" },
+        "tolerance": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "class": { "type": "string", "description": "Vendor class (FT, TT, FTf, ...)" },
+            "max_v": { "type": "number" },
+            "lost_in_analog": { "type": "boolean" }
+          }
+        },
+        "drive_options": { "type": "array", "items": { "$ref": "#/$defs/quantity" } },
+        "max_current_ma": { "type": "number", "minimum": 0 },
+        "pull": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "pu_ohm": { "type": ["number", "array"] },
+            "pd_ohm": { "type": ["number", "array"] },
+            "bus_hold": { "type": "boolean" }
+          }
+        },
+        "schmitt": { "type": "boolean" },
+        "slew_options": {
+          "type": "array",
+          "items": { "type": "string", "enum": ["slow", "medium", "fast", "very_fast"] }
+        },
+        "reset": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "State straight after reset",
+          "properties": {
+            "mode": { "type": "string", "enum": ["input", "output", "analog", "function", "hiz"] },
+            "bias": { "$ref": "#/$defs/bias" },
+            "function": { "type": ["string", "null"] }
+          }
+        },
+        "strap": {
+          "type": ["object", "null"],
+          "additionalProperties": false,
+          "properties": {
+            "function": { "type": "string" },
+            "sampled_at": { "type": "string" },
+            "level": { "type": "string", "description": "Required or default level (low, high, any)" },
+            "notes": { "type": "string" }
+          }
+        },
+        "vendor": { "$ref": "#/$defs/vendor" },
+        "notes": { "type": "string" }
+      }
+    },
+    "pad": {
+      "type": "object",
+      "unevaluatedProperties": false,
+      "allOf": [{ "$ref": "#/$defs/padIntrinsic" }],
+      "properties": {
+        "aliases": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Other names boards may use (GPIO number, port/pin)"
+        },
+        "port": { "type": "string", "description": "Port this pad belongs to (used by port routing rules)" },
+        "index": { "type": "integer", "minimum": 0, "description": "Pin number within its port" },
+        "functions": { "type": "array", "items": { "$ref": "#/$defs/function" } }
+      }
+    },
+    "function": {
+      "type": "object",
+      "required": ["function"],
+      "additionalProperties": false,
+      "properties": {
+        "function": { "type": "string", "minLength": 1 },
+        "peripheral": { "type": "string" },
+        "signal": { "type": "string" },
+        "mode": { "type": ["integer", "string"], "description": "AF index, ALT, FUNCSEL or vendor mode name" },
+        "class": {
+          "type": "string",
+          "enum": ["digital", "analog", "gpio", "debug", "clock", "system", "wakeup", "power"]
+        },
+        "direction": { "type": "string", "enum": ["in", "out", "inout"] },
+        "role_options": { "type": "array", "items": { "type": "string" } },
+        "group": { "type": "string" },
+        "analog": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "channel": { "type": ["integer", "string"] },
+            "polarity": { "type": "string", "enum": ["single", "positive", "negative"] },
+            "range_v": { "$ref": "#/$defs/voltageRange" }
+          }
+        },
+        "input_select": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "register": { "type": "string" },
+            "value": { "type": ["integer", "string"] }
+          }
+        },
+        "requires": { "type": "array", "items": { "type": "string" } },
+        "packages": { "type": "array", "items": { "type": "string" } },
+        "vendor": { "$ref": "#/$defs/vendor" }
+      }
+    },
+    "padSelector": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Selects pads by list, range, port or parity; exclude is applied last",
+      "properties": {
+        "list": { "type": "array", "items": { "type": "string" } },
+        "range": { "type": "array", "minItems": 2, "maxItems": 2, "items": { "type": "string" } },
+        "ports": { "type": "array", "items": { "type": "string" } },
+        "parity": { "type": "string", "enum": ["even", "odd"] },
+        "exclude": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "routingRule": {
+      "type": "object",
+      "required": ["kind", "pads", "functions"],
+      "additionalProperties": false,
+      "properties": {
+        "kind": { "type": "string", "enum": ["any_pin", "port_restricted", "analog_bus"] },
+        "label": { "type": "string" },
+        "bus": { "type": "string", "description": "Analog bus name (analog_bus)" },
+        "pads": { "$ref": "#/$defs/padSelector" },
+        "functions": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/function" } },
+        "notes": { "type": "string" },
+        "vendor": { "$ref": "#/$defs/vendor" }
+      }
+    },
+    "remapOption": {
+      "type": "object",
+      "required": ["value", "pads"],
+      "additionalProperties": false,
+      "properties": {
+        "value": { "type": ["integer", "string"] },
+        "label": { "type": "string" },
+        "pads": {
+          "type": "object",
+          "description": "Signal -> pad (null when the signal is unavailable in this remap)",
+          "additionalProperties": { "type": ["string", "null"] }
+        },
+        "packages": { "type": "array", "items": { "type": "string" } },
+        "vendor": { "$ref": "#/$defs/vendor" }
+      }
+    },
+    "signalOption": {
+      "type": "object",
+      "required": ["pad"],
+      "additionalProperties": false,
+      "properties": {
+        "pad": { "type": "string" },
+        "set": { "type": "string", "description": "Vendor selection name (SL1, _A, bit name)" },
+        "mode": { "type": ["integer", "string"] },
+        "requires": { "type": "array", "items": { "type": "string" } },
+        "vendor": { "$ref": "#/$defs/vendor" }
+      }
+    }
+  }
+}

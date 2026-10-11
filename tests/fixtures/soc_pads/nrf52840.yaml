@@ -1,0 +1,64 @@
+# Archetype 5: PSEL crossbar on any pin, plus fixed analog inputs and NFC pads.
+# Drive codes S0S1..E0E1 are separate per level (no open_drain bool).
+schema_version: "1.0"
+soc: nrf52840
+reference: {title: nRF52840 Product Specification, revision: "1.8"}
+packages:
+  aQFN73: {}
+  WLCSP94: {}
+domains:
+  VDD: {range: [1.7, 3.6], configurable: true, notes: Board selects VDD (DK has a 1.8/3.0 V switch)}
+  VDDH: {range: [2.5, 5.5]}
+pad_defaults:
+  type: io
+  domain: VDD
+  drive_options: [{value: S0S1, unit: code}, {value: H0S1, unit: code}, {value: S0H1, unit: code},
+                  {value: H0H1, unit: code}, {value: D0S1, unit: code}, {value: D0H1, unit: code},
+                  {value: S0D1, unit: code}, {value: H0D1, unit: code}]
+  pull: {pu_ohm: 13000, pd_ohm: 13000}
+  reset: {mode: input, bias: none}
+  vendor: {disconnect_input: true}
+pads:
+  P0.00: {port: P0, index: 0, functions: [{function: XL1, class: clock, direction: in}]}
+  P0.02:
+    aliases: [AIN0]
+    port: P0
+    index: 2
+    functions: [{function: AIN0, peripheral: SAADC, signal: AIN0, class: analog, analog: {channel: 0}}]
+  P0.03:
+    aliases: [AIN1]
+    port: P0
+    index: 3
+    functions: [{function: AIN1, peripheral: SAADC, signal: AIN1, class: analog, analog: {channel: 1}}]
+  P0.09:
+    port: P0
+    index: 9
+    functions: [{function: NFC1, peripheral: NFCT, signal: NFC1, class: analog}]
+    notes: NFC pads; set UICR NFCPINS to use as GPIO
+  P0.10: {port: P0, index: 10, functions: [{function: NFC2, peripheral: NFCT, signal: NFC2, class: analog}]}
+  P0.13: {port: P0, index: 13}
+  P0.18:
+    port: P0
+    index: 18
+    functions: [{function: nRESET, class: system, direction: in, vendor: {uicr: PSELRESET}}]
+  P0.26: {port: P0, index: 26}
+  P0.27: {port: P0, index: 27}
+  P1.00: {port: P1, index: 0, functions: [{function: TRACEDATA0, class: debug, direction: out}]}
+  P1.15: {port: P1, index: 15}
+  SWDIO: {type: special, functions: [{function: SWDIO, class: debug, direction: inout}]}
+  SWDCLK: {type: special, functions: [{function: SWDCLK, class: debug, direction: in}]}
+  D+: {type: special, domain: VDDH, functions: [{function: USB_DP, peripheral: USBD, class: digital}]}
+  VDDH: {type: power, domain: VDDH}
+routing:
+  - kind: any_pin
+    label: PSEL
+    pads: {range: [P0.00, P1.15]}
+    notes: Any GPIO; avoid NFC and radio-sensitive pins per PS 'pin assignments'
+    functions:
+      - {function: UARTE0_TXD, peripheral: UARTE0, signal: TXD, direction: out}
+      - {function: UARTE0_RXD, peripheral: UARTE0, signal: RXD, direction: in}
+      - {function: TWIM0_SCL, peripheral: TWIM0, signal: SCL, direction: inout}
+      - {function: TWIM0_SDA, peripheral: TWIM0, signal: SDA, direction: inout}
+      - {function: SPIM3_SCK, peripheral: SPIM3, signal: SCK, direction: out,
+         requires: [High-drive pins only above 8 MHz]}
+      - {function: PWM0_OUT0, peripheral: PWM0, signal: OUT0, direction: out}

@@ -1,0 +1,27 @@
+# Minimal second SoC for the multi-chip nrf9160dk fixture (crossbar, like nrf52840).
+schema_version: "1.0"
+soc: nrf9160
+reference: {title: nRF9160 Product Specification, revision: "2.1"}
+packages:
+  aQFN102: {}
+domains:
+  VDD_GPIO: {range: [1.7, 3.6], configurable: true, notes: DK selects 1.8 or 3.0 V with SW9}
+pad_defaults:
+  type: io
+  domain: VDD_GPIO
+  drive_options: [{value: S0S1, unit: code}, {value: H0H1, unit: code}, {value: S0D1, unit: code},
+                  {value: H0D1, unit: code}]
+  pull: {pu_ohm: 13000, pd_ohm: 13000}
+  reset: {mode: input, bias: none}
+pads:
+  P0.00: {port: P0, index: 0}
+  P0.02: {port: P0, index: 2}
+  P0.30: {port: P0, index: 30}
+routing:
+  - kind: any_pin
+    label: PSEL
+    pads: {ports: [P0]}
+    functions:
+      - {function: UARTE0_TXD, peripheral: UARTE0, signal: TXD, direction: out}
+      - {function: UARTE0_RXD, peripheral: UARTE0, signal: RXD, direction: in}
+      - {function: TWIM2_SCL, peripheral: TWIM2, signal: SCL, direction: inout}

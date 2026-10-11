@@ -1,0 +1,19 @@
+# Adapter shield: plugs into one binding, exposes another (mikroBUS).
+schema_version: "1.1"
+board: arduino_uno_click
+kind: shield
+plugs_into: [{binding: arduino-header-r3}]
+faces:
+  top:
+    underlay: uno_click.webp
+    children:
+      - id: mikrobus1
+        kind: group
+        point: [0.3, 0.5]
+        connector: {binding: mikro-bus, refdes: "1", dt_node: mikrobus_header_1}
+        children:
+          - {id: mb1_an, kind: pin, contact: AN, nexus_index: 0, plug: {binding: arduino-header-r3, nexus_index: 0}}
+          - {id: mb1_tx, kind: pin, contact: TX, nexus_index: 13, plug: {binding: arduino-header-r3, nexus_index: 7}}
+          - {id: mb1_5v, kind: pin, contact: 5V, plug: {binding: arduino-header-r3, contact: "5"},
+             net: {role: power_out, rail: 5V, nominal_v: 5.0}}
+          - {id: mb1_gnd, kind: pin, contact: GND, net: {role: ground}}

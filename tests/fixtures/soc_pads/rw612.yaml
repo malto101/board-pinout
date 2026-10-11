@@ -1,0 +1,20 @@
+# Archetype 4 variant: Flexcomm compound signals (one pad, role chosen by mode).
+schema_version: "1.0"
+soc: rw612
+reference: {title: RW61x User Manual, section: "IO pin configuration"}
+domains:
+  VDDIO_0: {io_voltages: [1.8, 3.3], configurable: true}
+pad_defaults: {type: io, domain: VDDIO_0, reset: {mode: input, bias: pull_up}}
+pads:
+  GPIO_2:
+    functions:
+      - {function: FC0_TXD_SCL_MISO_WS, peripheral: FLEXCOMM0, signal: TXD_SCL_MISO_WS, mode: 2,
+         role_options: [TXD, SCL, MISO, WS], vendor: {raw: "IO_MUX_FC0_TXD_SCL_MISO_WS"}}
+      - {function: GPIO2, class: gpio, mode: 0}
+  GPIO_3:
+    functions:
+      - {function: FC0_RXD_SDA_MOSI_DATA, peripheral: FLEXCOMM0, signal: RXD_SDA_MOSI_DATA, mode: 2,
+         role_options: [RXD, SDA, MOSI, DATA]}
+signal_select:
+  FC0_TXD_SCL_MISO_WS:
+    - {pad: GPIO_2, set: FC0_USART_DATA, vendor: {fsel: "FSEL FC0 = 1"}}
