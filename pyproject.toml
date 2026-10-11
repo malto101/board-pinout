@@ -59,7 +59,16 @@ include = [
   "/types",
   "/tests",
   "/scripts/check_package.py",
+  "/docs",
+  "/editor",
+  "/gif",
+  "/PYTHON_PKG.md",
   "/LICENSE",
+]
+exclude = [
+  "/docs/_build",
+  "/editor/node_modules",
+  "/editor/dist",
 ]
 
 [tool.pytest.ini_options]
