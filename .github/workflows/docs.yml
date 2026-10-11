@@ -52,7 +52,7 @@ jobs:
         run: |
           test -f _site/index.html
           test -f _site/editor/index.html
-          test -f _site/editor/assets/types.bundle.json || true
+          test -f _site/editor/types.bundle.json
           test -n "$(find _site/editor/assets -type f -name '*.js' -print -quit)"
           test -n "$(find _site/editor/assets -type f -name '*.css' -print -quit)"
           test -f _site/editor/examples/esp32s3_devkitc/pinout.yaml

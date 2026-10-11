@@ -66,11 +66,12 @@ jobs:
         run: |
           python -m venv /tmp/board-pinout-smoke
           /tmp/board-pinout-smoke/bin/python -m pip install dist/*.whl
-          /tmp/board-pinout-smoke/bin/python - <<'PY'
-          import board_pinout
-          from board_pinout import schema_path, static_dir, types_dir
-          assert board_pinout.__version__ == "0.2.0"
-          assert schema_path("soc_pads.schema.json").is_file()
-          assert static_dir().is_dir()
-          assert types_dir().is_dir()
-          PY
+          /tmp/board-pinout-smoke/bin/python scripts/check_package.py
+      - name: Install sdist and check resources
+        run: |
+          mkdir /tmp/board-pinout-sdist
+          tar -xzf dist/*.tar.gz -C /tmp/board-pinout-sdist
+          source_dir="$(find /tmp/board-pinout-sdist -mindepth 1 -maxdepth 1 -type d -print -quit)"
+          python -m venv /tmp/board-pinout-sdist-smoke
+          /tmp/board-pinout-sdist-smoke/bin/python -m pip install "$source_dir"
+          /tmp/board-pinout-sdist-smoke/bin/python scripts/check_package.py
