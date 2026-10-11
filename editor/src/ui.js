@@ -114,20 +114,27 @@ export function applyRoleToSelection(roleKey) {
 }
 
 export function rolePickerHtml(activeKey) {
+  const active = PART_SYMBOLS[activeKey] || PART_SYMBOLS.io;
   return `
-    <div class="role-picker">
-      <div class="panel-title" style="margin-bottom:0.3rem">Set as</div>
-      <div class="role-picker-grid">
-        ${PIN_ROLES.map((key) => {
-          const meta = PART_SYMBOLS[key];
-          const on = key === activeKey ? "active" : "";
-          return `<button type="button" class="role-btn ${on}" data-role="${key}" title="${escapeAttr(
-            meta.title
-          )}">${partSymBadge(key)}<span>${escapeAttr(meta.title)}</span></button>`;
-        }).join("")}
+    <details class="role-picker">
+      <summary class="role-picker-toggle">
+        <span class="panel-title">Set as</span>
+        <span class="role-picker-current">${partSymBadge(activeKey)}<span>${escapeAttr(active.title)}</span></span>
+      </summary>
+      <div class="role-picker-menu">
+        <p class="hint-mini">Choose the specific part kind</p>
+        <div class="role-picker-grid">
+          ${PIN_ROLES.map((key) => {
+            const meta = PART_SYMBOLS[key];
+            const on = key === activeKey ? "active" : "";
+            return `<button type="button" class="role-btn ${on}" data-role="${key}" title="${escapeAttr(
+              meta.title
+            )}">${partSymBadge(key)}<span>${escapeAttr(meta.title)}</span></button>`;
+          }).join("")}
+        </div>
+        <p class="hint-mini">Applies to selection · use on pins inside a group</p>
       </div>
-      <p class="hint-mini">Applies to selection · use on pins inside a group</p>
-    </div>
+    </details>
   `;
 }
 
@@ -194,10 +201,17 @@ export function showContextMenu(x, y, id) {
     (found?.part.label_rotation != null && Number(found.part.label_rotation) !== 0)
   );
   const hasVerts = !!(found?.part.leader_vertices?.length);
-  const roleBtns = PIN_ROLES.map(
-    (key) =>
-      `<button type="button" data-ctx-role="${key}">Set as ${escapeAttr(PART_SYMBOLS[key].title)}</button>`
-  ).join("");
+  const roleBtns = `
+    <details class="ctx-submenu">
+      <summary>Set as <span aria-hidden="true">›</span></summary>
+      <div class="ctx-submenu-panel">
+        ${PIN_ROLES.map(
+          (key) =>
+            `<button type="button" data-ctx-role="${key}">${partSymBadge(key)}<span>${escapeAttr(PART_SYMBOLS[key].title)}</span></button>`
+        ).join("")}
+      </div>
+    </details>
+  `;
   menu.innerHTML = `
     <button type="button" data-ctx="expand" ${hasKids ? "" : "disabled"}>Expand / collapse</button>
     <button type="button" data-ctx="add-child">Add child group</button>

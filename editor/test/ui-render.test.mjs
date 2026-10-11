@@ -67,4 +67,13 @@ test("selected part rendering diagnoses a stale linked table", () => {
   assert.match(html, /not found in linked table/);
 });
 
+test("set-as roles are grouped behind one disclosure", () => {
+  const html = ui.rolePickerHtml("io");
+  const fragment = JSDOM.fragment(html);
+  assert.equal(fragment.querySelectorAll(":scope > button").length, 0);
+  assert.equal(fragment.querySelectorAll(".role-picker-toggle").length, 1);
+  assert.equal(fragment.querySelectorAll(".role-btn").length, 9);
+  assert.match(html, /Choose the specific part kind/);
+});
+
 dom.window.close();
