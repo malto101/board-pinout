@@ -40,17 +40,25 @@ fi
 BOARD="${ARGS[0]:-nrf54l15dk}"
 OUT="${ARGS[1]:-$ZEPHYR_BASE/doc/_build/pinout_preview}"
 
-"$ROOT/scripts/sync_package_data.sh"
-
+if [[ ! -d "$ZEPHYR_BASE/boards" ]]; then
+  echo "ZEPHYR_BASE must point to a Zephyr checkout containing boards/: $ZEPHYR_BASE" >&2
+  exit 2
+fi
 if ! command -v board-pinout >/dev/null 2>&1; then
-  pip install -e "$ROOT"
+  echo "board-pinout is not installed; run 'uv sync' or 'python -m pip install -e $ROOT' first" >&2
+  exit 2
 fi
 
-YAML="$(find "$ZEPHYR_BASE/boards" -type f -path "*/${BOARD}/doc/pinout.yaml" | head -1)"
-if [[ -z "$YAML" ]]; then
+mapfile -d '' MATCHES < <(find "$ZEPHYR_BASE/boards" -type f -path "*/${BOARD}/doc/pinout.yaml" -print0 | sort -z)
+if [[ "${#MATCHES[@]}" -eq 0 ]]; then
   echo "No boards/*/${BOARD}/doc/pinout.yaml found" >&2
   exit 1
 fi
+if [[ "${#MATCHES[@]}" -gt 1 ]]; then
+  printf 'Multiple board pinouts match %q:\n%s' "$BOARD" "$(printf '  %s\n' "${MATCHES[@]}")" >&2
+  exit 1
+fi
+YAML="${MATCHES[0]}"
 DOC_DIR="$(dirname "$YAML")"
 
 mkdir -p "$OUT"

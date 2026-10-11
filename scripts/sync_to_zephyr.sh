@@ -6,11 +6,16 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 ZEPHYR_BASE="${ZEPHYR_BASE:-$ROOT/../zephyr}"
 
-"$ROOT/scripts/sync_package_data.sh"
-
-if ! command -v board-pinout >/dev/null 2>&1; then
-  pip install -e "$ROOT"
+if [[ ! -d "$ZEPHYR_BASE/boards" ]]; then
+  echo "ZEPHYR_BASE must point to a Zephyr checkout containing boards/: $ZEPHYR_BASE" >&2
+  exit 2
 fi
+if ! command -v board-pinout >/dev/null 2>&1; then
+  echo "board-pinout is not installed; run 'uv sync' or 'python -m pip install -e $ROOT' first" >&2
+  exit 2
+fi
+
+"$ROOT/scripts/sync_package_data.sh"
 
 echo "Validating board doc/pinout.yaml files under $ZEPHYR_BASE/boards …"
 fail=0
