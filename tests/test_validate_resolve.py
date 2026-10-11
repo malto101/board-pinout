@@ -57,7 +57,7 @@ def test_visual_scale_schema_rejects_invalid_values(field, value):
 
 
 def test_visual_scale_defaults_inherit_and_instance_wins():
-    from board_pinout.resolve import load_type_library, resolve_board
+    from board_pinout.resolve import resolve_board
 
     types = {
         "scaled": {
