@@ -492,6 +492,18 @@ export function mountWidget(root, payload) {
     }
     ev.stopPropagation();
   });
+  helpDialog.addEventListener("wheel", function (ev) {
+    ev.stopPropagation();
+  }, { passive: true });
+  helpDialog.addEventListener("pointerdown", function (ev) {
+    ev.stopPropagation();
+  });
+  helpDialog.addEventListener("pointermove", function (ev) {
+    ev.stopPropagation();
+  });
+  helpDialog.addEventListener("pointerup", function (ev) {
+    ev.stopPropagation();
+  });
   helpDialog.addEventListener("keydown", function (ev) {
     if (ev.key === "Escape") {
       ev.preventDefault();
@@ -1507,11 +1519,11 @@ export function mountWidget(root, payload) {
       "</div>" +
       '<div class="zbp-actions zbp-actions-inline">' +
       (hasChildren(part)
-        ? '<button type="button" class="zbp-act" data-act="expand">▸ Expand</button>'
+        ? '<button type="button" class="zbp-act zbp-icon-act" data-act="expand" title="Expand parts" aria-label="Expand parts">▸</button>'
         : "") +
-      '<button type="button" class="zbp-act" data-act="close-info">✕ Close</button>' +
+      '<button type="button" class="zbp-act zbp-icon-act" data-act="close-info" title="Close details" aria-label="Close details">✕</button>' +
       (state.stack.length && !state.peripheral
-        ? '<button type="button" class="zbp-act" data-act="up">↑ Up</button>'
+        ? '<button type="button" class="zbp-act zbp-icon-act" data-act="up" title="Go up" aria-label="Go up">↑</button>'
         : "") +
       "</div></div>" +
       metaHtml(part) +
@@ -1707,11 +1719,11 @@ export function mountWidget(root, payload) {
         "</strong>" +
         '<div class="zbp-actions zbp-actions-inline">' +
         (hasChildren(part)
-          ? '<button type="button" class="zbp-act" data-act="expand">▸ Expand</button>'
+          ? '<button type="button" class="zbp-act zbp-icon-act" data-act="expand" title="Expand parts" aria-label="Expand parts">▸</button>'
           : "") +
-        '<button type="button" class="zbp-act" data-act="info">ℹ Info</button>' +
+        '<button type="button" class="zbp-act zbp-icon-act" data-act="info" title="View info" aria-label="View info">ℹ</button>' +
         (state.stack.length
-          ? '<button type="button" class="zbp-act" data-act="up">↑ Up</button>'
+          ? '<button type="button" class="zbp-act zbp-icon-act" data-act="up" title="Go up" aria-label="Go up">↑</button>'
           : "") +
         "</div></div>";
     } else if (!state.peripheral && !part) {

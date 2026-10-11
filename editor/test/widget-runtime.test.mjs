@@ -93,6 +93,14 @@ test("checked-in widget bundle mounts and renders mux details", async () => {
   assert.equal(dialog.hidden, true);
   assert.equal(help.getAttribute("aria-expanded"), "false");
 
+  help.dispatchEvent(new dom.window.MouseEvent("click", { bubbles: true }));
+  const body = dialog.querySelector(".zbp-help-body");
+  const beforeTransform = root.querySelector(".zbp-viewport").style.transform;
+  body.dispatchEvent(new dom.window.WheelEvent("wheel", { bubbles: true, deltaY: 120 }));
+  assert.equal(root.querySelector(".zbp-viewport").style.transform, beforeTransform);
+  dialog.querySelector("[data-help-close=\"backdrop\"]").dispatchEvent(new dom.window.MouseEvent("click", { bubbles: true }));
+  assert.equal(dialog.hidden, true);
+
   const peripheral = root.querySelector(".zbp-peripheral");
   assert.ok(peripheral);
   assert.equal(peripheral.disabled, false);

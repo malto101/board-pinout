@@ -26,6 +26,9 @@ test("shared visual contract classifies semantic parts and renders symbols", () 
     assert.match(markup, new RegExp(`data-sym="${key}"`));
     assert.match(markup, /class="marker-point"/);
   }
+  assert.match(markerSymbolMarkup(10, 20, { key: "gnd", ...PART_SYMBOLS.gnd }), /marker-gnd-backdrop/);
+  assert.match(markerSymbolMarkup(10, 20, { key: "gnd", ...PART_SYMBOLS.gnd }), /fill="#fff"/);
+  assert.match(markerSymbolMarkup(10, 20, { key: "gnd", ...PART_SYMBOLS.gnd }), /stroke="#0c0e13"/);
 });
 
 

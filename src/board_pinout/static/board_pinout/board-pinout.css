@@ -563,6 +563,37 @@
   cursor: not-allowed;
 }
 
+:is(.board-pinout, .zephyr-board-pinout) .zbp-icon-act {
+  min-width: 1.8rem;
+  min-height: 1.8rem;
+  padding: 0.2rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  line-height: 1;
+}
+
+:is(.board-pinout, .zephyr-board-pinout) .zbp-icon-act:focus-visible {
+  outline: 2px solid #7dd3fc;
+  outline-offset: 2px;
+}
+
+:is(.board-pinout, .zephyr-board-pinout) .zbp-help-dialog,
+:is(.board-pinout, .zephyr-board-pinout) .zbp-help-panel,
+:is(.board-pinout, .zephyr-board-pinout) .zbp-help-body {
+  overscroll-behavior: contain;
+}
+
+:is(.board-pinout, .zephyr-board-pinout) .zbp-help-panel {
+  pointer-events: auto;
+}
+
+:is(.board-pinout, .zephyr-board-pinout) .zbp-help-body {
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
 :is(.board-pinout, .zephyr-board-pinout) .zbp-browse-head,
 :is(.board-pinout, .zephyr-board-pinout) .zbp-info-head,
 :is(.board-pinout, .zephyr-board-pinout) .zbp-peri-head {

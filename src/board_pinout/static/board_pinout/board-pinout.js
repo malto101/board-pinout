@@ -695,6 +695,7 @@
     switch (visual.key) {
       case "gnd":
         shape = `
+        <circle class="marker-gnd-backdrop" cx="${cx}" cy="${cy + 1}" r="8" fill="#fff" stroke="#0c0e13" stroke-width="1.4"/>
         <line x1="${cx - 6}" y1="${cy - 2}" x2="${cx + 6}" y2="${cy - 2}" stroke="${c}" stroke-width="1.7" stroke-linecap="round"/>
         <line x1="${cx - 4}" y1="${cy + 1}" x2="${cx + 4}" y2="${cy + 1}" stroke="${c}" stroke-width="1.45" stroke-linecap="round"/>
         <line x1="${cx - 2}" y1="${cy + 4}" x2="${cx + 2}" y2="${cy + 4}" stroke="${c}" stroke-width="1.25" stroke-linecap="round"/>`;
@@ -1121,6 +1122,18 @@
         ev.preventDefault();
         closeHelp();
       }
+      ev.stopPropagation();
+    });
+    helpDialog.addEventListener("wheel", function(ev) {
+      ev.stopPropagation();
+    }, { passive: true });
+    helpDialog.addEventListener("pointerdown", function(ev) {
+      ev.stopPropagation();
+    });
+    helpDialog.addEventListener("pointermove", function(ev) {
+      ev.stopPropagation();
+    });
+    helpDialog.addEventListener("pointerup", function(ev) {
       ev.stopPropagation();
     });
     helpDialog.addEventListener("keydown", function(ev) {
@@ -1850,7 +1863,7 @@
       if (part.kind) sub.push(part.kind);
       if (part.ref) sub.push(part.ref);
       if (part.id && part.silk && part.silk !== part.id) sub.push(part.id);
-      return '<div class="zbp-info-card"><div class="zbp-info-head"><div class="zbp-info-titles"><strong>' + escapeHtml(title) + "</strong>" + (sub.length ? '<span class="zbp-info-sub">' + escapeHtml(sub.join(" \xB7 ")) + "</span>" : "") + '</div><div class="zbp-actions zbp-actions-inline">' + (hasChildren(part) ? '<button type="button" class="zbp-act" data-act="expand">\u25B8 Expand</button>' : "") + '<button type="button" class="zbp-act" data-act="close-info">\u2715 Close</button>' + (state.stack.length && !state.peripheral ? '<button type="button" class="zbp-act" data-act="up">\u2191 Up</button>' : "") + "</div></div>" + metaHtml(part) + "</div>";
+      return '<div class="zbp-info-card"><div class="zbp-info-head"><div class="zbp-info-titles"><strong>' + escapeHtml(title) + "</strong>" + (sub.length ? '<span class="zbp-info-sub">' + escapeHtml(sub.join(" \xB7 ")) + "</span>" : "") + '</div><div class="zbp-actions zbp-actions-inline">' + (hasChildren(part) ? '<button type="button" class="zbp-act zbp-icon-act" data-act="expand" title="Expand parts" aria-label="Expand parts">\u25B8</button>' : "") + '<button type="button" class="zbp-act zbp-icon-act" data-act="close-info" title="Close details" aria-label="Close details">\u2715</button>' + (state.stack.length && !state.peripheral ? '<button type="button" class="zbp-act zbp-icon-act" data-act="up" title="Go up" aria-label="Go up">\u2191</button>' : "") + "</div></div>" + metaHtml(part) + "</div>";
     }
     function peripheralDetailHtml(periId) {
       var peri = collectPeripherals(topParts()).find(function(p) {
@@ -1950,7 +1963,7 @@
       if (infoPart) {
         html += infoCardHtml(infoPart);
       } else if (part && !state.peripheral) {
-        html += '<div class="zbp-browse-head"><strong>' + escapeHtml(part.silk || part.id) + '</strong><div class="zbp-actions zbp-actions-inline">' + (hasChildren(part) ? '<button type="button" class="zbp-act" data-act="expand">\u25B8 Expand</button>' : "") + '<button type="button" class="zbp-act" data-act="info">\u2139 Info</button>' + (state.stack.length ? '<button type="button" class="zbp-act" data-act="up">\u2191 Up</button>' : "") + "</div></div>";
+        html += '<div class="zbp-browse-head"><strong>' + escapeHtml(part.silk || part.id) + '</strong><div class="zbp-actions zbp-actions-inline">' + (hasChildren(part) ? '<button type="button" class="zbp-act zbp-icon-act" data-act="expand" title="Expand parts" aria-label="Expand parts">\u25B8</button>' : "") + '<button type="button" class="zbp-act zbp-icon-act" data-act="info" title="View info" aria-label="View info">\u2139</button>' + (state.stack.length ? '<button type="button" class="zbp-act zbp-icon-act" data-act="up" title="Go up" aria-label="Go up">\u2191</button>' : "") + "</div></div>";
       } else if (!state.peripheral && !part) {
         html += '<p class="zbp-hint">Click a part \xB7 use \u2139 for details</p>';
       }
