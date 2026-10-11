@@ -124,16 +124,13 @@
   font-weight: 400;
 }
 
-:is(.board-pinout, .zephyr-board-pinout) .zbp-hit.zbp-mux-hit circle {
-  fill: var(--zbp-marker-active, #2dd4bf);
-  stroke: #99f6e4;
-  stroke-width: 2.25;
+:is(.board-pinout, .zephyr-board-pinout) .zbp-hit.zbp-mux-hit .marker-point {
   filter: drop-shadow(0 0 4px rgba(45, 212, 191, 0.85));
 }
 
-:is(.board-pinout, .zephyr-board-pinout) .zbp-hit.zbp-mux-hit path {
-  stroke: rgba(45, 212, 191, 0.9);
-  stroke-width: 1.35;
+:is(.board-pinout, .zephyr-board-pinout) .zbp-hit:focus-visible {
+  outline: none;
+  filter: drop-shadow(0 0 3px rgba(61, 139, 253, 0.95));
 }
 
 :is(.board-pinout, .zephyr-board-pinout) .zbp-mux-list {
@@ -281,6 +278,113 @@
 :is(.board-pinout, .zephyr-board-pinout) .zbp-view-btn:hover {
   border-color: #3d8bfd;
   background: rgba(20, 32, 48, 0.95);
+}
+
+:is(.board-pinout, .zephyr-board-pinout) .zbp-view-btn:focus-visible,
+:is(.board-pinout, .zephyr-board-pinout) .zbp-help-btn:focus-visible,
+:is(.board-pinout, .zephyr-board-pinout) .zbp-help-close:focus-visible {
+  outline: 2px solid #7dd3fc;
+  outline-offset: 2px;
+}
+
+:is(.board-pinout, .zephyr-board-pinout) .zbp-help-btn {
+  position: absolute;
+  top: 0.45rem;
+  right: 0.45rem;
+  z-index: 8;
+  width: 2rem;
+  height: 2rem;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 999px;
+  background: rgba(12, 16, 22, 0.9);
+  color: #e8eef7;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+:is(.board-pinout, .zephyr-board-pinout) .zbp-help-dialog {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+}
+
+:is(.board-pinout, .zephyr-board-pinout) .zbp-help-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.62);
+}
+
+:is(.board-pinout, .zephyr-board-pinout) .zbp-help-panel {
+  position: absolute;
+  top: 3.25rem;
+  right: 0.75rem;
+  width: min(31rem, calc(100% - 1.5rem));
+  max-height: calc(100% - 4rem);
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 10px;
+  background: #121821;
+  color: #e8eef7;
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.55);
+}
+
+:is(.board-pinout, .zephyr-board-pinout) .zbp-help-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.65rem 0.75rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+:is(.board-pinout, .zephyr-board-pinout) .zbp-help-head h2 {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+:is(.board-pinout, .zephyr-board-pinout) .zbp-help-close {
+  width: 1.8rem;
+  height: 1.8rem;
+  border: 0;
+  border-radius: 5px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
+:is(.board-pinout, .zephyr-board-pinout) .zbp-help-body {
+  max-height: calc(100% - 3.5rem);
+  overflow: auto;
+  padding: 0.75rem;
+  font-size: 0.82rem;
+  line-height: 1.45;
+}
+
+:is(.board-pinout, .zephyr-board-pinout) .zbp-help-section + .zbp-help-section {
+  margin-top: 0.85rem;
+}
+
+:is(.board-pinout, .zephyr-board-pinout) .zbp-help-section h3 {
+  margin: 0 0 0.25rem;
+  font-size: 0.78rem;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  opacity: 0.72;
+}
+
+:is(.board-pinout, .zephyr-board-pinout) .zbp-help-section p {
+  margin: 0.3rem 0;
+}
+
+@media (max-width: 520px) {
+  :is(.board-pinout, .zephyr-board-pinout) .zbp-help-panel {
+    top: 3rem;
+    right: 0.45rem;
+    width: calc(100% - 0.9rem);
+  }
 }
 
 :is(.board-pinout, .zephyr-board-pinout) .zbp-side {

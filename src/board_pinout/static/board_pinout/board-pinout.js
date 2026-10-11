@@ -1,6 +1,5 @@
 (() => {
   // ../src/board_pinout/static/board_pinout/js/util.js
-  var MARKER_R = 3.25;
   var LABEL_GAP = 14;
   var CENTER_POINT = [0.5, 0.5];
   function escapeHtml(s) {
@@ -642,6 +641,108 @@
     };
   }
 
+  // ../src/board_pinout/static/board_pinout/js/visual.js
+  var PART_SYMBOLS = {
+    group: { title: "Group", color: "#a78bfa", glyph: "\u25A6" },
+    gnd: { title: "GND", color: "#9aa3b5", glyph: "\u22A5" },
+    power: { title: "Power", color: "#e35d6a", glyph: "+" },
+    led: { title: "LED", color: "#fbbf24", glyph: "\u25C6" },
+    button: { title: "Button", color: "#2dd4bf", glyph: "\u25A0" },
+    switch: { title: "Switch", color: "#60a5fa", glyph: "\u25D7" },
+    sensor: { title: "Sensor", color: "#34d399", glyph: "\u25CE" },
+    port: { title: "Port", color: "#38bdf8", glyph: "\u25A3" },
+    io: { title: "I/O", color: "#f5a623", glyph: "\u25CF" },
+    nc: { title: "NC", color: "#6b7280", glyph: "\xD7" }
+  };
+  function visualForPart(part, types) {
+    part = part || {};
+    types = types || {};
+    const type = types[part.ref || ""] || {};
+    const kind = part.kind || type.kind || "";
+    const controlType = part.control_type || type.control_type || "";
+    const receptacleType = part.receptacle_type || type.receptacle_type || "";
+    const text = [part.silk, part.id, part.ref, part.pad, part.notes, controlType, receptacleType].filter(Boolean).join(" ").toLowerCase();
+    const role = (part.net || type.default_net || {}).role || "";
+    let key = "io";
+    if (role === "ground" || /\bgnd\b|\bground\b/.test(text)) key = "gnd";
+    else if (["power_out", "power_in", "power_bidir"].includes(role) || /\b(vcc|vdd|vbus|vin|3v3|5v|pwr|power)\b/.test(text)) key = "power";
+    else if (role === "nc" || /(^|\b)nc(\b|$)/.test(text)) key = "nc";
+    else if (kind === "group" || kind === "pin_array") key = "group";
+    else if (controlType === "led" || part.ref === "led_indicator" || /\bleds?\b/.test(text)) key = "led";
+    else if (controlType === "button" || part.ref === "tactile_button" || /\b(btn|button)\b/.test(text)) key = "button";
+    else if (controlType === "switch" || part.ref === "power_switch" || /\bswitch|\bsw\d*/.test(text)) key = "switch";
+    else if (kind === "receptacle" || receptacleType || /usb|hdmi|eth|rj45/.test(text)) key = "port";
+    else if (/sensor|imu|temp|accel|gyro|humid|press/.test(text)) key = "sensor";
+    return { key, ...PART_SYMBOLS[key] || PART_SYMBOLS.io };
+  }
+  function selectionHaloMarkup(cx, cy, { primary = false } = {}) {
+    const ring = primary ? "#2dd4bf" : "#4c8dff";
+    const glow = primary ? "rgba(45, 212, 191, 0.28)" : "rgba(76, 141, 255, 0.28)";
+    return `
+    <circle class="marker-halo-glow" cx="${cx}" cy="${cy}" r="13.5" fill="${glow}"/>
+    <circle class="marker-halo-ring" cx="${cx}" cy="${cy}" r="11.5"
+      fill="none" stroke="${ring}" stroke-width="2.4"/>
+    <circle class="marker-halo-outer" cx="${cx}" cy="${cy}" r="14.5"
+      fill="none" stroke="${ring}" stroke-width="1" opacity="0.5" stroke-dasharray="2.5 2"/>
+  `;
+  }
+  function markerSymbolMarkup(cx, cy, visual, { active = false, primary = false } = {}) {
+    visual = visual || PART_SYMBOLS.io;
+    const c = visual.color;
+    const stroke = active ? primary ? "#2dd4bf" : "#4c8dff" : "#0c0e13";
+    const sw = active ? 1.85 : 1.25;
+    let shape = "";
+    switch (visual.key) {
+      case "gnd":
+        shape = `
+        <line x1="${cx - 6}" y1="${cy - 2}" x2="${cx + 6}" y2="${cy - 2}" stroke="${c}" stroke-width="1.7" stroke-linecap="round"/>
+        <line x1="${cx - 4}" y1="${cy + 1}" x2="${cx + 4}" y2="${cy + 1}" stroke="${c}" stroke-width="1.45" stroke-linecap="round"/>
+        <line x1="${cx - 2}" y1="${cy + 4}" x2="${cx + 2}" y2="${cy + 4}" stroke="${c}" stroke-width="1.25" stroke-linecap="round"/>`;
+        break;
+      case "power":
+        shape = `
+        <circle cx="${cx}" cy="${cy}" r="6" fill="${c}" stroke="${stroke}" stroke-width="${sw}"/>
+        <path d="M${cx} ${cy - 3.2} V${cy + 3.2} M${cx - 3.2} ${cy} H${cx + 3.2}" stroke="#0c0e13" stroke-width="1.6" stroke-linecap="round"/>`;
+        break;
+      case "led":
+        shape = `<path d="M${cx} ${cy - 6.5} L${cx + 6} ${cy} L${cx} ${cy + 6.5} L${cx - 6} ${cy} Z" fill="${c}" stroke="${stroke}" stroke-width="${sw}"/>`;
+        break;
+      case "button":
+        shape = `
+        <rect x="${cx - 5.5}" y="${cy - 5.5}" width="11" height="11" rx="2.5" fill="${c}" stroke="${stroke}" stroke-width="${sw}"/>
+        <circle cx="${cx}" cy="${cy}" r="2" fill="#0c0e13" opacity="0.35"/>`;
+        break;
+      case "switch":
+        shape = `
+        <rect x="${cx - 7}" y="${cy - 3.5}" width="14" height="7" rx="3.5" fill="#10131a" stroke="${c}" stroke-width="1.4"/>
+        <circle cx="${cx + 3}" cy="${cy}" r="2.7" fill="${c}"/>`;
+        break;
+      case "sensor":
+        shape = `
+        <circle cx="${cx}" cy="${cy}" r="2.8" fill="${c}" stroke="${stroke}" stroke-width="${sw}"/>
+        <path d="M${cx - 6.5} ${cy} A6.5 6.5 0 0 1 ${cx + 6.5} ${cy}" fill="none" stroke="${c}" stroke-width="1.25"/>
+        <path d="M${cx - 4.2} ${cy - 1.2} A4.4 4.4 0 0 1 ${cx + 4.2} ${cy - 1.2}" fill="none" stroke="${c}" stroke-width="1.1"/>`;
+        break;
+      case "group":
+        shape = `
+        <rect x="${cx - 6.5}" y="${cy - 6.5}" width="8" height="8" rx="1.5" fill="none" stroke="${c}" stroke-width="1.35"/>
+        <rect x="${cx - 2}" y="${cy - 2}" width="8.5" height="8.5" rx="1.5" fill="${c}" stroke="${stroke}" stroke-width="${sw}"/>`;
+        break;
+      case "port":
+        shape = `<path d="M${cx - 6} ${cy - 4.2} H${cx + 3.5} L${cx + 6.5} ${cy} L${cx + 3.5} ${cy + 4.2} H${cx - 6} Z" fill="${c}" stroke="${stroke}" stroke-width="${sw}"/>`;
+        break;
+      case "nc":
+        shape = `
+        <circle cx="${cx}" cy="${cy}" r="5.5" fill="#242a36" stroke="${c}" stroke-width="${sw}"/>
+        <path d="M${cx - 3} ${cy - 3} L${cx + 3} ${cy + 3} M${cx + 3} ${cy - 3} L${cx - 3} ${cy + 3}" stroke="${c}" stroke-width="1.55" stroke-linecap="round"/>`;
+        break;
+      default:
+        shape = `<circle cx="${cx}" cy="${cy}" r="5.5" fill="${c}" stroke="${stroke}" stroke-width="${sw}"/>`;
+    }
+    const halo = active ? selectionHaloMarkup(cx, cy, { primary }) : "";
+    return `<g class="marker-point" data-sym="${visual.key}">${halo}${shape}<circle cx="${cx}" cy="${cy}" r="10" fill="transparent"/></g>`;
+  }
+
   // ../src/board_pinout/static/board_pinout/js/widget.js
   var PAYLOAD_VERSION = 1;
   var SEARCH_DEBOUNCE_MS = 150;
@@ -941,16 +1042,21 @@
     if (!controls) {
       controls = document.createElement("div");
       controls.className = "zbp-view-controls";
-      controls.innerHTML = '<button type="button" class="zbp-view-btn" data-view="clear" title="Clear selection">\u2715</button><button type="button" class="zbp-view-btn" data-view="focus" title="Focus on selection">\u25CE</button><button type="button" class="zbp-view-btn" data-view="rot-ccw" title="Rotate underlay \u221290\xB0">\u21BA</button><button type="button" class="zbp-view-btn" data-view="rot-cw" title="Rotate underlay +90\xB0">\u21BB</button><button type="button" class="zbp-view-btn" data-view="out" title="Zoom out">\u2212</button><button type="button" class="zbp-view-btn" data-view="in" title="Zoom in">+</button><button type="button" class="zbp-view-btn" data-view="reset" title="Reset view">\u27F2</button>';
+      controls.innerHTML = '<button type="button" class="zbp-view-btn" data-view="clear" title="Clear selection" aria-label="Clear selection">\u2715</button><button type="button" class="zbp-view-btn" data-view="focus" title="Focus on selection" aria-label="Focus on selection">\u25CE</button><button type="button" class="zbp-view-btn" data-view="rot-ccw" title="Rotate underlay \u221290\xB0" aria-label="Rotate underlay counter-clockwise">\u21BA</button><button type="button" class="zbp-view-btn" data-view="rot-cw" title="Rotate underlay +90\xB0" aria-label="Rotate underlay clockwise">\u21BB</button><button type="button" class="zbp-view-btn" data-view="out" title="Zoom out" aria-label="Zoom out">\u2212</button><button type="button" class="zbp-view-btn" data-view="in" title="Zoom in" aria-label="Zoom in">+</button><button type="button" class="zbp-view-btn" data-view="reset" title="Reset view" aria-label="Reset view">\u27F2</button>';
       stage.appendChild(controls);
     } else {
-      let ensureViewBtn = function(act, title, text, beforeAct) {
-        if (controls.querySelector('[data-view="' + act + '"]')) return;
+      let ensureViewBtn = function(act, title, text, beforeAct, label) {
+        var existing = controls.querySelector('[data-view="' + act + '"]');
+        if (existing) {
+          if (!existing.getAttribute("aria-label")) existing.setAttribute("aria-label", label || title);
+          return;
+        }
         var btn = document.createElement("button");
         btn.type = "button";
         btn.className = "zbp-view-btn";
         btn.setAttribute("data-view", act);
         btn.title = title;
+        btn.setAttribute("aria-label", label || title);
         btn.textContent = text;
         var before = beforeAct && controls.querySelector('[data-view="' + beforeAct + '"]');
         if (before) controls.insertBefore(btn, before);
@@ -958,9 +1064,71 @@
       };
       ensureViewBtn("clear", "Clear selection", "\u2715", "focus");
       ensureViewBtn("focus", "Focus on selection", "\u25CE", "rot-ccw");
-      ensureViewBtn("rot-ccw", "Rotate underlay \u221290\xB0", "\u21BA", "out");
-      ensureViewBtn("rot-cw", "Rotate underlay +90\xB0", "\u21BB", "out");
+      ensureViewBtn("rot-ccw", "Rotate underlay \u221290\xB0", "\u21BA", "out", "Rotate underlay counter-clockwise");
+      ensureViewBtn("rot-cw", "Rotate underlay +90\xB0", "\u21BB", "out", "Rotate underlay clockwise");
+      ensureViewBtn("out", "Zoom out", "\u2212", "in");
+      ensureViewBtn("in", "Zoom in", "+", "reset");
+      ensureViewBtn("reset", "Reset view", "\u27F2", null);
     }
+    var helpButton = stage.querySelector('[data-view="help"], .zbp-help-btn');
+    if (!helpButton) {
+      helpButton = document.createElement("button");
+      helpButton.type = "button";
+      helpButton.className = "zbp-help-btn";
+      helpButton.textContent = "?";
+      stage.appendChild(helpButton);
+    }
+    helpButton.classList.add("zbp-help-btn");
+    helpButton.setAttribute("aria-label", "Open pinout help");
+    helpButton.setAttribute("aria-haspopup", "dialog");
+    helpButton.setAttribute("aria-expanded", "false");
+    helpButton.title = "How to use this pinout";
+    var helpId = root.id ? root.id + "-help" : "zbp-help-" + Math.random().toString(36).slice(2);
+    var helpDialog = stage.querySelector(".zbp-help-dialog");
+    if (!helpDialog) {
+      helpDialog = document.createElement("div");
+      helpDialog.className = "zbp-help-dialog";
+      helpDialog.hidden = true;
+      helpDialog.innerHTML = '<div class="zbp-help-backdrop" data-help-close="backdrop" aria-hidden="true"></div><div class="zbp-help-panel" role="dialog" aria-modal="true" aria-labelledby="' + helpId + '-title"><div class="zbp-help-head"><h2 id="' + helpId + '-title">Pinout viewer help</h2><button type="button" class="zbp-help-close" data-help-close="button" aria-label="Close pinout help" title="Close (Esc)">\xD7</button></div><div class="zbp-help-body"><section class="zbp-help-section"><h3>Explore the canvas</h3><p>Click a marker to highlight it. Double-click a marker, or choose <strong>Expand parts</strong>, to drill into its children. Use breadcrumbs or <strong>\u2191 Up</strong> to move back.</p><p>Drag empty canvas space to pan. Scroll to zoom toward the pointer. Use the view buttons to focus, clear, rotate, zoom, or reset the view.</p></section><section class="zbp-help-section"><h3>Search and details</h3><p>Search by part, pad, function, or peripheral. Peripheral and software filters highlight matching pins and dim the rest. Use <strong>\u2139 View info</strong> for electrical, SoC pad, mux, net, and software details.</p></section><section class="zbp-help-section"><h3>Keyboard</h3><p>Use Tab to reach controls and markers, Enter or Space to select a marker, and Escape to close this help.</p></section></div></div>';
+      stage.appendChild(helpDialog);
+    }
+    var helpPanel = helpDialog.querySelector('[role="dialog"]');
+    var helpClose = helpDialog.querySelector('[data-help-close="button"]');
+    helpButton.setAttribute("aria-controls", helpPanel && helpPanel.id ? helpPanel.id : helpId + "-panel");
+    if (helpPanel && !helpPanel.id) helpPanel.id = helpId + "-panel";
+    var helpReturnFocus = null;
+    function closeHelp() {
+      helpDialog.hidden = true;
+      helpButton.setAttribute("aria-expanded", "false");
+      var target = helpReturnFocus && helpReturnFocus.isConnected ? helpReturnFocus : helpButton;
+      helpReturnFocus = null;
+      if (target && target.focus) target.focus();
+    }
+    function openHelp() {
+      helpReturnFocus = document.activeElement;
+      helpDialog.hidden = false;
+      helpButton.setAttribute("aria-expanded", "true");
+      if (helpClose) helpClose.focus();
+    }
+    helpButton.addEventListener("click", function(ev) {
+      ev.preventDefault();
+      ev.stopPropagation();
+      if (helpDialog.hidden) openHelp();
+      else closeHelp();
+    });
+    helpDialog.addEventListener("click", function(ev) {
+      if (ev.target.closest("[data-help-close]")) {
+        ev.preventDefault();
+        closeHelp();
+      }
+      ev.stopPropagation();
+    });
+    helpDialog.addEventListener("keydown", function(ev) {
+      if (ev.key === "Escape") {
+        ev.preventDefault();
+        closeHelp();
+      }
+    });
     function clearSelection() {
       state.stack = [];
       state.selected = null;
@@ -1426,13 +1594,15 @@
       var stageW = stage.clientWidth || 1;
       var stageH = stage.clientHeight || 1;
       var offsets = groupLabelOffsets(list, box, stageW, stageH);
+      var types = doc.types_inline || doc.types || {};
       var html = list.map(function(p, idx) {
         var cx = box.left + p.point[0] * box.width;
         var cy = box.top + p.point[1] * box.height;
         var off = offsets[idx] || { dx: LABEL_GAP + 42, dy: 0 };
         var label = p.silk || p.id;
+        var visual = visualForPart(p, types);
         var dim = partIsDimmed(p);
-        var fill = MARKER_FILL;
+        var active = state.selected === p.id;
         var tw = estimateLabelWidth(p);
         var th = 16;
         var lay = layoutLabelBox(cx, cy, off, tw, th);
@@ -1466,32 +1636,14 @@
         var pivotX = rx + tw / 2;
         var pivotY = ry + th / 2;
         var labelXform = rot ? ' transform="rotate(' + rot + " " + pivotX + " " + pivotY + ')"' : "";
-        return '<g class="zbp-hit' + (state.query && matchesQuery(p) ? " zbp-match" : "") + '" data-id="' + escapeHtml(p.id) + '" opacity="' + (dim ? "0.18" : "1") + '"><path d="' + d + '" fill="none" stroke="var(--zbp-line, rgba(245,166,35,0.75))" stroke-width="1" stroke-linejoin="round" /><circle cx="' + cx + '" cy="' + cy + '" r="' + MARKER_R + '" fill="' + fill + '" stroke="#0b1016" stroke-width="1.25" /><g class="zbp-label"' + labelXform + '><rect class="zbp-label-bg" x="' + rx + '" y="' + ry + '" width="' + tw + '" height="' + th + '" rx="3" /><text x="' + textX + '" y="' + textY + '" fill="#f3f6fb" font-size="10" font-family="system-ui,sans-serif" text-anchor="' + anchor + '">' + escapeHtml(label) + "</text></g></g>";
+        return '<g class="zbp-hit' + (active ? " zbp-selected" : "") + (state.query && matchesQuery(p) ? " zbp-match" : "") + '" data-id="' + escapeHtml(p.id) + '" data-sym="' + escapeHtml(visual.key) + '" aria-label="' + escapeHtml(label + ", " + visual.title) + '" role="button" tabindex="0" focusable="true" opacity="' + (dim ? "0.18" : "1") + '"><path d="' + d + '" fill="none" stroke="var(--zbp-line, rgba(245,166,35,0.75))" stroke-width="1" stroke-linejoin="round" />' + markerSymbolMarkup(cx, cy, visual, { active, primary: true }) + '<g class="zbp-label"' + labelXform + '><rect class="zbp-label-bg" x="' + rx + '" y="' + ry + '" width="' + tw + '" height="' + th + '" rx="3" /><text x="' + textX + '" y="' + textY + '" fill="#f3f6fb" font-size="10" font-family="system-ui,sans-serif" text-anchor="' + anchor + '">' + escapeHtml(label) + "</text></g></g>";
       }).join("");
       if (html !== overlayHtml) {
         overlayHtml = html;
         overlay.innerHTML = html;
-        activeCircle = null;
-      }
-      if (activeCircle) {
-        activeCircle.setAttribute("fill", activeCircle.getAttribute("data-fill"));
-        activeCircle.parentNode.classList.remove("zbp-selected");
-        activeCircle = null;
-      }
-      if (!state.selected) return;
-      var g = overlay.querySelector('.zbp-hit[data-id="' + attrValue(state.selected) + '"]');
-      var circle = g && g.querySelector("circle");
-      if (circle) {
-        circle.setAttribute("data-fill", circle.getAttribute("fill"));
-        circle.setAttribute("fill", MARKER_ACTIVE_FILL);
-        g.classList.add("zbp-selected");
-        activeCircle = circle;
       }
     }
-    var MARKER_FILL = "var(--zbp-marker, #f5a623)";
-    var MARKER_ACTIVE_FILL = "var(--zbp-marker-active, #2dd4bf)";
     var overlayHtml = null;
-    var activeCircle = null;
     function hitId(ev) {
       var g = ev.target.closest && ev.target.closest(".zbp-hit");
       return g && overlay.contains(g) ? g.getAttribute("data-id") : null;
@@ -1525,6 +1677,14 @@
       if (!id) return;
       ev.stopPropagation();
       if (state.popoverId !== id) openMarkerPopover(id, ev);
+    });
+    overlay.addEventListener("keydown", function(ev) {
+      if (ev.key !== "Enter" && ev.key !== " ") return;
+      var id = hitId(ev);
+      if (!id) return;
+      ev.preventDefault();
+      ev.stopPropagation();
+      selectPartHighlight(id);
     });
     function netText(net) {
       if (!net || !net.role) return "";
@@ -1955,7 +2115,7 @@
       ev.preventDefault();
     });
     stage.addEventListener("dblclick", function(ev) {
-      if (ev.target.closest(".zbp-hit, .zbp-popover, .zbp-view-controls")) return;
+      if (ev.target.closest(".zbp-hit, .zbp-popover, .zbp-view-controls, .zbp-help-btn, .zbp-help-dialog")) return;
       ev.preventDefault();
       if (window.getSelection) {
         var sel = window.getSelection();
@@ -1967,7 +2127,7 @@
         state.panMoved = false;
         return;
       }
-      if (ev.target.closest(".zbp-view-controls, .zbp-popover")) return;
+      if (ev.target.closest(".zbp-view-controls, .zbp-popover, .zbp-help-btn, .zbp-help-dialog")) return;
       var paired = pairedHit(ev);
       if (paired) {
         openMarkerPopover(paired, ev);
@@ -2009,7 +2169,7 @@
     );
     stage.addEventListener("pointerdown", function(ev) {
       if (ev.button !== 0) return;
-      if (ev.target.closest(".zbp-hit, .zbp-popover, .zbp-view-controls")) return;
+      if (ev.target.closest(".zbp-hit, .zbp-popover, .zbp-view-controls, .zbp-help-btn, .zbp-help-dialog")) return;
       hidePopover();
       stopViewTween();
       state.panning = true;

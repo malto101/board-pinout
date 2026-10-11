@@ -1,6 +1,34 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { JSDOM } from "jsdom";
+import {
+  PART_SYMBOL_ORDER,
+  PART_SYMBOLS,
+  markerSymbolMarkup,
+  visualForPart,
+} from "../../src/board_pinout/static/board_pinout/js/visual.js";
+
+
+test("shared visual contract classifies semantic parts and renders symbols", () => {
+  assert.deepEqual(PART_SYMBOL_ORDER, ["group", "gnd", "power", "led", "button", "switch", "sensor", "port", "io", "nc"]);
+  assert.equal(visualForPart({ kind: "group" }).key, "group");
+  assert.equal(visualForPart({ net: { role: "ground" } }).key, "gnd");
+  assert.equal(visualForPart({ net: { role: "power_out" } }).key, "power");
+  assert.equal(visualForPart({ control_type: "led" }).key, "led");
+  assert.equal(visualForPart({ ref: "tactile_button" }).key, "button");
+  assert.equal(visualForPart({ ref: "power_switch" }).key, "switch");
+  assert.equal(visualForPart({ notes: "temperature sensor" }).key, "sensor");
+  assert.equal(visualForPart({ kind: "receptacle" }).key, "port");
+  assert.equal(visualForPart({ silk: "NC" }).key, "nc");
+  assert.equal(visualForPart({}).key, "io");
+  for (const key of PART_SYMBOL_ORDER) {
+    const markup = markerSymbolMarkup(10, 20, { key, ...PART_SYMBOLS[key] });
+    assert.match(markup, new RegExp(`data-sym="${key}"`));
+    assert.match(markup, /class="marker-point"/);
+  }
+});
+
+
 
 const dom = new JSDOM(`<!doctype html><body></body>`, { url: "https://editor.test/" });
 globalThis.window = dom.window;

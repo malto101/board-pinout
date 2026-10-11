@@ -70,6 +70,9 @@ def test_inline_mode_default(tmp_path, parallel):
     page = (out / "boards/demo/doc/index.html").read_text()
     assert "board-pinout.css" in page and "board-pinout.js" in page
     assert 'class="board-pinout"' in page
+    assert 'class="zbp-help-btn"' in page
+    assert 'class="zbp-help-dialog"' in page
+    assert "double-click for actions" in page
     assert _data_src(page) is None
     payload = _inline_payload(page)
     assert payload["board"] == "demo" and payload["doc"]["resolved"] is True

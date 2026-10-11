@@ -24,6 +24,7 @@ function payload() {
               silk: "IO0",
               pad: "IO0",
               point: [0.4, 0.6],
+              kind: "pin",
               electrical: { io_v: 3.3, pull: "up" },
               pad_info: { domain: "VDD3P3", tolerance: "3.6 V" },
               mux: [
@@ -73,7 +74,24 @@ test("checked-in widget bundle mounts and renders mux details", async () => {
   const root = dom.window.document.querySelector(".board-pinout");
   assert.ok(root.querySelector(".zbp-viewport"));
   assert.ok(root.querySelector(".zbp-view-controls"));
+  const help = root.querySelector(".zbp-help-btn");
+  const dialog = root.querySelector(".zbp-help-dialog");
+  assert.ok(help);
+  assert.ok(dialog?.hidden);
+  assert.match(dialog.textContent, /drill/i);
+  assert.match(dialog.textContent, /pan/i);
+  assert.match(dialog.textContent, /zoom/i);
+  assert.match(dialog.textContent, /search/i);
   assert.ok(root.querySelector('.zbp-hit[data-id="smoke-pin"]'));
+  assert.equal(root.querySelector('.zbp-hit[data-id="smoke-pin"]').dataset.sym, "io");
+  assert.ok(root.querySelector('.zbp-hit[data-id="smoke-pin"] .marker-point'));
+
+  help.dispatchEvent(new dom.window.MouseEvent("click", { bubbles: true }));
+  assert.equal(dialog.hidden, false);
+  assert.equal(help.getAttribute("aria-expanded"), "true");
+  dialog.querySelector(".zbp-help-close").dispatchEvent(new dom.window.MouseEvent("click", { bubbles: true }));
+  assert.equal(dialog.hidden, true);
+  assert.equal(help.getAttribute("aria-expanded"), "false");
 
   const peripheral = root.querySelector(".zbp-peripheral");
   assert.ok(peripheral);

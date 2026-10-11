@@ -15,6 +15,7 @@ import {
   layoutLabelBox,
 } from "./labels.js";
 import { imageBox, resolveUnderlay, tweenView } from "./view.js";
+import { markerSymbolMarkup, visualForPart } from "./visual.js";
 
 /** Highest external payload schema version this widget understands. */
 export var PAYLOAD_VERSION = 1;
@@ -394,22 +395,27 @@ export function mountWidget(root, payload) {
     controls = document.createElement("div");
     controls.className = "zbp-view-controls";
     controls.innerHTML =
-      '<button type="button" class="zbp-view-btn" data-view="clear" title="Clear selection">✕</button>' +
-      '<button type="button" class="zbp-view-btn" data-view="focus" title="Focus on selection">◎</button>' +
-      '<button type="button" class="zbp-view-btn" data-view="rot-ccw" title="Rotate underlay −90°">↺</button>' +
-      '<button type="button" class="zbp-view-btn" data-view="rot-cw" title="Rotate underlay +90°">↻</button>' +
-      '<button type="button" class="zbp-view-btn" data-view="out" title="Zoom out">−</button>' +
-      '<button type="button" class="zbp-view-btn" data-view="in" title="Zoom in">+</button>' +
-      '<button type="button" class="zbp-view-btn" data-view="reset" title="Reset view">⟲</button>';
+      '<button type="button" class="zbp-view-btn" data-view="clear" title="Clear selection" aria-label="Clear selection">✕</button>' +
+      '<button type="button" class="zbp-view-btn" data-view="focus" title="Focus on selection" aria-label="Focus on selection">◎</button>' +
+      '<button type="button" class="zbp-view-btn" data-view="rot-ccw" title="Rotate underlay −90°" aria-label="Rotate underlay counter-clockwise">↺</button>' +
+      '<button type="button" class="zbp-view-btn" data-view="rot-cw" title="Rotate underlay +90°" aria-label="Rotate underlay clockwise">↻</button>' +
+      '<button type="button" class="zbp-view-btn" data-view="out" title="Zoom out" aria-label="Zoom out">−</button>' +
+      '<button type="button" class="zbp-view-btn" data-view="in" title="Zoom in" aria-label="Zoom in">+</button>' +
+      '<button type="button" class="zbp-view-btn" data-view="reset" title="Reset view" aria-label="Reset view">⟲</button>';
     stage.appendChild(controls);
   } else {
-    function ensureViewBtn(act, title, text, beforeAct) {
-      if (controls.querySelector('[data-view="' + act + '"]')) return;
+    function ensureViewBtn(act, title, text, beforeAct, label) {
+      var existing = controls.querySelector('[data-view="' + act + '"]');
+      if (existing) {
+        if (!existing.getAttribute("aria-label")) existing.setAttribute("aria-label", label || title);
+        return;
+      }
       var btn = document.createElement("button");
       btn.type = "button";
       btn.className = "zbp-view-btn";
       btn.setAttribute("data-view", act);
       btn.title = title;
+      btn.setAttribute("aria-label", label || title);
       btn.textContent = text;
       var before = beforeAct && controls.querySelector('[data-view="' + beforeAct + '"]');
       if (before) controls.insertBefore(btn, before);
@@ -417,9 +423,81 @@ export function mountWidget(root, payload) {
     }
     ensureViewBtn("clear", "Clear selection", "✕", "focus");
     ensureViewBtn("focus", "Focus on selection", "◎", "rot-ccw");
-    ensureViewBtn("rot-ccw", "Rotate underlay −90°", "↺", "out");
-    ensureViewBtn("rot-cw", "Rotate underlay +90°", "↻", "out");
+    ensureViewBtn("rot-ccw", "Rotate underlay −90°", "↺", "out", "Rotate underlay counter-clockwise");
+    ensureViewBtn("rot-cw", "Rotate underlay +90°", "↻", "out", "Rotate underlay clockwise");
+    ensureViewBtn("out", "Zoom out", "−", "in");
+    ensureViewBtn("in", "Zoom in", "+", "reset");
+    ensureViewBtn("reset", "Reset view", "⟲", null);
   }
+
+  var helpButton = stage.querySelector('[data-view="help"], .zbp-help-btn');
+  if (!helpButton) {
+    helpButton = document.createElement("button");
+    helpButton.type = "button";
+    helpButton.className = "zbp-help-btn";
+    helpButton.textContent = "?";
+    stage.appendChild(helpButton);
+  }
+  helpButton.classList.add("zbp-help-btn");
+  helpButton.setAttribute("aria-label", "Open pinout help");
+  helpButton.setAttribute("aria-haspopup", "dialog");
+  helpButton.setAttribute("aria-expanded", "false");
+  helpButton.title = "How to use this pinout";
+
+  var helpId = root.id ? root.id + "-help" : "zbp-help-" + Math.random().toString(36).slice(2);
+  var helpDialog = stage.querySelector(".zbp-help-dialog");
+  if (!helpDialog) {
+    helpDialog = document.createElement("div");
+    helpDialog.className = "zbp-help-dialog";
+    helpDialog.hidden = true;
+    helpDialog.innerHTML =
+      '<div class="zbp-help-backdrop" data-help-close="backdrop" aria-hidden="true"></div>' +
+      '<div class="zbp-help-panel" role="dialog" aria-modal="true" aria-labelledby="' + helpId + '-title">' +
+      '<div class="zbp-help-head"><h2 id="' + helpId + '-title">Pinout viewer help</h2>' +
+      '<button type="button" class="zbp-help-close" data-help-close="button" aria-label="Close pinout help" title="Close (Esc)">×</button></div>' +
+      '<div class="zbp-help-body">' +
+      '<section class="zbp-help-section"><h3>Explore the canvas</h3><p>Click a marker to highlight it. Double-click a marker, or choose <strong>Expand parts</strong>, to drill into its children. Use breadcrumbs or <strong>↑ Up</strong> to move back.</p><p>Drag empty canvas space to pan. Scroll to zoom toward the pointer. Use the view buttons to focus, clear, rotate, zoom, or reset the view.</p></section>' +
+      '<section class="zbp-help-section"><h3>Search and details</h3><p>Search by part, pad, function, or peripheral. Peripheral and software filters highlight matching pins and dim the rest. Use <strong>ℹ View info</strong> for electrical, SoC pad, mux, net, and software details.</p></section>' +
+      '<section class="zbp-help-section"><h3>Keyboard</h3><p>Use Tab to reach controls and markers, Enter or Space to select a marker, and Escape to close this help.</p></section>' +
+      '</div></div>';
+    stage.appendChild(helpDialog);
+  }
+  var helpPanel = helpDialog.querySelector('[role="dialog"]');
+  var helpClose = helpDialog.querySelector('[data-help-close="button"]');
+  helpButton.setAttribute("aria-controls", helpPanel && helpPanel.id ? helpPanel.id : helpId + "-panel");
+  if (helpPanel && !helpPanel.id) helpPanel.id = helpId + "-panel";
+  var helpReturnFocus = null;
+  function closeHelp() {
+    helpDialog.hidden = true;
+    helpButton.setAttribute("aria-expanded", "false");
+    var target = helpReturnFocus && helpReturnFocus.isConnected ? helpReturnFocus : helpButton;
+    helpReturnFocus = null;
+    if (target && target.focus) target.focus();
+  }
+  function openHelp() {
+    helpReturnFocus = document.activeElement;
+    helpDialog.hidden = false;
+    helpButton.setAttribute("aria-expanded", "true");
+    if (helpClose) helpClose.focus();
+  }
+  helpButton.addEventListener("click", function (ev) {
+    ev.preventDefault();
+    ev.stopPropagation();
+    if (helpDialog.hidden) openHelp(); else closeHelp();
+  });
+  helpDialog.addEventListener("click", function (ev) {
+    if (ev.target.closest("[data-help-close]")) {
+      ev.preventDefault();
+      closeHelp();
+    }
+    ev.stopPropagation();
+  });
+  helpDialog.addEventListener("keydown", function (ev) {
+    if (ev.key === "Escape") {
+      ev.preventDefault();
+      closeHelp();
+    }
+  });
 
   function clearSelection() {
     state.stack = [];
@@ -979,18 +1057,16 @@ export function mountWidget(root, payload) {
     var stageW = stage.clientWidth || 1;
     var stageH = stage.clientHeight || 1;
     var offsets = groupLabelOffsets(list, box, stageW, stageH);
+    var types = doc.types_inline || doc.types || {};
     var html = list
       .map(function (p, idx) {
         var cx = box.left + p.point[0] * box.width;
         var cy = box.top + p.point[1] * box.height;
         var off = offsets[idx] || { dx: LABEL_GAP + 42, dy: 0 };
         var label = p.silk || p.id;
+        var visual = visualForPart(p, types);
         var dim = partIsDimmed(p);
-        // The peripheral filter already limits markers to its pins, so they
-        // keep the normal style and only the selected pin stands out. That
-        // is applied after the markup so a selection-only change produces
-        // identical markup and skips the rebuild.
-        var fill = MARKER_FILL;
+        var active = state.selected === p.id;
         var tw = estimateLabelWidth(p);
         var th = 16;
         var lay = layoutLabelBox(cx, cy, off, tw, th);
@@ -1024,7 +1100,6 @@ export function mountWidget(root, payload) {
         if (!isFinite(rot)) rot = 0;
         rot = screenReadableLabelRot(rot, state.view.rotation);
         if (Math.abs(rot) < 1e-6) rot = 0;
-        // Normalize near-equivalents like 360 → 0 for a clean attribute.
         rot = ((rot % 360) + 360) % 360;
         if (rot > 180) rot -= 360;
         if (Math.abs(rot) < 1e-6) rot = 0;
@@ -1035,28 +1110,21 @@ export function mountWidget(root, payload) {
           : "";
         return (
           '<g class="zbp-hit' +
+          (active ? " zbp-selected" : "") +
           (state.query && matchesQuery(p) ? " zbp-match" : "") +
           '" data-id="' +
           escapeHtml(p.id) +
-          '" opacity="' +
+          '" data-sym="' +
+          escapeHtml(visual.key) +
+          '" aria-label="' +
+          escapeHtml(label + ", " + visual.title) +
+          '" role="button" tabindex="0" focusable="true" opacity="' +
           (dim ? "0.18" : "1") +
           '">' +
           '<path d="' +
           d +
           '" fill="none" stroke="var(--zbp-line, rgba(245,166,35,0.75))" stroke-width="1" stroke-linejoin="round" />' +
-          '<circle cx="' +
-          cx +
-          '" cy="' +
-          cy +
-          '" r="' +
-          MARKER_R +
-          '" fill="' +
-          fill +
-          '" stroke="' +
-          "#0b1016" +
-          '" stroke-width="' +
-          "1.25" +
-          '" />' +
+          markerSymbolMarkup(cx, cy, visual, { active: active, primary: true }) +
           '<g class="zbp-label"' +
           labelXform +
           ">" +
@@ -1084,28 +1152,10 @@ export function mountWidget(root, payload) {
     if (html !== overlayHtml) {
       overlayHtml = html;
       overlay.innerHTML = html;
-      activeCircle = null;
-    }
-    if (activeCircle) {
-      activeCircle.setAttribute("fill", activeCircle.getAttribute("data-fill"));
-      activeCircle.parentNode.classList.remove("zbp-selected");
-      activeCircle = null;
-    }
-    if (!state.selected) return;
-    var g = overlay.querySelector('.zbp-hit[data-id="' + attrValue(state.selected) + '"]');
-    var circle = g && g.querySelector("circle");
-    if (circle) {
-      circle.setAttribute("data-fill", circle.getAttribute("fill"));
-      circle.setAttribute("fill", MARKER_ACTIVE_FILL);
-      g.classList.add("zbp-selected");
-      activeCircle = circle;
     }
   }
 
-  var MARKER_FILL = "var(--zbp-marker, #f5a623)";
-  var MARKER_ACTIVE_FILL = "var(--zbp-marker-active, #2dd4bf)";
   var overlayHtml = null;
-  var activeCircle = null;
 
   // Delegated marker handlers: bound once, survive overlay re-renders.
   function hitId(ev) {
@@ -1146,6 +1196,14 @@ export function mountWidget(root, payload) {
     if (!id) return;
     ev.stopPropagation();
     if (state.popoverId !== id) openMarkerPopover(id, ev);
+  });
+  overlay.addEventListener("keydown", function (ev) {
+    if (ev.key !== "Enter" && ev.key !== " ") return;
+    var id = hitId(ev);
+    if (!id) return;
+    ev.preventDefault();
+    ev.stopPropagation();
+    selectPartHighlight(id);
   });
 
   // "power_out · 3V3 · 3.3 V" for a fixed net (power, ground, reset, NC).
@@ -1862,7 +1920,7 @@ export function mountWidget(root, payload) {
     ev.preventDefault();
   });
   stage.addEventListener("dblclick", function (ev) {
-    if (ev.target.closest(".zbp-hit, .zbp-popover, .zbp-view-controls")) return;
+    if (ev.target.closest(".zbp-hit, .zbp-popover, .zbp-view-controls, .zbp-help-btn, .zbp-help-dialog")) return;
     ev.preventDefault();
     if (window.getSelection) {
       var sel = window.getSelection();
@@ -1875,7 +1933,7 @@ export function mountWidget(root, payload) {
       state.panMoved = false;
       return;
     }
-    if (ev.target.closest(".zbp-view-controls, .zbp-popover")) return;
+    if (ev.target.closest(".zbp-view-controls, .zbp-popover, .zbp-help-btn, .zbp-help-dialog")) return;
     var paired = pairedHit(ev);
     if (paired) {
       openMarkerPopover(paired, ev);
@@ -1921,7 +1979,7 @@ export function mountWidget(root, payload) {
 
   stage.addEventListener("pointerdown", function (ev) {
     if (ev.button !== 0) return;
-    if (ev.target.closest(".zbp-hit, .zbp-popover, .zbp-view-controls")) return;
+    if (ev.target.closest(".zbp-hit, .zbp-popover, .zbp-view-controls, .zbp-help-btn, .zbp-help-dialog")) return;
     hidePopover();
     stopViewTween();
     state.panning = true;
