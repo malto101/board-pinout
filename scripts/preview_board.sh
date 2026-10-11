@@ -63,14 +63,19 @@ DOC_DIR="$(dirname "$YAML")"
 
 mkdir -p "$OUT"
 
-python3 - <<PY
+DOC_DIR="$DOC_DIR" OUT="$OUT" BOARD="$BOARD" python3 - <<'PY'
 from pathlib import Path
-import json, shutil
+import html
+import json
+import os
+import re
+import shutil
+
 from board_pinout import static_dir, types_dir
 from board_pinout.resolve import resolve_file
 
-doc_dir = Path("$DOC_DIR")
-out = Path("$OUT")
+doc_dir = Path(os.environ["DOC_DIR"])
+out = Path(os.environ["OUT"])
 yaml_path = doc_dir / "pinout.yaml"
 resolved = resolve_file(yaml_path, types_dir())
 face = "top"
@@ -86,29 +91,37 @@ static = static_dir()
 shutil.copy2(static / "board-pinout.js", out / "board-pinout.js")
 shutil.copy2(static / "board-pinout.css", out / "board-pinout.css")
 
+board_name = str(resolved.get("board") or os.environ["BOARD"])
+board_slug = re.sub(r"[^A-Za-z0-9_-]+", "-", board_name).strip("-") or "board"
+board_text = html.escape(board_name)
+board_id = html.escape(f"board-pinout-{board_slug}-top", quote=True)
+underlay_attr = html.escape(underlay_name, quote=True)
 payload = {
-    "board": resolved.get("board") or "$BOARD",
+    "board": board_name,
     "face": face,
     "underlay": underlay_name,
     "doc": resolved,
 }
-html = f"""<!DOCTYPE html>
+json_payload = json.dumps(payload, separators=(",", ":"), ensure_ascii=False)
+json_payload = json_payload.replace("<", "\\u003c").replace(">", "\\u003e").replace("&", "\\u0026")
+html_text = f"""<!DOCTYPE html>
 <html lang="en"><head>
-<meta charset="UTF-8"/><title>{payload['board']} pinout preview</title>
+<meta charset="UTF-8"/><title>{board_text} pinout preview</title>
 <link rel="stylesheet" href="board-pinout.css"/>
 </head><body style="margin:1rem;font-family:system-ui,sans-serif;background:#111;color:#eee">
-<h1 style="font-size:1.1rem;font-weight:600">{payload['board']} pinout</h1>
-<div class="board-pinout zephyr-board-pinout" id="board-pinout-{payload['board']}-top" data-underlay-rel="{underlay_name}">
+<h1 style="font-size:1.1rem;font-weight:600">{board_text} pinout</h1>
+<div class="board-pinout zephyr-board-pinout" id="{board_id}" data-underlay-rel="{underlay_attr}">
 <div class="zbp-toolbar"><input type="search" class="zbp-search" placeholder="Search parts…"/>
 <span class="zbp-hint">Drag to pan · scroll to zoom · marker Expand/Info · empty click = top</span></div>
 <div class="zbp-layout"><div class="zbp-stage"><img class="zbp-underlay" alt="board"/>
 <svg class="zbp-overlay" xmlns="http://www.w3.org/2000/svg"></svg></div>
 <div class="zbp-side"><div class="zbp-breadcrumb"></div><div class="zbp-detail"></div></div></div>
-<script type="application/json" class="zbp-data">{json.dumps(payload, separators=(',', ':'))}</script>
+<script type="application/json" class="zbp-data">{json_payload}</script>
 </div>
 <script src="board-pinout.js"></script>
 </body></html>
 """
-(out / f"{payload['board']}.html").write_text(html)
-print(f"wrote {out / (payload['board'] + '.html')}")
+output = out / f"{board_slug}.html"
+output.write_text(html_text, encoding="utf-8")
+print(f"wrote {output}")
 PY
