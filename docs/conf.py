@@ -6,10 +6,12 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
+from board_pinout import __version__  # noqa: E402
+
 project = "Board Pinout"
 copyright = "2026, Board Pinout contributors"
 author = "Board Pinout contributors"
-release = "0.1.0"
+release = __version__
 
 extensions = ["board_pinout.sphinx_ext"]
 templates_path: list[str] = []

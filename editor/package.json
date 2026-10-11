@@ -1,7 +1,6 @@
 {
   "name": "board-pinout-editor",
   "private": true,
-  "version": "0.1.0",
   "type": "module",
   "scripts": {
     "sync-types": "bash ../scripts/sync_package_data.sh",
