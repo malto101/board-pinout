@@ -6,12 +6,13 @@ set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 
-python3 - <<PY
+ROOT_PATH="$ROOT" python3 - <<'PY'
 from pathlib import Path
 import json
+import os
 import yaml
 
-root = Path("$ROOT")
+root = Path(os.environ["ROOT_PATH"])
 types: dict = {}
 for p in sorted((root / "types").glob("*.yaml")):
     doc = yaml.safe_load(p.read_text()) or {}
