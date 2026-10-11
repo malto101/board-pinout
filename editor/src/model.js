@@ -14,26 +14,70 @@ export function muxEntriesForView(part) {
   return effectivePartMuxEntries(part);
 }
 
-export function activeSocIndex() {
+let cachedSocIndex = null;
+let cachedSocTable = null;
+let cachedSocPackage = null;
+
+function boardSocRefs() {
+  const soc = state.board.soc;
+  if (typeof soc === "string" && soc) return [{ id: soc, package: state.board.soc_package }];
+  return Array.isArray(soc) ? soc.filter((ref) => typeof ref === "string" ? ref : ref?.id).map((ref) =>
+    typeof ref === "string" ? { id: ref, package: undefined } : ref
+  ) : [];
+}
+
+export function activeSocIndex(part = null) {
   if (state.documentMode !== "board" || state.board.mux_source !== "soc") return null;
-  if (!state.socTable || state.socTable.soc !== state.board.soc) return null;
-  return buildSocIndex(state.socTable);
+  const refs = boardSocRefs();
+  const requested = part?.soc;
+  const ref = requested
+    ? refs.find((item) => item.id === requested)
+    : refs.find((item) => item.id === state.socTable?.soc);
+  const table = state.socTable;
+  if (!table || (requested && table.soc !== requested) || (!requested && !ref)) return null;
+  const selected = ref || { id: table.soc, package: state.board.soc_package };
+  if (cachedSocTable !== table || cachedSocPackage !== selected.package) {
+    cachedSocTable = table;
+    cachedSocPackage = selected.package;
+    cachedSocIndex = buildSocIndex(table, selected.package);
+  }
+  return cachedSocIndex;
+}
+
+function excludedMuxEntry(entry, patterns) {
+  return (patterns || []).some((pattern) => {
+    if (String(pattern).endsWith(".*")) {
+      const prefix = String(pattern).slice(0, -2);
+      return entry.peripheral ? String(entry.peripheral) === prefix : String(entry.function || "").startsWith(`${prefix}_`);
+    }
+    return String(entry.function || "") === String(pattern);
+  });
 }
 
 /** Effective mux choices for authoring/preview; authored entries remain raw. */
 export function effectivePartMuxEntries(part) {
   const authored = partMuxEntries(part);
-  const index = activeSocIndex();
+  const index = activeSocIndex(part);
   if (!index || !part?.pad) return authored;
-  const candidates = index.candidates(part.pad).map(normalizeMuxEntry).filter(Boolean);
-  if (part.mux_policy === "replace") return authored;
-  if (part.mux_policy === "extend") return candidates.concat(authored);
-  return authored.length ? authored : candidates;
+  const useTable = part.mux_policy !== "replace" && part.mux === undefined;
+  const extendTable = part.mux_policy === "extend";
+  const candidates = index.candidates(part.pad, { expandRouting: part.mux_routable !== false })
+    .filter((entry) => !excludedMuxEntry(entry, part.mux_exclude))
+    .map(normalizeMuxEntry)
+    .filter(Boolean);
+  if (!useTable && !extendTable) return authored;
+  if (extendTable) return candidates.concat(authored);
+  return candidates;
+}
+
+export function effectivePartPadInfo(part) {
+  const index = activeSocIndex(part);
+  return index && part?.pad ? index.pad(part.pad)?.info || null : null;
 }
 
 export function socPadCandidates(part) {
-  const index = activeSocIndex();
-  return index && part?.pad ? index.candidates(part.pad) : [];
+  const index = activeSocIndex(part);
+  return index && part?.pad ? index.candidates(part.pad, { expandRouting: part.mux_routable !== false }) : [];
 }
 
 export function effectivePartHasPeripheral(part, peri) {

@@ -20,6 +20,8 @@ import {
   collectPeripherals,
   activeSocIndex,
   socPadCandidates,
+  muxEntriesForView,
+  effectivePartPadInfo,
   CENTER_POINT,
   isOpen,
 } from "./model.js";
@@ -426,6 +428,7 @@ export function renderMeta() {
     <label>rows <input data-field="rows" type="number" value="${escapeAttr(p.rows ?? "")}" /></label>
     <label>cols <input data-field="cols" type="number" value="${escapeAttr(p.cols ?? "")}" /></label>
     <label>pad <input data-field="pad" value="${escapeAttr(p.pad || "")}" /></label>
+    ${effectiveDetailsHtml(p)}
     ${muxEditorHtml(p)}
     <label>notes <textarea data-field="notes" rows="3">${escapeAttr(p.notes || "")}</textarea></label>
   `;
@@ -454,8 +457,27 @@ export function renderMeta() {
   bindSelectionTools(els.metaForm);
 }
 
+export function effectiveDetailsHtml(part) {
+  const info = effectivePartPadInfo(part);
+  const rows = [];
+  const electrical = part.electrical || {};
+  Object.entries(electrical).forEach(([key, value]) => rows.push(`<dt>${escapeAttr(key)}</dt><dd>${escapeAttr(typeof value === "object" ? JSON.stringify(value) : value)}</dd>`));
+  if (info) {
+    rows.push(`<dt>SoC pad</dt><dd>${escapeAttr(info.pad || part.pad || "")}</dd>`);
+    Object.entries(info).filter(([key]) => !["soc", "pad", "package"].includes(key)).forEach(([key, value]) => rows.push(`<dt>${escapeAttr(key)}</dt><dd>${escapeAttr(typeof value === "object" ? JSON.stringify(value) : value)}</dd>`));
+  }
+  if (part.net) {
+    Object.entries(part.net).forEach(([key, value]) => rows.push(`<dt>net.${escapeAttr(key)}</dt><dd>${escapeAttr(typeof value === "object" ? JSON.stringify(value) : value)}</dd>`));
+  }
+  if (!rows.length) return "";
+  return `<section class="effective-details"><h4>Effective details</h4><dl class="zbp-meta-dl">${rows.join("")}</dl></section>`;
+}
+
 export function muxEditorHtml(part) {
-  const rows = (part.mux || [])
+  const authored = Array.isArray(part.mux) ? part.mux : [];
+  const effective = muxEntriesForView(part);
+  const inherited = effective.filter((entry) => !authored.some((raw) => raw?.function === entry.function && raw?.peripheral === entry.peripheral));
+  const rows = authored
     .map(
       (m, i) => `
     <div class="mux-row" data-mux-i="${i}">
@@ -467,13 +489,18 @@ export function muxEditorHtml(part) {
     </div>`
     )
     .join("");
+  const inheritedRows = inherited.map((m) => `<div class="mux-row mux-inherited" aria-label="Inherited SoC mux entry">
+      <span>${escapeAttr(m.peripheral || "")}</span><span>${escapeAttr(m.signal || "")}</span>
+      <span>${escapeAttr(m.function || "")}</span><span>${escapeAttr(m.mode ?? "")}</span>
+    </div>`).join("");
   return `
     <div class="mux-editor">
       <div class="panel-head"><span class="panel-title">Mux</span>
         <button type="button" class="btn small" id="muxAddBtn" title="Add mux function">＋</button>
       </div>
       <p class="hint-mini">e.g. peripheral i2c0 · signal SDA · or function I2C0_SDA</p>
-      <div class="mux-rows">${rows || '<p class="muted">No mux entries</p>'}</div>
+      ${inheritedRows ? `<p class="hint-mini">Inherited from the active SoC table (read-only preview)</p>` : ""}
+      <div class="mux-rows">${rows || (!inheritedRows ? '<p class="muted">No mux entries</p>' : "")}${inheritedRows}</div>
     </div>`;
 }
 

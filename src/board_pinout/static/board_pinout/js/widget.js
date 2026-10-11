@@ -1230,18 +1230,31 @@ export function mountWidget(root, payload) {
 
   function muxExtraRows(mux) {
     if (!mux || typeof mux !== "object") return "";
-    return [
-      ["Class", mux.class],
-      ["Direction", mux.direction],
-      ["Role options", mux.role_options],
-      ["Group", mux.group],
-      ["Analog", mux.analog],
-      ["Input select", mux.input_select],
-      ["Requires", mux.requires],
-      ["Packages", mux.packages],
-      ["Source", mux.source],
-      ["Vendor", mux.vendor],
-    ].map(function (pair) { return metaRow(pair[0], valueText(pair[1])); }).join("");
+    var labels = {
+      class: "Class",
+      direction: "Direction",
+      role_options: "Role options",
+      group: "Group",
+      analog: "Analog",
+      input_select: "Input select",
+      requires: "Requires",
+      packages: "Packages",
+      source: "Source",
+      vendor: "Vendor",
+      remap: "Remap",
+      set: "Select bits",
+      routing: "Routing",
+      routing_label: "Routing rule",
+      bus: "Bus",
+    };
+    return Object.keys(mux)
+      .filter(function (key) {
+        return ["function", "peripheral", "signal", "mode"].indexOf(key) < 0;
+      })
+      .map(function (key) {
+        return metaRow(labels[key] || key, valueText(mux[key]));
+      })
+      .join("");
   }
 
   function muxDetailRows(mux) {
