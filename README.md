@@ -177,6 +177,11 @@ Important authoring rules:
 - Part IDs are unique and a part provides either `ref` or `kind`.
 - `point` and `label_offset` use normalized `[x, y]` coordinates in underlay
   space, normally between `0` and `1`.
+- `node_scale` and `label_scale` are optional unitless display multipliers.
+  They default to `1`; `node_scale` changes the marker geometry and
+  `label_scale` changes the label text and box. Reusable type values are
+  inherited by parts, while an instance value overrides its type. Supported
+  ranges are `0.5..3` for nodes and `0.75..2` for labels.
 - `underlay` is relative to `pinout.yaml`. Keep the image beside the YAML,
   commonly in `doc/img/`; WebP, PNG, SVG, and JPEG are supported.
 - `underlay_rotation` is optional and uses 90-degree steps.

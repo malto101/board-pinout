@@ -26,6 +26,8 @@ function payload() {
               point: [0.4, 0.6],
               kind: "pin",
               electrical: { io_v: 3.3, pull: "up" },
+              node_scale: 1.5,
+              label_scale: 1.25,
               pad_info: { domain: "VDD3P3", tolerance: "3.6 V" },
               mux: [
                 {
@@ -82,9 +84,16 @@ test("checked-in widget bundle mounts and renders mux details", async () => {
   assert.match(dialog.textContent, /pan/i);
   assert.match(dialog.textContent, /zoom/i);
   assert.match(dialog.textContent, /search/i);
+  assert.ok(dialog.querySelector(".zbp-help-body"));
+  assert.equal(dialog.querySelectorAll(".zbp-help-section").length, 3);
+  assert.match(dialog.querySelector(".zbp-help-section:last-child").textContent, /Keyboard/);
   assert.ok(root.querySelector('.zbp-hit[data-id="smoke-pin"]'));
   assert.equal(root.querySelector('.zbp-hit[data-id="smoke-pin"]').dataset.sym, "io");
   assert.ok(root.querySelector('.zbp-hit[data-id="smoke-pin"] .marker-point'));
+  assert.match(root.querySelector('.zbp-hit[data-id="smoke-pin"] .marker-point').innerHTML, /scale\(1\.5\)/);
+  assert.match(root.querySelector('.zbp-hit[data-id="smoke-pin"] text').getAttribute("font-size"), /12\.5/);
+  assert.ok(dialog.querySelector(".zbp-help-section:last-child"));
+  assert.match(dialog.querySelector(".zbp-help-section:last-child").textContent, /Keyboard/);
 
   help.dispatchEvent(new dom.window.MouseEvent("click", { bubbles: true }));
   assert.equal(dialog.hidden, false);

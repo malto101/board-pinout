@@ -89,6 +89,8 @@ def _merge_type(instance: dict[str, Any], typ: dict[str, Any]) -> dict[str, Any]
         "pin_ids",
         "receptacle_type",
         "control_type",
+        "node_scale",
+        "label_scale",
     ):
         if key in typ and key not in instance:
             instance[key] = _copy_tree(typ[key])

@@ -7,6 +7,10 @@ import {
   markerSymbolMarkup,
   visualForPart,
 } from "../../src/board_pinout/static/board_pinout/js/visual.js";
+import {
+  estimateLabelWidth,
+  labelMetrics,
+} from "../../src/board_pinout/static/board_pinout/js/labels.js";
 
 
 test("shared visual contract classifies semantic parts and renders symbols", () => {
@@ -42,9 +46,17 @@ test("shared visual contract classifies semantic parts and renders symbols", () 
   assert.doesNotMatch(activeIo, /marker-halo-/);
 });
 
+test("shared visual metrics scale markers and labels", () => {
+  const marker = markerSymbolMarkup(10, 20, { key: "io", ...PART_SYMBOLS.io }, { part: { node_scale: 1.5 } });
+  assert.match(marker, /scale\(1\.5\)/);
+  const metrics = labelMetrics({ label_scale: 1.25 });
+  assert.equal(metrics.fontSize, 12.5);
+  assert.equal(estimateLabelWidth({ id: "IO0", label_scale: 1.25 }, metrics), 35.75);
+});
 
 
-const dom = new JSDOM(`<!doctype html><body></body>`, { url: "https://editor.test/" });
+
+const dom = new JSDOM(`<!doctype html><body><div id="metaForm"></div></body>`, { url: "https://editor.test/" });
 globalThis.window = dom.window;
 globalThis.document = dom.window.document;
 
@@ -81,6 +93,8 @@ test("selected part rendering offers canonical SoC pad and formatted details", (
   setup();
   const part = {
     id: "pin0",
+    node_scale: 1.4,
+    label_scale: 1.25,
     pad: "GPIO0",
     electrical: { pull: { mode: "up", ohm: 45000 } },
     net: { role: "signal" },

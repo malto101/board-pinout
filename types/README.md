@@ -4,6 +4,10 @@ Vendor-neutral core types only (`base.yaml`). Board- or vendor-specific headers
 (Beagle P8/P9, Arduino R3, Pi 40-pin, Nordic DK clusters, …) live in the
 **consuming docs tree** as `types_inline` on that board’s `pinout.yaml`.
 
+Types may set optional `node_scale` (`0.5..3`) and `label_scale` (`0.75..2`)
+unitless display defaults. A board part can override either value; omission
+keeps the default size.
+
 ## Editor palette
 
 Any type with an `editor:` block appears under New part (after

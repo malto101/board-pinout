@@ -22,6 +22,18 @@
           "description": { "type": "string" },
           "rows": { "type": "integer", "minimum": 1 },
           "cols": { "type": "integer", "minimum": 1 },
+          "node_scale": {
+            "type": "number",
+            "minimum": 0.5,
+            "maximum": 3,
+            "description": "Optional multiplier for the visible node marker; defaults to 1."
+          },
+          "label_scale": {
+            "type": "number",
+            "minimum": 0.75,
+            "maximum": 2,
+            "description": "Optional multiplier for the node label text and box; defaults to 1."
+          },
           "numbering": {
             "type": "string",
             "enum": ["row_major", "col_major", "custom"]

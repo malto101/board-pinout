@@ -445,6 +445,8 @@ export function renderMeta() {
     }>Reset label offset / rotation</button>
     <label>rows <input data-field="rows" type="number" value="${escapeAttr(p.rows ?? "")}" /></label>
     <label>cols <input data-field="cols" type="number" value="${escapeAttr(p.cols ?? "")}" /></label>
+    <label title="Visible marker size multiplier; blank uses the default.">marker scale <input data-field="node_scale" type="number" min="0.5" max="3" step="0.05" value="${escapeAttr(p.node_scale ?? "")}" /></label>
+    <label title="Label text and box size multiplier; blank uses the default.">label scale <input data-field="label_scale" type="number" min="0.75" max="2" step="0.05" value="${escapeAttr(p.label_scale ?? "")}" /></label>
     ${socPadPickerHtml(p)}
     ${effectiveDetailsHtml(p)}
     ${muxEditorHtml(p)}
@@ -725,6 +727,22 @@ export function applyMetaField(part, input) {
   } else if (field === "rows" || field === "cols") {
     if (value === "") delete part[field];
     else part[field] = Number(value);
+  } else if (field === "node_scale" || field === "label_scale") {
+    const bounds = field === "node_scale" ? [0.5, 3] : [0.75, 2];
+    if (value.trim() === "") {
+      delete part[field];
+    } else {
+      const next = Number(value);
+      if (!Number.isFinite(next) || next < bounds[0] || next > bounds[1]) {
+        alert(`${field} must be between ${bounds[0]} and ${bounds[1]}`);
+        input.value = part[field] ?? "";
+        history.past.pop();
+        updateHistoryButtons();
+        return;
+      }
+      part[field] = next === 1 ? undefined : next;
+      if (part[field] === undefined) delete part[field];
+    }
   } else if (field === "kind") {
     if (!value) delete part[field];
     else part[field] = value;

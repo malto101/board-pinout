@@ -38,6 +38,28 @@ export function visualForPart(part, types) {
   return { key, ...(PART_SYMBOLS[key] || PART_SYMBOLS.io) };
 }
 
+export const DEFAULT_MARKER_SCALE = 1;
+export const MIN_MARKER_SCALE = 0.5;
+export const MAX_MARKER_SCALE = 3;
+
+export function normalizeMarkerScale(value) {
+  const n = Number(value);
+  if (!Number.isFinite(n)) return DEFAULT_MARKER_SCALE;
+  return Math.min(MAX_MARKER_SCALE, Math.max(MIN_MARKER_SCALE, n));
+}
+
+export function markerMetrics(partOrScale, types) {
+  let value = partOrScale;
+  if (typeof partOrScale === "object" && partOrScale !== null) {
+    value = partOrScale.node_scale;
+    if (value == null && types && partOrScale.ref) {
+      value = types[partOrScale.ref]?.node_scale;
+    }
+  }
+  const scale = normalizeMarkerScale(value);
+  return { scale, hitRadius: Math.max(8, 10 * scale) };
+}
+
 /** Selection halo shared by the editor and read-only widget. */
 export function selectionHaloMarkup(cx, cy, { primary = false } = {}) {
   const ring = primary ? "#2dd4bf" : "#4c8dff";
@@ -52,9 +74,11 @@ export function selectionHaloMarkup(cx, cy, { primary = false } = {}) {
 }
 
 /** Render a semantic marker while keeping a transparent, forgiving hit target. */
-export function markerSymbolMarkup(cx, cy, visual, { active = false, primary = false } = {}) {
+export function markerSymbolMarkup(cx, cy, visual, { active = false, primary = false, scale, part, types } = {}) {
   visual = visual || PART_SYMBOLS.io;
   const c = visual.color;
+  const marker = markerMetrics(part || scale, types);
+  const s = marker.scale;
   const stroke = active ? "#4c8dff" : "#0c0e13";
   const sw = active ? 1.85 : 1.25;
   let shape = "";
@@ -106,5 +130,5 @@ export function markerSymbolMarkup(cx, cy, visual, { active = false, primary = f
     default:
       shape = `<circle cx="${cx}" cy="${cy}" r="5.5" fill="${c}" stroke="${stroke}" stroke-width="${sw}"/>`;
   }
-  return `<g class="marker-point" data-sym="${visual.key}">${shape}<circle cx="${cx}" cy="${cy}" r="10" fill="transparent"/></g>`;
+  return `<g class="marker-point" data-sym="${visual.key}"><g transform="translate(${cx} ${cy}) scale(${s}) translate(${-cx} ${-cy})">${shape}</g><circle cx="${cx}" cy="${cy}" r="${marker.hitRadius}" fill="transparent"/></g>`;
 }

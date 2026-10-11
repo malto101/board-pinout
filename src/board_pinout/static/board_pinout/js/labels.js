@@ -29,9 +29,46 @@ export function screenReadableLabelRot(labelRot, viewRot) {
   return lr;
 }
 
-export function estimateLabelWidth(part) {
+export const LABEL_DEFAULTS = {
+  fontSize: 10,
+  height: 16,
+  charWidth: 6.2,
+  paddingX: 10,
+  minWidth: 28,
+  textInsetX: 5,
+  baselineOffset: 3.5,
+};
+export const MIN_LABEL_SCALE = 0.75;
+export const MAX_LABEL_SCALE = 2;
+
+export function normalizeLabelScale(value) {
+  var n = Number(value);
+  if (!Number.isFinite(n)) return 1;
+  return Math.min(MAX_LABEL_SCALE, Math.max(MIN_LABEL_SCALE, n));
+}
+
+export function labelMetrics(part, types) {
+  var value = part && part.label_scale;
+  if (value == null && types && part && part.ref) {
+    value = types[part.ref] && types[part.ref].label_scale;
+  }
+  var scale = normalizeLabelScale(value);
+  return {
+    scale: scale,
+    fontSize: LABEL_DEFAULTS.fontSize * scale,
+    height: LABEL_DEFAULTS.height * scale,
+    charWidth: LABEL_DEFAULTS.charWidth * scale,
+    paddingX: LABEL_DEFAULTS.paddingX * scale,
+    minWidth: LABEL_DEFAULTS.minWidth * scale,
+    textInsetX: LABEL_DEFAULTS.textInsetX * scale,
+    baselineOffset: LABEL_DEFAULTS.baselineOffset * scale,
+  };
+}
+
+export function estimateLabelWidth(part, metrics) {
   var label = (part && (part.silk || part.id)) || "";
-  return Math.max(28, String(label).length * 6.2 + 10);
+  var m = metrics || labelMetrics(part);
+  return Math.max(m.minWidth, String(label).length * m.charWidth + m.paddingX);
 }
 
 /**
@@ -90,7 +127,7 @@ export function fitOffsetInStage(off, pt, tw, th, stageW, stageH, pad) {
  * Near stage edges, flip inward so labels are not clipped by overflow
  * (dual-row rows keep their side so each row reads from one edge).
  */
-export function computeAutoLabelOffsets(list, box, stageW, stageH) {
+export function computeAutoLabelOffsets(list, box, stageW, stageH, types) {
   var n = list.length;
   if (!n) return [];
   stageW = stageW || box.left * 2 + box.width;
@@ -143,7 +180,9 @@ export function computeAutoLabelOffsets(list, box, stageW, stageH) {
       authoredRot !== null &&
       authoredRot !== "" &&
       isFinite(Number(authoredRot));
-    var tw = estimateLabelWidth(list[i]);
+    var metrics = labelMetrics(list[i], types);
+    var tw = estimateLabelWidth(list[i], metrics);
+    var th = metrics.height;
     if (authored && authored.length === 2) {
       return fitOffsetInStage(
         {
@@ -153,7 +192,7 @@ export function computeAutoLabelOffsets(list, box, stageW, stageH) {
         },
         pt,
         tw,
-        16,
+        th,
         stageW,
         stageH,
         pad
@@ -170,7 +209,7 @@ export function computeAutoLabelOffsets(list, box, stageW, stageH) {
         },
         pt,
         tw,
-        16,
+        th,
         stageW,
         stageH,
         pad
@@ -185,7 +224,7 @@ export function computeAutoLabelOffsets(list, box, stageW, stageH) {
         },
         pt,
         tw,
-        16,
+        th,
         stageW,
         stageH,
         pad
@@ -200,7 +239,7 @@ export function computeAutoLabelOffsets(list, box, stageW, stageH) {
       },
       pt,
       tw,
-      16,
+      th,
       stageW,
       stageH,
       pad
@@ -208,7 +247,10 @@ export function computeAutoLabelOffsets(list, box, stageW, stageH) {
   });
 }
 
-export function layoutLabelBox(cx, cy, off, tw, th) {
+export function layoutLabelBox(cx, cy, off, tw, th, metrics) {
+  metrics = metrics || LABEL_DEFAULTS;
+  var textInsetX = metrics.textInsetX;
+  var baselineOffset = metrics.baselineOffset;
   var lx = cx + off.dx;
   var ly = cy + off.dy;
   var vertical = Math.abs(off.dy) > Math.abs(off.dx);
@@ -225,26 +267,26 @@ export function layoutLabelBox(cx, cy, off, tw, th) {
       rx = lx - tw / 2;
       ry = ly;
       textX = lx;
-      textY = ly + th / 2 + 3.5;
+      textY = ly + th / 2 + baselineOffset;
       anchor = "middle";
     } else {
       rx = lx - tw / 2;
       ry = ly - th;
       textX = lx;
-      textY = ly - th / 2 + 3.5;
+      textY = ly - th / 2 + baselineOffset;
       anchor = "middle";
     }
   } else if (off.dx >= 0) {
     rx = lx;
     ry = ly - th / 2;
-    textX = lx + 5;
-    textY = ly + 3.5;
+    textX = lx + textInsetX;
+    textY = ly + baselineOffset;
     anchor = "start";
   } else {
     rx = lx - tw;
     ry = ly - th / 2;
-    textX = lx - 5;
-    textY = ly + 3.5;
+    textX = lx - textInsetX;
+    textY = ly + baselineOffset;
     anchor = "end";
   }
   return {

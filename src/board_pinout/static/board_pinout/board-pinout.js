@@ -355,9 +355,43 @@
     if (screen > 90 || screen < -90) lr += 180;
     return lr;
   }
-  function estimateLabelWidth(part) {
+  var LABEL_DEFAULTS = {
+    fontSize: 10,
+    height: 16,
+    charWidth: 6.2,
+    paddingX: 10,
+    minWidth: 28,
+    textInsetX: 5,
+    baselineOffset: 3.5
+  };
+  var MIN_LABEL_SCALE = 0.75;
+  var MAX_LABEL_SCALE = 2;
+  function normalizeLabelScale(value) {
+    var n = Number(value);
+    if (!Number.isFinite(n)) return 1;
+    return Math.min(MAX_LABEL_SCALE, Math.max(MIN_LABEL_SCALE, n));
+  }
+  function labelMetrics(part, types) {
+    var value = part && part.label_scale;
+    if (value == null && types && part && part.ref) {
+      value = types[part.ref] && types[part.ref].label_scale;
+    }
+    var scale = normalizeLabelScale(value);
+    return {
+      scale,
+      fontSize: LABEL_DEFAULTS.fontSize * scale,
+      height: LABEL_DEFAULTS.height * scale,
+      charWidth: LABEL_DEFAULTS.charWidth * scale,
+      paddingX: LABEL_DEFAULTS.paddingX * scale,
+      minWidth: LABEL_DEFAULTS.minWidth * scale,
+      textInsetX: LABEL_DEFAULTS.textInsetX * scale,
+      baselineOffset: LABEL_DEFAULTS.baselineOffset * scale
+    };
+  }
+  function estimateLabelWidth(part, metrics) {
     var label = part && (part.silk || part.id) || "";
-    return Math.max(28, String(label).length * 6.2 + 10);
+    var m = metrics || labelMetrics(part);
+    return Math.max(m.minWidth, String(label).length * m.charWidth + m.paddingX);
   }
   function fitOffsetInStage(off, pt, tw, th, stageW, stageH, pad) {
     var dx = off.dx;
@@ -396,7 +430,7 @@
     }
     return { dx, dy, rotation: rot, lockSide: off.lockSide };
   }
-  function computeAutoLabelOffsets(list, box, stageW, stageH) {
+  function computeAutoLabelOffsets(list, box, stageW, stageH, types) {
     var n = list.length;
     if (!n) return [];
     stageW = stageW || box.left * 2 + box.width;
@@ -443,7 +477,9 @@
       var authored = list[i].label_offset;
       var authoredRot = list[i].label_rotation;
       var rotAuth = authoredRot !== void 0 && authoredRot !== null && authoredRot !== "" && isFinite(Number(authoredRot));
-      var tw = estimateLabelWidth(list[i]);
+      var metrics = labelMetrics(list[i], types);
+      var tw = estimateLabelWidth(list[i], metrics);
+      var th = metrics.height;
       if (authored && authored.length === 2) {
         return fitOffsetInStage(
           {
@@ -453,7 +489,7 @@
           },
           pt,
           tw,
-          16,
+          th,
           stageW,
           stageH,
           pad
@@ -470,7 +506,7 @@
           },
           pt,
           tw,
-          16,
+          th,
           stageW,
           stageH,
           pad
@@ -485,7 +521,7 @@
           },
           pt,
           tw,
-          16,
+          th,
           stageW,
           stageH,
           pad
@@ -500,14 +536,17 @@
         },
         pt,
         tw,
-        16,
+        th,
         stageW,
         stageH,
         pad
       );
     });
   }
-  function layoutLabelBox(cx, cy, off, tw, th) {
+  function layoutLabelBox(cx, cy, off, tw, th, metrics) {
+    metrics = metrics || LABEL_DEFAULTS;
+    var textInsetX = metrics.textInsetX;
+    var baselineOffset = metrics.baselineOffset;
     var lx = cx + off.dx;
     var ly = cy + off.dy;
     var vertical = Math.abs(off.dy) > Math.abs(off.dx);
@@ -524,26 +563,26 @@
         rx = lx - tw / 2;
         ry = ly;
         textX = lx;
-        textY = ly + th / 2 + 3.5;
+        textY = ly + th / 2 + baselineOffset;
         anchor = "middle";
       } else {
         rx = lx - tw / 2;
         ry = ly - th;
         textX = lx;
-        textY = ly - th / 2 + 3.5;
+        textY = ly - th / 2 + baselineOffset;
         anchor = "middle";
       }
     } else if (off.dx >= 0) {
       rx = lx;
       ry = ly - th / 2;
-      textX = lx + 5;
-      textY = ly + 3.5;
+      textX = lx + textInsetX;
+      textY = ly + baselineOffset;
       anchor = "start";
     } else {
       rx = lx - tw;
       ry = ly - th / 2;
-      textX = lx - 5;
-      textY = ly + 3.5;
+      textX = lx - textInsetX;
+      textY = ly + baselineOffset;
       anchor = "end";
     }
     return {
@@ -675,9 +714,31 @@
     else if (/sensor|imu|temp|accel|gyro|humid|press/.test(text)) key = "sensor";
     return { key, ...PART_SYMBOLS[key] || PART_SYMBOLS.io };
   }
-  function markerSymbolMarkup(cx, cy, visual, { active = false, primary = false } = {}) {
+  var DEFAULT_MARKER_SCALE = 1;
+  var MIN_MARKER_SCALE = 0.5;
+  var MAX_MARKER_SCALE = 3;
+  function normalizeMarkerScale(value) {
+    const n = Number(value);
+    if (!Number.isFinite(n)) return DEFAULT_MARKER_SCALE;
+    return Math.min(MAX_MARKER_SCALE, Math.max(MIN_MARKER_SCALE, n));
+  }
+  function markerMetrics(partOrScale, types) {
+    var _a;
+    let value = partOrScale;
+    if (typeof partOrScale === "object" && partOrScale !== null) {
+      value = partOrScale.node_scale;
+      if (value == null && types && partOrScale.ref) {
+        value = (_a = types[partOrScale.ref]) == null ? void 0 : _a.node_scale;
+      }
+    }
+    const scale = normalizeMarkerScale(value);
+    return { scale, hitRadius: Math.max(8, 10 * scale) };
+  }
+  function markerSymbolMarkup(cx, cy, visual, { active = false, primary = false, scale, part, types } = {}) {
     visual = visual || PART_SYMBOLS.io;
     const c = visual.color;
+    const marker = markerMetrics(part || scale, types);
+    const s = marker.scale;
     const stroke = active ? "#4c8dff" : "#0c0e13";
     const sw = active ? 1.85 : 1.25;
     let shape = "";
@@ -729,7 +790,7 @@
       default:
         shape = `<circle cx="${cx}" cy="${cy}" r="5.5" fill="${c}" stroke="${stroke}" stroke-width="${sw}"/>`;
     }
-    return `<g class="marker-point" data-sym="${visual.key}">${shape}<circle cx="${cx}" cy="${cy}" r="10" fill="transparent"/></g>`;
+    return `<g class="marker-point" data-sym="${visual.key}"><g transform="translate(${cx} ${cy}) scale(${s}) translate(${-cx} ${-cy})">${shape}</g><circle cx="${cx}" cy="${cy}" r="${marker.hitRadius}" fill="transparent"/></g>`;
   }
 
   // ../src/board_pinout/static/board_pinout/js/widget.js
@@ -1078,7 +1139,7 @@
       helpDialog = document.createElement("div");
       helpDialog.className = "zbp-help-dialog";
       helpDialog.hidden = true;
-      helpDialog.innerHTML = '<div class="zbp-help-backdrop" data-help-close="backdrop" aria-hidden="true"></div><div class="zbp-help-panel" role="dialog" aria-modal="true" aria-labelledby="' + helpId + '-title"><div class="zbp-help-head"><h2 id="' + helpId + '-title">Pinout viewer help</h2><button type="button" class="zbp-help-close" data-help-close="button" aria-label="Close pinout help" title="Close (Esc)">\xD7</button></div><div class="zbp-help-body"><section class="zbp-help-section"><h3>Explore the canvas</h3><p>Click a marker to highlight it. Double-click a marker, or choose <strong>Expand parts</strong>, to drill into its children. Use breadcrumbs or <strong>\u2191 Up</strong> to move back.</p><p>Drag empty canvas space to pan. Scroll to zoom toward the pointer. Use the view buttons to focus, clear, rotate, zoom, or reset the view.</p></section><section class="zbp-help-section"><h3>Search and details</h3><p>Search by part, pad, function, or peripheral. Peripheral and software filters highlight matching pins and dim the rest. Use <strong>\u2139 View info</strong> for electrical, SoC pad, mux, net, and software details.</p></section><section class="zbp-help-section"><h3>Keyboard</h3><p>Use Tab to reach controls and markers, Enter or Space to select a marker, and Escape to close this help.</p></section></div></div>';
+      helpDialog.innerHTML = '<div class="zbp-help-backdrop" data-help-close="backdrop" aria-hidden="true"></div><div class="zbp-help-panel" role="dialog" aria-modal="true" aria-labelledby="' + helpId + '-title"><div class="zbp-help-head"><h2 id="' + helpId + '-title">Pinout viewer help</h2><button type="button" class="zbp-help-close" data-help-close="button" aria-label="Close pinout help" title="Close (Esc)">\xD7</button></div><div class="zbp-help-body"><section class="zbp-help-section"><h3>Explore</h3><p>Click a marker to select it. Double-click or choose <strong>\u25B8</strong> to drill into children. Use <strong>\u2191</strong> or breadcrumbs to go back. Drag to pan; scroll to zoom.</p><p>Use the view buttons to focus, clear, rotate, zoom, or reset.</p></section><section class="zbp-help-section"><h3>Search and details</h3><p>Search parts, pads, functions, or peripherals. Filters highlight matching pins. Choose <strong>\u2139</strong> for electrical, SoC, mux, net, and software details.</p></section><section class="zbp-help-section"><h3>Keyboard</h3><p><strong>Tab</strong> moves between controls; <strong>Enter</strong>/<strong>Space</strong> selects; <strong>Esc</strong> closes help.</p></section></div></div>';
       stage.appendChild(helpDialog);
     }
     var helpPanel = helpDialog.querySelector('[role="dialog"]');
@@ -1569,7 +1630,7 @@
         });
       });
     }
-    function groupLabelOffsets(list, box, stageW, stageH) {
+    function groupLabelOffsets(list, box, stageW, stageH, types) {
       var byGroup = /* @__PURE__ */ new Map();
       return list.map(function(p) {
         var found = index.find(p.id);
@@ -1579,14 +1640,14 @@
           var siblings = parent ? layoutExpandedChildren(parent) : topParts().map(function(q) {
             return ensurePoint(q);
           });
-          var all = computeAutoLabelOffsets(siblings, box, stageW, stageH);
+          var all = computeAutoLabelOffsets(siblings, box, stageW, stageH, types);
           offs = /* @__PURE__ */ new Map();
           siblings.forEach(function(q, i) {
             offs.set(q.id, all[i]);
           });
           byGroup.set(parent, offs);
         }
-        return offs.get(p.id) || computeAutoLabelOffsets([p], box, stageW, stageH)[0];
+        return offs.get(p.id) || computeAutoLabelOffsets([p], box, stageW, stageH, types)[0];
       });
     }
     function renderOverlay() {
@@ -1594,8 +1655,8 @@
       var list = markers();
       var stageW = stage.clientWidth || 1;
       var stageH = stage.clientHeight || 1;
-      var offsets = groupLabelOffsets(list, box, stageW, stageH);
       var types = doc.types_inline || doc.types || {};
+      var offsets = groupLabelOffsets(list, box, stageW, stageH, types);
       var html = list.map(function(p, idx) {
         var cx = box.left + p.point[0] * box.width;
         var cy = box.top + p.point[1] * box.height;
@@ -1604,9 +1665,10 @@
         var visual = visualForPart(p, types);
         var dim = partIsDimmed(p);
         var active = state.selected === p.id;
-        var tw = estimateLabelWidth(p);
-        var th = 16;
-        var lay = layoutLabelBox(cx, cy, off, tw, th);
+        var labelSize = labelMetrics(p, types);
+        var tw = estimateLabelWidth(p, labelSize);
+        var th = labelSize.height;
+        var lay = layoutLabelBox(cx, cy, off, tw, th, labelSize);
         var rx = lay.rx;
         var ry = lay.ry;
         var textX = lay.textX;
@@ -1637,7 +1699,7 @@
         var pivotX = rx + tw / 2;
         var pivotY = ry + th / 2;
         var labelXform = rot ? ' transform="rotate(' + rot + " " + pivotX + " " + pivotY + ')"' : "";
-        return '<g class="zbp-hit' + (active ? " zbp-selected" : "") + (state.query && matchesQuery(p) ? " zbp-match" : "") + '" data-id="' + escapeHtml(p.id) + '" data-sym="' + escapeHtml(visual.key) + '" aria-label="' + escapeHtml(label + ", " + visual.title) + '" role="button" tabindex="0" focusable="true" opacity="' + (dim ? "0.18" : "1") + '"><path d="' + d + '" fill="none" stroke="var(--zbp-line, rgba(245,166,35,0.75))" stroke-width="1" stroke-linejoin="round" />' + markerSymbolMarkup(cx, cy, visual, { active, primary: true }) + '<g class="zbp-label"' + labelXform + '><rect class="zbp-label-bg" x="' + rx + '" y="' + ry + '" width="' + tw + '" height="' + th + '" rx="3" /><text x="' + textX + '" y="' + textY + '" fill="#f3f6fb" font-size="10" font-family="system-ui,sans-serif" text-anchor="' + anchor + '">' + escapeHtml(label) + "</text></g></g>";
+        return '<g class="zbp-hit' + (active ? " zbp-selected" : "") + (state.query && matchesQuery(p) ? " zbp-match" : "") + '" data-id="' + escapeHtml(p.id) + '" data-sym="' + escapeHtml(visual.key) + '" aria-label="' + escapeHtml(label + ", " + visual.title) + '" role="button" tabindex="0" focusable="true" opacity="' + (dim ? "0.18" : "1") + '"><path d="' + d + '" fill="none" stroke="var(--zbp-line, rgba(245,166,35,0.75))" stroke-width="1" stroke-linejoin="round" />' + markerSymbolMarkup(cx, cy, visual, { active, primary: true, part: p, types }) + '<g class="zbp-label"' + labelXform + '><rect class="zbp-label-bg" x="' + rx + '" y="' + ry + '" width="' + tw + '" height="' + th + '" rx="3" /><text x="' + textX + '" y="' + textY + '" fill="#f3f6fb" font-size="' + labelSize.fontSize + '" font-family="system-ui,sans-serif" text-anchor="' + anchor + '">' + escapeHtml(label) + "</text></g></g>";
       }).join("");
       if (html !== overlayHtml) {
         overlayHtml = html;

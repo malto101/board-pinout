@@ -12,6 +12,7 @@ import {
   bakeLabelOffset,
   layoutLabelBox,
   estimateLabelWidth,
+  labelMetrics,
   screenReadableLabelRot,
 } from "./labels.js";
 import {
@@ -311,9 +312,10 @@ export function renderOverlay() {
       const active = primary || inMulti || !!muxHit;
       const visual = resolvePartVisual(p);
       const label = p.silk || p.id;
-      const tw = estimateLabelWidth(p);
-      const th = 16;
-      const lay = layoutLabelBox(cx, cy, off, tw, th);
+      const labelSize = labelMetrics(p, state.types);
+      const tw = estimateLabelWidth(p, labelSize);
+      const th = labelSize.height;
+      const lay = layoutLabelBox(cx, cy, off, tw, th, labelSize);
       const ring = primary
         ? "#2dd4bf"
         : muxHit
@@ -350,7 +352,12 @@ export function renderOverlay() {
           muxSig ? ` data-mux-sig="${escapeAttr(muxSig)}"` : ""
         } opacity="${dimmed ? "0.18" : "1"}">
           ${leaderPolylineMarkup(cx, cy, lay.tipX, lay.tipY, vertsPx, line, active ? 1.6 : 1)}
-          ${markerSymbolMarkup(cx, cy, visual, { active, primary: primary || !!muxHit })}
+          ${markerSymbolMarkup(cx, cy, visual, {
+            active,
+            primary: primary || !!muxHit,
+            part: p,
+            types: state.types,
+          })}
           ${vertexHandles}
           <g class="marker-label"${(() => {
             let rot = Number(
@@ -369,7 +376,7 @@ export function renderOverlay() {
           })()}>
             <rect x="${lay.rx}" y="${lay.ry}" width="${tw}" height="${th}"
               rx="3" fill="${labelFill}" stroke="${ring}" stroke-width="${active ? 1.5 : 1}" />
-            <text x="${lay.textX}" y="${lay.textY}" fill="#f3f6fb" font-size="10"
+            <text x="${lay.textX}" y="${lay.textY}" fill="#f3f6fb" font-size="${labelSize.fontSize}"
               font-family="system-ui,sans-serif" font-weight="${active ? 600 : 400}" text-anchor="${lay.anchor}">${escapeAttr(
                 label
               )}</text>

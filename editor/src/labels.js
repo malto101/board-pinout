@@ -2,13 +2,14 @@
  * Editor glue over the widget's label layout, so the editor and the docs
  * place labels identically.
  */
-import { els } from "./state.js";
+import { els, state } from "./state.js";
 import { LABEL_GAP } from "../../src/board_pinout/static/board_pinout/js/util.js";
 import { computeAutoLabelOffsets as layoutOffsets } from "../../src/board_pinout/static/board_pinout/js/labels.js";
 
 export {
   screenReadableLabelRot,
   estimateLabelWidth,
+  labelMetrics,
   layoutLabelBox,
 } from "../../src/board_pinout/static/board_pinout/js/labels.js";
 
@@ -16,7 +17,7 @@ const DEFAULT_GAP = LABEL_GAP + 42;
 
 export function computeAutoLabelOffsets(markers, box) {
   const stage = els.canvasStage;
-  return layoutOffsets(markers, box, stage?.clientWidth, stage?.clientHeight);
+  return layoutOffsets(markers, box, stage?.clientWidth, stage?.clientHeight, state.types);
 }
 
 export function labelOffset(index, total, part, box, precomputed) {

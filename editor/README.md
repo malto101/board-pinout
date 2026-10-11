@@ -21,8 +21,10 @@ The canvas background is the face **underlay** — the same image docs will show
 
 1. Toolbar **Underlay** → pick WebP/PNG/SVG/JPEG (or load **ESP32 sample**).
 2. Place markers; coordinates are normalized 0..1 on that image.
-3. Optional **Underlay °** on the Board panel → `faces.<face>.underlay_rotation`.
-4. **Export** writes `underlay: <filename>` (or a relative path you set). When
+3. In **Selected**, optional **marker scale** (`0.5..3`) changes the node
+   size and **label scale** (`0.75..2`) changes the label text and box. Blank
+   keeps the default size; values of `1` are omitted from exports.
+4. Optional **Underlay °** on the Board panel → `faces.<face>.underlay_rotation`.4. **Export** writes `underlay: <filename>` (or a relative path you set). When
    committing to a board tree, put that file next to `pinout.yaml` (Zephyr:
    usually `doc/img/<board>.webp` and `underlay: img/<board>.webp`).
 

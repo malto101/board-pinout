@@ -11,6 +11,7 @@ import { assignmentOwner, partAssignments } from "./mux.js";
 import {
   screenReadableLabelRot,
   estimateLabelWidth,
+  labelMetrics,
   computeAutoLabelOffsets,
   layoutLabelBox,
 } from "./labels.js";
@@ -456,9 +457,9 @@ export function mountWidget(root, payload) {
       '<div class="zbp-help-head"><h2 id="' + helpId + '-title">Pinout viewer help</h2>' +
       '<button type="button" class="zbp-help-close" data-help-close="button" aria-label="Close pinout help" title="Close (Esc)">×</button></div>' +
       '<div class="zbp-help-body">' +
-      '<section class="zbp-help-section"><h3>Explore the canvas</h3><p>Click a marker to highlight it. Double-click a marker, or choose <strong>Expand parts</strong>, to drill into its children. Use breadcrumbs or <strong>↑ Up</strong> to move back.</p><p>Drag empty canvas space to pan. Scroll to zoom toward the pointer. Use the view buttons to focus, clear, rotate, zoom, or reset the view.</p></section>' +
-      '<section class="zbp-help-section"><h3>Search and details</h3><p>Search by part, pad, function, or peripheral. Peripheral and software filters highlight matching pins and dim the rest. Use <strong>ℹ View info</strong> for electrical, SoC pad, mux, net, and software details.</p></section>' +
-      '<section class="zbp-help-section"><h3>Keyboard</h3><p>Use Tab to reach controls and markers, Enter or Space to select a marker, and Escape to close this help.</p></section>' +
+      '<section class="zbp-help-section"><h3>Explore</h3><p>Click a marker to select it. Double-click or choose <strong>▸</strong> to drill into children. Use <strong>↑</strong> or breadcrumbs to go back. Drag to pan; scroll to zoom.</p><p>Use the view buttons to focus, clear, rotate, zoom, or reset.</p></section>' +
+      '<section class="zbp-help-section"><h3>Search and details</h3><p>Search parts, pads, functions, or peripherals. Filters highlight matching pins. Choose <strong>ℹ</strong> for electrical, SoC, mux, net, and software details.</p></section>' +
+      '<section class="zbp-help-section"><h3>Keyboard</h3><p><strong>Tab</strong> moves between controls; <strong>Enter</strong>/<strong>Space</strong> selects; <strong>Esc</strong> closes help.</p></section>' +
       '</div></div>';
     stage.appendChild(helpDialog);
   }
@@ -1040,7 +1041,7 @@ export function mountWidget(root, payload) {
    * (the parent's expanded children, or the top level). A pin's label then
    * looks the same in every view: drilled in, peripheral filter or selection.
    */
-  function groupLabelOffsets(list, box, stageW, stageH) {
+  function groupLabelOffsets(list, box, stageW, stageH, types) {
     var byGroup = new Map();
     return list.map(function (p) {
       var found = index.find(p.id);
@@ -1052,14 +1053,14 @@ export function mountWidget(root, payload) {
           : topParts().map(function (q) {
               return ensurePoint(q);
             });
-        var all = computeAutoLabelOffsets(siblings, box, stageW, stageH);
+        var all = computeAutoLabelOffsets(siblings, box, stageW, stageH, types);
         offs = new Map();
         siblings.forEach(function (q, i) {
           offs.set(q.id, all[i]);
         });
         byGroup.set(parent, offs);
       }
-      return offs.get(p.id) || computeAutoLabelOffsets([p], box, stageW, stageH)[0];
+      return offs.get(p.id) || computeAutoLabelOffsets([p], box, stageW, stageH, types)[0];
     });
   }
 
@@ -1068,8 +1069,8 @@ export function mountWidget(root, payload) {
     var list = markers();
     var stageW = stage.clientWidth || 1;
     var stageH = stage.clientHeight || 1;
-    var offsets = groupLabelOffsets(list, box, stageW, stageH);
     var types = doc.types_inline || doc.types || {};
+    var offsets = groupLabelOffsets(list, box, stageW, stageH, types);
     var html = list
       .map(function (p, idx) {
         var cx = box.left + p.point[0] * box.width;
@@ -1079,9 +1080,10 @@ export function mountWidget(root, payload) {
         var visual = visualForPart(p, types);
         var dim = partIsDimmed(p);
         var active = state.selected === p.id;
-        var tw = estimateLabelWidth(p);
-        var th = 16;
-        var lay = layoutLabelBox(cx, cy, off, tw, th);
+        var labelSize = labelMetrics(p, types);
+        var tw = estimateLabelWidth(p, labelSize);
+        var th = labelSize.height;
+        var lay = layoutLabelBox(cx, cy, off, tw, th, labelSize);
         var rx = lay.rx;
         var ry = lay.ry;
         var textX = lay.textX;
@@ -1136,7 +1138,7 @@ export function mountWidget(root, payload) {
           '<path d="' +
           d +
           '" fill="none" stroke="var(--zbp-line, rgba(245,166,35,0.75))" stroke-width="1" stroke-linejoin="round" />' +
-          markerSymbolMarkup(cx, cy, visual, { active: active, primary: true }) +
+          markerSymbolMarkup(cx, cy, visual, { active: active, primary: true, part: p, types: types }) +
           '<g class="zbp-label"' +
           labelXform +
           ">" +
@@ -1153,7 +1155,9 @@ export function mountWidget(root, payload) {
           textX +
           '" y="' +
           textY +
-          '" fill="#f3f6fb" font-size="10" font-family="system-ui,sans-serif" text-anchor="' +
+          '" fill="#f3f6fb" font-size="' +
+          labelSize.fontSize +
+          '" font-family="system-ui,sans-serif" text-anchor="' +
           anchor +
           '">' +
           escapeHtml(label) +

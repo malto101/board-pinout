@@ -1,6 +1,8 @@
 import json
 from pathlib import Path
 
+import pytest
+
 from board_pinout.join import ensure_status_defaults
 from board_pinout.resolve import resolve_file
 from board_pinout.validate import validate_document, validate_file
@@ -23,6 +25,70 @@ def test_resolve_synthesizes_pins():
     header = p0["children"][0]
     assert header["id"] == "port_p0_header"
     assert len(header["children"]) == 20
+
+
+def test_visual_scale_schema_accepts_bounded_values():
+    doc = {
+        "board": "b",
+        "faces": {"top": {"children": [{
+            "id": "p1", "kind": "pin", "point": [0.1, 0.1],
+            "node_scale": 0.5, "label_scale": 2,
+        }]}},
+    }
+    result = validate_document(doc)
+    assert result.ok, result.errors
+
+
+@pytest.mark.parametrize(("field", "value"), [
+    ("node_scale", 0.49),
+    ("node_scale", 3.01),
+    ("label_scale", 0.74),
+    ("label_scale", 2.01),
+    ("node_scale", "large"),
+])
+def test_visual_scale_schema_rejects_invalid_values(field, value):
+    doc = {
+        "board": "b",
+        "faces": {"top": {"children": [{
+            "id": "p1", "kind": "pin", "point": [0.1, 0.1], field: value,
+        }]}},
+    }
+    assert not validate_document(doc).ok
+
+
+def test_visual_scale_defaults_inherit_and_instance_wins():
+    from board_pinout.resolve import load_type_library, resolve_board
+
+    types = {
+        "scaled": {
+            "kind": "pin",
+            "node_scale": 1.8,
+            "label_scale": 1.25,
+        }
+    }
+    doc = {
+        "board": "b",
+        "faces": {"top": {"children": [
+            {"id": "inherited", "ref": "scaled", "point": [0.1, 0.1]},
+            {"id": "override", "ref": "scaled", "point": [0.2, 0.1], "node_scale": 0.8},
+        ]}},
+    }
+    parts = resolve_board(doc, types)["faces"]["top"]["children"]
+    assert parts[0]["node_scale"] == 1.8
+    assert parts[0]["label_scale"] == 1.25
+    assert parts[1]["node_scale"] == 0.8
+    assert parts[1]["label_scale"] == 1.25
+
+
+def test_visual_scale_omission_does_not_inject_defaults():
+    from board_pinout.resolve import resolve_board
+
+    doc = {"board": "b", "faces": {"top": {"children": [
+        {"id": "plain", "kind": "pin", "point": [0.1, 0.1]},
+    ]}}}
+    part = resolve_board(doc, {})["faces"]["top"]["children"][0]
+    assert "node_scale" not in part
+    assert "label_scale" not in part
 
 
 def test_type_default_net_fills_fixed_pins_only():
