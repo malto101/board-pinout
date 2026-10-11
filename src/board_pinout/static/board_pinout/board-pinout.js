@@ -675,27 +675,16 @@
     else if (/sensor|imu|temp|accel|gyro|humid|press/.test(text)) key = "sensor";
     return { key, ...PART_SYMBOLS[key] || PART_SYMBOLS.io };
   }
-  function selectionHaloMarkup(cx, cy, { primary = false } = {}) {
-    const ring = primary ? "#2dd4bf" : "#4c8dff";
-    const glow = primary ? "rgba(45, 212, 191, 0.28)" : "rgba(76, 141, 255, 0.28)";
-    return `
-    <circle class="marker-halo-glow" cx="${cx}" cy="${cy}" r="13.5" fill="${glow}"/>
-    <circle class="marker-halo-ring" cx="${cx}" cy="${cy}" r="11.5"
-      fill="none" stroke="${ring}" stroke-width="2.4"/>
-    <circle class="marker-halo-outer" cx="${cx}" cy="${cy}" r="14.5"
-      fill="none" stroke="${ring}" stroke-width="1" opacity="0.5" stroke-dasharray="2.5 2"/>
-  `;
-  }
   function markerSymbolMarkup(cx, cy, visual, { active = false, primary = false } = {}) {
     visual = visual || PART_SYMBOLS.io;
     const c = visual.color;
-    const stroke = active ? primary ? "#2dd4bf" : "#4c8dff" : "#0c0e13";
+    const stroke = active ? "#4c8dff" : "#0c0e13";
     const sw = active ? 1.85 : 1.25;
     let shape = "";
     switch (visual.key) {
       case "gnd":
         shape = `
-        <circle class="marker-gnd-backdrop" cx="${cx}" cy="${cy + 1}" r="8" fill="#fff" stroke="#0c0e13" stroke-width="1.4"/>
+        <circle class="marker-gnd-backdrop" cx="${cx}" cy="${cy + 1}" r="8" fill="#fff" stroke="${stroke}" stroke-width="1.4"/>
         <line x1="${cx - 6}" y1="${cy - 2}" x2="${cx + 6}" y2="${cy - 2}" stroke="${c}" stroke-width="1.7" stroke-linecap="round"/>
         <line x1="${cx - 4}" y1="${cy + 1}" x2="${cx + 4}" y2="${cy + 1}" stroke="${c}" stroke-width="1.45" stroke-linecap="round"/>
         <line x1="${cx - 2}" y1="${cy + 4}" x2="${cx + 2}" y2="${cy + 4}" stroke="${c}" stroke-width="1.25" stroke-linecap="round"/>`;
@@ -740,8 +729,7 @@
       default:
         shape = `<circle cx="${cx}" cy="${cy}" r="5.5" fill="${c}" stroke="${stroke}" stroke-width="${sw}"/>`;
     }
-    const halo = active ? selectionHaloMarkup(cx, cy, { primary }) : "";
-    return `<g class="marker-point" data-sym="${visual.key}">${halo}${shape}<circle cx="${cx}" cy="${cy}" r="10" fill="transparent"/></g>`;
+    return `<g class="marker-point" data-sym="${visual.key}">${shape}<circle cx="${cx}" cy="${cy}" r="10" fill="transparent"/></g>`;
   }
 
   // ../src/board_pinout/static/board_pinout/js/widget.js

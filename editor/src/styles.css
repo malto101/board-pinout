@@ -1137,14 +1137,6 @@ input, select, textarea {
   pointer-events: none;
 }
 
-#overlay .marker-hit.is-selected .marker-point {
-  filter: drop-shadow(0 0 3px rgba(45, 212, 191, 0.35));
-}
-
-#overlay .marker-hit.is-selected:not(.is-primary) .marker-point {
-  filter: drop-shadow(0 0 3px rgba(76, 141, 255, 0.4));
-}
-
 #overlay .marker-label {
   cursor: move;
 }

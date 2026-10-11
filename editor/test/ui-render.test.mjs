@@ -29,6 +29,17 @@ test("shared visual contract classifies semantic parts and renders symbols", () 
   assert.match(markerSymbolMarkup(10, 20, { key: "gnd", ...PART_SYMBOLS.gnd }), /marker-gnd-backdrop/);
   assert.match(markerSymbolMarkup(10, 20, { key: "gnd", ...PART_SYMBOLS.gnd }), /fill="#fff"/);
   assert.match(markerSymbolMarkup(10, 20, { key: "gnd", ...PART_SYMBOLS.gnd }), /stroke="#0c0e13"/);
+  assert.match(
+    markerSymbolMarkup(10, 20, { key: "gnd", ...PART_SYMBOLS.gnd }, { active: true, primary: true }),
+    /stroke="#4c8dff"/
+  );
+  assert.doesNotMatch(
+    markerSymbolMarkup(10, 20, { key: "gnd", ...PART_SYMBOLS.gnd }, { active: true }),
+    /marker-halo-/
+  );
+  const activeIo = markerSymbolMarkup(10, 20, { key: "io", ...PART_SYMBOLS.io }, { active: true });
+  assert.match(activeIo, /stroke="#4c8dff"/);
+  assert.doesNotMatch(activeIo, /marker-halo-/);
 });
 
 
