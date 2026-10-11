@@ -134,12 +134,21 @@
             <div class="panel-head"><span class="panel-title">Board</span></div>
             <label title="Board name">Name <input id="boardName" type="text" /></label>
             <label title="SoC id">SoC <input id="boardSoc" type="text" /></label>
+            <label title="SoC package or bonded variant">SoC package
+              <input id="boardSocPackage" type="text" list="boardSocPackages" placeholder="optional package" />
+              <datalist id="boardSocPackages"></datalist>
+            </label>
             <label title="Mux source">Mux source
               <select id="boardMuxSource">
                 <option value="inline">Inline</option>
                 <option value="soc">SoC table</option>
               </select>
             </label>
+            <div class="soc-link-actions">
+              <button id="boardSocLoadBtn" class="btn small" type="button">Load/link SoC table</button>
+              <input id="boardSocInput" type="file" accept=".yaml,.yml,.json" hidden />
+              <p id="boardSocStatus" class="hint-mini" role="status"></p>
+            </div>
             <label title="Default underlay rotation when opening docs / reset view">
               Underlay °
               <input id="underlayRotation" type="number" step="90" value="0" />
@@ -147,11 +156,12 @@
           </div>
           <div class="panel thin" id="socPanel" hidden>
             <div class="panel-head"><span class="panel-title">SoC pad table</span></div>
-            <p class="hint-mini">Advanced fields stay lossless in the JSON/YAML editor.</p>
+            <p class="flow-hint"><strong>SoC authoring flow</strong><br />1. Define the table identity. 2. Add canonical pads and aliases. 3. Add intrinsic electrical data and functions. 4. Link this table from a board and choose pads on its parts. 5. Export both documents.</p>
+            <p class="hint-mini">Canonical names are stored on board parts; aliases are lookup names. Inherited pad and mux data is read-only here and remains sourced from the SoC table.</p>
             <label>SoC id <input id="socName" type="text" /></label>
             <label>Description <input id="socDescription" type="text" /></label>
             <label>Reference URL <input id="socReference" type="url" /></label>
-            <label>Table YAML/JSON
+            <label>Advanced table YAML/JSON
               <textarea id="socJson" rows="8" spellcheck="false"></textarea>
             </label>
             <div class="soc-authoring">
@@ -173,6 +183,10 @@
               <button id="socPadDeleteBtn" class="btn small danger" type="button">Delete pad</button>
               <p id="socDiagnostics" class="hint-mini" role="status"></p>
             </div>
+            <details class="soc-advanced">
+              <summary>Advanced fields and routing</summary>
+              <p class="hint-mini">Use the table editor above for packages, domains, pad defaults, based_on, routing, remaps, signal_select, and future schema fields. These fields are preserved on export.</p>
+            </details>
             <button id="socExportBtn" class="btn small" type="button">Export socpad.yaml</button>
           </div>
           <div class="panel thin">

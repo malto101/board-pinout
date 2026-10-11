@@ -19,9 +19,13 @@ import {
   level0Parts,
   collectPeripherals,
   activeSocIndex,
+  activeSocStatus,
+  socPadOptions,
+  canonicalSocPad,
   socPadCandidates,
   muxEntriesForView,
   effectivePartPadInfo,
+  resetSocIndexCache,
   CENTER_POINT,
   isOpen,
 } from "./model.js";
@@ -427,7 +431,7 @@ export function renderMeta() {
     }>Reset label offset / rotation</button>
     <label>rows <input data-field="rows" type="number" value="${escapeAttr(p.rows ?? "")}" /></label>
     <label>cols <input data-field="cols" type="number" value="${escapeAttr(p.cols ?? "")}" /></label>
-    <label>pad <input data-field="pad" value="${escapeAttr(p.pad || "")}" /></label>
+    ${socPadPickerHtml(p)}
     ${effectiveDetailsHtml(p)}
     ${muxEditorHtml(p)}
     <label>notes <textarea data-field="notes" rows="3">${escapeAttr(p.notes || "")}</textarea></label>
@@ -436,6 +440,25 @@ export function renderMeta() {
     input.addEventListener("change", () => applyMetaField(p, input));
     input.addEventListener("keydown", (e) => {
       if (e.key === "Enter") applyMetaField(p, input);
+    });
+  });
+  const padSearch = els.metaForm.querySelector("[data-pad-search]");
+  padSearch?.addEventListener("input", () => {
+    const query = padSearch.value.trim().toLowerCase();
+    const select = els.metaForm.querySelector('select[data-field="pad"]');
+    select?.querySelectorAll("option").forEach((option) => {
+      if (!option.value) {
+        option.hidden = false;
+        return;
+      }
+      option.hidden = !!query && !option.textContent.toLowerCase().includes(query);
+    });
+  });
+  const muxFilter = els.metaForm.querySelector("[data-mux-filter]");
+  muxFilter?.addEventListener("input", () => {
+    const query = muxFilter.value.trim().toLowerCase();
+    els.metaForm.querySelectorAll(".mux-inherited").forEach((row) => {
+      row.hidden = !!query && !row.textContent.toLowerCase().includes(query);
     });
   });
   document.getElementById("resetLabelOffset")?.addEventListener("click", () => {
@@ -457,20 +480,62 @@ export function renderMeta() {
   bindSelectionTools(els.metaForm);
 }
 
+function displayValue(value) {
+  if (value === null || value === undefined || value === "") return "";
+  if (typeof value === "object") {
+    return `<code class="meta-value">${escapeAttr(JSON.stringify(value, null, 2))}</code>`;
+  }
+  return escapeAttr(String(value));
+}
+
+function detailRows(rows) {
+  return rows
+    .filter(([, value]) => value !== undefined && value !== null && value !== "")
+    .map(([key, value]) => `<dt>${escapeAttr(key)}</dt><dd>${displayValue(value)}</dd>`)
+    .join("");
+}
+
+export function socPadPickerHtml(part) {
+  const status = activeSocStatus(part);
+  const options = socPadOptions(part);
+  const current = canonicalSocPad(part, part?.pad) || part?.pad || "";
+  const optionRows = options.map((row) => {
+    const aliases = row.aliases.length ? ` · ${row.aliases.join(", ")}` : "";
+    const functions = [...new Set(row.functions.map((entry) => entry.peripheral || entry.function).filter(Boolean))].slice(0, 4).join(", ");
+    const label = `${row.name}${aliases}${functions ? ` · ${functions}` : ""}`;
+    return `<option value="${escapeAttr(row.name)}" ${row.name === current ? "selected" : ""}>${escapeAttr(label)}</option>`;
+  }).join("");
+  const statusClass = status.kind === "linked" ? "ok" : status.kind === "inline" ? "" : "error";
+  const manual = current && !options.some((row) => row.name === current)
+    ? `<option value="${escapeAttr(current)}" selected>${escapeAttr(current)} (not found in linked table)</option>`
+    : "";
+  return `<div class="pad-picker">
+    <label>SoC pad
+      <select data-field="pad" aria-label="Select SoC pad">
+        <option value="">${options.length ? "Select a canonical pad" : "No linked pad table"}</option>
+        ${manual}${optionRows}
+      </select>
+    </label>
+    <input data-pad-search type="search" placeholder="Filter pads or aliases…" aria-label="Filter SoC pads" />
+    <p class="hint-mini ${statusClass}" data-soc-status>${escapeAttr(status.message)}</p>
+    ${current ? `<p class="soc-pad-summary">Stored pad: <code>${escapeAttr(current)}</code>. Selecting an alias stores its canonical name.</p>` : ""}
+  </div>`;
+}
+
 export function effectiveDetailsHtml(part) {
   const info = effectivePartPadInfo(part);
   const rows = [];
   const electrical = part.electrical || {};
-  Object.entries(electrical).forEach(([key, value]) => rows.push(`<dt>${escapeAttr(key)}</dt><dd>${escapeAttr(typeof value === "object" ? JSON.stringify(value) : value)}</dd>`));
+  Object.entries(electrical).forEach(([key, value]) => rows.push([`Board override · ${key}`, value]));
   if (info) {
-    rows.push(`<dt>SoC pad</dt><dd>${escapeAttr(info.pad || part.pad || "")}</dd>`);
-    Object.entries(info).filter(([key]) => !["soc", "pad", "package"].includes(key)).forEach(([key, value]) => rows.push(`<dt>${escapeAttr(key)}</dt><dd>${escapeAttr(typeof value === "object" ? JSON.stringify(value) : value)}</dd>`));
+    rows.push(["SoC pad", info.pad || part.pad || ""]);
+    Object.entries(info)
+      .filter(([key]) => !["soc", "pad", "package"].includes(key))
+      .forEach(([key, value]) => rows.push([`SoC table · ${key}`, value]));
   }
-  if (part.net) {
-    Object.entries(part.net).forEach(([key, value]) => rows.push(`<dt>net.${escapeAttr(key)}</dt><dd>${escapeAttr(typeof value === "object" ? JSON.stringify(value) : value)}</dd>`));
-  }
+  if (part.net) Object.entries(part.net).forEach(([key, value]) => rows.push([`Board net · ${key}`, value]));
   if (!rows.length) return "";
-  return `<section class="effective-details"><h4>Effective details</h4><dl class="zbp-meta-dl">${rows.join("")}</dl></section>`;
+  return `<section class="effective-details"><h4>Effective details</h4><dl class="zbp-meta-dl">${detailRows(rows)}</dl></section>`;
 }
 
 export function muxEditorHtml(part) {
@@ -490,16 +555,21 @@ export function muxEditorHtml(part) {
     )
     .join("");
   const inheritedRows = inherited.map((m) => `<div class="mux-row mux-inherited" aria-label="Inherited SoC mux entry">
-      <span>${escapeAttr(m.peripheral || "")}</span><span>${escapeAttr(m.signal || "")}</span>
-      <span>${escapeAttr(m.function || "")}</span><span>${escapeAttr(m.mode ?? "")}</span>
+      <span title="Peripheral"><span class="mux-cell-label">Peripheral</span>${escapeAttr(m.peripheral || "—")}</span>
+      <span title="Signal"><span class="mux-cell-label">Signal</span>${escapeAttr(m.signal || "—")}</span>
+      <span title="Function"><span class="mux-cell-label">Function</span>${escapeAttr(m.function || "—")}</span>
+      <span title="Mode"><span class="mux-cell-label">Mode</span>${escapeAttr(m.mode ?? "—")}</span>
     </div>`).join("");
+  const inheritedFilter = inherited.length > 8
+    ? `<input class="mux-filter" data-mux-filter type="search" placeholder="Filter inherited mux…" aria-label="Filter inherited mux entries" />`
+    : "";
   return `
     <div class="mux-editor">
       <div class="panel-head"><span class="panel-title">Mux</span>
         <button type="button" class="btn small" id="muxAddBtn" title="Add mux function">＋</button>
       </div>
       <p class="hint-mini">e.g. peripheral i2c0 · signal SDA · or function I2C0_SDA</p>
-      ${inheritedRows ? `<p class="hint-mini">Inherited from the active SoC table (read-only preview)</p>` : ""}
+      ${inheritedRows ? `<p class="hint-mini">Inherited from the active SoC table (read-only preview)</p>${inheritedFilter}` : ""}
       <div class="mux-rows">${rows || (!inheritedRows ? '<p class="muted">No mux entries</p>' : "")}${inheritedRows}</div>
     </div>`;
 }
@@ -644,9 +714,13 @@ export function applyMetaField(part, input) {
   } else if (field === "kind") {
     if (!value) delete part[field];
     else part[field] = value;
-  } else if (field === "ref" || field === "silk" || field === "pad" || field === "notes") {
+  } else if (field === "ref" || field === "silk" || field === "notes") {
     if (!value) delete part[field];
     else part[field] = value;
+  } else if (field === "pad") {
+    const canonical = value ? canonicalSocPad(part, value.trim()) : null;
+    if (!value.trim()) delete part.pad;
+    else part.pad = canonical || value.trim();
   }
   refresh();
 }
@@ -760,6 +834,16 @@ export function synthesizePins(part) {
 export function refresh() {
   els.boardName.value = state.board.board || "";
   els.boardSoc.value = state.board.soc || "";
+  if (els.boardSocPackage) els.boardSocPackage.value = state.board.soc_package || "";
+  if (els.boardSocPackages) {
+    const packages = Object.keys(state.socTable?.packages || {}).sort();
+    els.boardSocPackages.innerHTML = packages.map((name) => `<option value="${escapeAttr(name)}"></option>`).join("");
+  }
+  if (els.boardSocStatus) {
+    const status = activeSocStatus();
+    els.boardSocStatus.textContent = status.message;
+    els.boardSocStatus.className = `hint-mini ${status.kind === "linked" ? "ok" : status.kind === "inline" ? "" : "error"}`;
+  }
   if (els.boardMuxSource) els.boardMuxSource.value = state.board.mux_source || "inline";
   if (els.documentMode) els.documentMode.value = state.documentMode;
   if (els.boardPanel) els.boardPanel.hidden = state.documentMode !== "board";
@@ -1371,6 +1455,16 @@ function shortcutSections(mod) {
         ["Double-click tree name", "Rename part"],
       ],
     },
+    {
+      title: "SoC-backed board flow",
+      rows: [
+        ["Document → SoC", "Create the pad table and export socpad.yaml"],
+        ["Board → SoC/package", "Link the matching table and package"],
+        ["Selected → SoC pad", "Choose a canonical pad or alias"],
+        ["Inherited mux", "Read-only preview from the SoC table"],
+        ["Export", "Export pinout.yaml and ship both documents"],
+      ],
+    },
   ];
 }
 
@@ -1462,11 +1556,46 @@ export function bindUi() {
   els.boardSoc.addEventListener("change", () => {
     pushHistory();
     state.board.soc = els.boardSoc.value.trim();
+    resetSocIndexCache();
+    refresh();
+  });
+  els.boardSocPackage?.addEventListener("change", () => {
+    pushHistory();
+    const value = els.boardSocPackage.value.trim();
+    if (value) state.board.soc_package = value;
+    else delete state.board.soc_package;
+    resetSocIndexCache();
+    refresh();
+  });
+  els.boardSocLoadBtn?.addEventListener("click", () => els.boardSocInput?.click());
+  els.boardSocInput?.addEventListener("change", async () => {
+    const file = els.boardSocInput.files?.[0];
+    if (!file) return;
+    try {
+      const doc = yaml.load(await file.text());
+      const errors = socDiagnostics(doc);
+      if (errors.length) throw new Error(errors.join("; "));
+      pushHistory();
+      state.socTable = doc;
+      resetSocIndexCache();
+      if (!state.board.soc) state.board.soc = doc.soc;
+      if (els.boardMuxSource) state.board.mux_source = "soc";
+      refresh();
+    } catch (err) {
+      if (els.boardSocStatus) {
+        els.boardSocStatus.textContent = `Unable to link SoC table: ${err.message}`;
+        els.boardSocStatus.className = "hint-mini error";
+      }
+    } finally {
+      els.boardSocInput.value = "";
+    }
   });
   els.boardMuxSource?.addEventListener("change", () => {
     pushHistory();
     if (els.boardMuxSource.value === "soc") state.board.mux_source = "soc";
     else delete state.board.mux_source;
+    resetSocIndexCache();
+    refresh();
   });
   els.socName?.addEventListener("change", () => {
     pushHistory();

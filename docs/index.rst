@@ -17,8 +17,26 @@ controls above, or use the hosted editor at
 `https://malto101.github.io/board-pinout/editor/`_ to author a board visually.
 
 The editor imports and exports board ``pinout.yaml`` files. For SoC-backed boards,
-export the separate SoC pad table and place it at the consuming project's canonical
-path, such as ``soc/<vendor>/<soc>/doc/pinmux/<soc>.yaml`` in Zephyr.
+use this flow:
+
+#. Create or import a SoC pad table, add canonical pad names and aliases, then
+   add intrinsic electrical data and functions. Keep packages, routing, remaps,
+   and signal-selection rules in the advanced table data.
+#. Export the separate ``socpad.yaml`` table.
+#. In the board document, set ``soc``, optional ``soc_package``, and
+   ``mux_source: soc``. Load/link the matching table in the editor.
+#. Create board parts and choose their **SoC pad** from the canonical/alias-aware
+   selector. The inspector then previews inherited pad electrical data and mux
+   candidates; authored board mux entries remain separate overrides.
+#. Export ``pinout.yaml`` and place both files at the consuming project's
+   canonical paths, such as ``soc/<vendor>/<soc>/doc/pinmux/<soc>.yaml`` and
+   ``boards/<vendor>/<board>/doc/pinout.yaml`` in Zephyr.
+
+The board file stores the authored pad reference and overrides. The resolver
+materializes ``pad_info`` and inherited mux entries when consuming documentation
+or validation; the editor does not copy those derived fields into the board file.
+If the linked table does not match the board SoC/package, the editor reports the
+mismatch instead of showing stale derived details.
 
 .. _https://malto101.github.io/board-pinout/editor/: https://malto101.github.io/board-pinout/editor/
 

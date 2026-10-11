@@ -167,10 +167,11 @@ html, body, #app {
 
 .workspace {
   display: grid;
-  grid-template-columns: 48px 240px minmax(0, 1fr) 280px;
+  grid-template-columns: 48px 240px minmax(0, 1fr) minmax(280px, 340px);
   grid-template-rows: minmax(0, 1fr);
   height: calc(100% - 48px);
   min-height: 0;
+  min-width: 0;
 }
 
 .workspace > .rail { grid-column: 1; grid-row: 1; }
@@ -275,14 +276,130 @@ html, body, #app {
 
 .mux-row {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: 0.25rem;
   align-items: center;
   padding: 0.3rem;
   border: 1px solid var(--border);
   border-radius: 6px;
   background: #10131a;
+  min-width: 0;
 }
+
+.mux-row > * {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.mux-row.mux-inherited {
+  grid-template-columns: minmax(4rem, 0.8fr) minmax(4rem, 1fr) minmax(0, 1.45fr) minmax(3rem, 0.55fr);
+  font-size: 0.72rem;
+  color: #d4dbea;
+}
+
+.mux-row.mux-inherited > span {
+  overflow-wrap: anywhere;
+  white-space: normal;
+}
+
+.mux-cell-label {
+  display: block;
+  color: var(--muted);
+  font-size: 0.64rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.effective-details {
+  margin: 0.45rem 0;
+  padding-top: 0.35rem;
+  border-top: 1px solid var(--border);
+}
+
+.effective-details h4 {
+  margin: 0 0 0.3rem;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+}
+
+.zbp-meta-dl {
+  display: grid;
+  grid-template-columns: minmax(4.5rem, 0.7fr) minmax(0, 1.3fr);
+  gap: 0.2rem 0.45rem;
+  margin: 0;
+  min-width: 0;
+}
+
+.zbp-meta-dl dt,
+.zbp-meta-dl dd {
+  min-width: 0;
+  margin: 0;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+
+.zbp-meta-dl dt { color: var(--muted); font-size: 0.72rem; }
+.zbp-meta-dl dd { color: var(--text); font-size: 0.74rem; }
+.zbp-meta-value {
+  display: block;
+  max-height: 9rem;
+  overflow: auto;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.68rem;
+  line-height: 1.35;
+  white-space: pre-wrap;
+}
+
+.soc-pad-summary {
+  margin: 0.3rem 0 0;
+  color: var(--muted);
+  font-size: 0.7rem;
+  line-height: 1.35;
+}
+
+.mux-filter {
+  width: 100%;
+  min-width: 0;
+  margin: 0.25rem 0;
+}
+
+.meta-form label,
+.soc-authoring label,
+#boardPanel label,
+#socPanel label {
+  min-width: 0;
+}
+
+.meta-form input,
+.meta-form select,
+.meta-form textarea,
+.soc-authoring input,
+.soc-authoring select,
+.soc-authoring textarea,
+#boardPanel input,
+#boardPanel select,
+#socPanel input,
+#socPanel select,
+#socPanel textarea {
+  max-width: 100%;
+  min-width: 0;
+}
+
+.meta-form code,
+.soc-authoring code {
+  overflow-wrap: anywhere;
+}
+
+.pad-picker {
+  display: grid;
+  gap: 0.25rem;
+  margin: 0.35rem 0;
+}
+
+.pad-picker select,
+.pad-picker input { min-width: 0; width: 100%; }
 
 .mux-row input {
   width: 100%;
@@ -321,7 +438,46 @@ html, body, #app {
   flex-direction: column;
   gap: 0.45rem;
   min-height: 0;
+  min-width: 0;
 }
+
+.sidebar.right > .panel,
+.meta-form,
+.effective-details,
+.soc-authoring,
+.soc-link-actions {
+  min-width: 0;
+}
+
+.flow-hint {
+  margin: 0.25rem 0 0.55rem;
+  padding: 0.45rem 0.55rem;
+  border-left: 2px solid var(--accent);
+  background: rgba(76, 141, 255, 0.08);
+  color: #cbd8ee;
+  font-size: 0.76rem;
+  line-height: 1.45;
+}
+
+.soc-link-actions {
+  border-top: 1px solid var(--border);
+  margin-top: 0.35rem;
+  padding-top: 0.45rem;
+}
+
+.soc-link-actions .btn { width: 100%; }
+.soc-link-actions .hint-mini { margin: 0.35rem 0 0; }
+.soc-advanced {
+  margin-top: 0.5rem;
+  color: var(--muted);
+  font-size: 0.76rem;
+}
+.soc-advanced summary { cursor: pointer; color: var(--text); }
+
+#boardSocStatus.error,
+#socDiagnostics.error { color: #ffb6be; }
+#boardSocStatus.ok,
+#socDiagnostics.ok { color: #8fe3bb; }
 
 .sidebar.left { border-right: 1px solid var(--border); }
 .sidebar.right { border-left: 1px solid var(--border); }
@@ -987,6 +1143,10 @@ input, select, textarea {
   cursor: pointer;
   font: inherit;
   font-size: 0.8rem;
+}
+
+@media (max-width: 1280px) {
+  .workspace { grid-template-columns: 44px 210px minmax(0, 1fr) 300px; }
 }
 
 @media (max-width: 1100px) {

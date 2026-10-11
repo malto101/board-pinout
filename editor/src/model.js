@@ -36,12 +36,58 @@ export function activeSocIndex(part = null) {
   const table = state.socTable;
   if (!table || (requested && table.soc !== requested) || (!requested && !ref)) return null;
   const selected = ref || { id: table.soc, package: state.board.soc_package };
-  if (cachedSocTable !== table || cachedSocPackage !== selected.package) {
+  const packageName = selected.package || state.board.soc_package;
+  if (cachedSocTable !== table || cachedSocPackage !== packageName) {
     cachedSocTable = table;
-    cachedSocPackage = selected.package;
-    cachedSocIndex = buildSocIndex(table, selected.package);
+    cachedSocPackage = packageName;
+    cachedSocIndex = buildSocIndex(table, packageName);
   }
   return cachedSocIndex;
+}
+
+export function activeSocStatus(part = null) {
+  if (state.documentMode !== "board" || state.board.mux_source !== "soc") {
+    return { kind: "inline", message: "Inline mux authoring is active." };
+  }
+  const refs = boardSocRefs();
+  const requested = part?.soc;
+  const expected = requested || refs.find((ref) => ref.id === state.socTable?.soc)?.id || refs[0]?.id || state.board.soc;
+  if (!expected) return { kind: "missing", message: "Set a board SoC before linking a pad table." };
+  if (!state.socTable) return { kind: "missing", message: `Load the ${expected} SoC pad table.` };
+  if (state.socTable.soc !== expected) {
+    return { kind: "mismatch", message: `Loaded SoC ${state.socTable.soc || "(unnamed)"}; expected ${expected}.` };
+  }
+  const packageName = part?.soc_package || state.board.soc_package || refs.find((ref) => ref.id === expected)?.package;
+  if (packageName && state.socTable.packages && !state.socTable.packages[packageName]) {
+    return { kind: "package", message: `SoC table has no package named ${packageName}.` };
+  }
+  return { kind: "linked", message: `Linked ${expected}${packageName ? ` · package ${packageName}` : ""}.` };
+}
+
+export function socPadOptions(part = null) {
+  const index = activeSocIndex(part);
+  if (!index) return [];
+  return [...index.pads.values()].map((row) => ({
+    name: row.name,
+    aliases: row.aliases || [],
+    info: row.info || {},
+    functions: row.functions || [],
+  }));
+}
+
+export function canonicalSocPad(part, value) {
+  const index = activeSocIndex(part);
+  return index?.canonical(value) || null;
+}
+
+export function resetSocIndexCache() {
+  cachedSocIndex = null;
+  cachedSocTable = null;
+  cachedSocPackage = null;
+}
+
+export function boardSocReferences() {
+  return boardSocRefs();
 }
 
 function excludedMuxEntry(entry, patterns) {

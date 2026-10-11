@@ -1,0 +1,70 @@
+import assert from "node:assert/strict";
+import test from "node:test";
+import { JSDOM } from "jsdom";
+
+const dom = new JSDOM(`<!doctype html><body></body>`, { url: "https://editor.test/" });
+globalThis.window = dom.window;
+globalThis.document = dom.window.document;
+
+const [{ state }, ui] = await Promise.all([
+  import("../src/state.js"),
+  import("../src/ui.js"),
+]);
+
+function setup() {
+  state.documentMode = "board";
+  state.board = {
+    schema_version: "1.1",
+    board: "demo",
+    soc: "demo-soc",
+    soc_package: "qfn",
+    mux_source: "soc",
+    faces: { top: { children: [] } },
+  };
+  state.socTable = {
+    soc: "demo-soc",
+    packages: { qfn: { pads: { IO0: {} } } },
+    pads: {
+      IO0: {
+        aliases: ["GPIO0"],
+        type: "io",
+        pull: { pu_ohm: 45000 },
+        functions: [{ function: "UART0_TX", peripheral: "uart0", signal: "TX", source: "soc" }],
+      },
+    },
+  };
+}
+
+test("selected part rendering offers canonical SoC pad and formatted details", () => {
+  setup();
+  const part = {
+    id: "pin0",
+    pad: "GPIO0",
+    electrical: { pull: { mode: "up", ohm: 45000 } },
+    net: { role: "signal" },
+  };
+  const picker = ui.socPadPickerHtml(part);
+  assert.match(picker, /value="IO0"/);
+  assert.match(picker, /GPIO0/);
+  assert.match(picker, /Linked demo-soc/);
+
+  const details = ui.effectiveDetailsHtml(part);
+  assert.match(details, /Board override · pull/);
+  assert.match(details, /&quot;ohm&quot;: 45000/);
+  assert.match(details, /SoC table · type/);
+
+  const mux = ui.muxEditorHtml(part);
+  assert.match(mux, /Inherited from the active SoC table/);
+  assert.match(mux, /UART0_TX/);
+  assert.match(mux, /mux-cell-label/);
+});
+
+test("selected part rendering diagnoses a stale linked table", () => {
+  setup();
+  state.socTable.soc = "other-soc";
+  const html = ui.socPadPickerHtml({ id: "pin0", pad: "IO0" });
+  assert.match(html, /Loaded SoC other-soc; expected demo-soc/);
+  assert.match(html, /not found in linked table/);
+});
+
+dom.window.close();

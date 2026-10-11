@@ -36,8 +36,14 @@ export function socDiagnostics(table) {
 function merge(base, override) {
   var out = Object.assign({}, base || {}, override || {});
   ["pull", "reset", "strap", "tolerance"].forEach(function (key) {
-    if ((base && base[key]) || (override && override[key])) {
-      out[key] = Object.assign({}, base && base[key], override && override[key]);
+    var baseValue = base && base[key];
+    var overrideValue = override && override[key];
+    if (baseValue === undefined && overrideValue === undefined) return;
+    if (baseValue && typeof baseValue === "object" && !Array.isArray(baseValue) &&
+        overrideValue && typeof overrideValue === "object" && !Array.isArray(overrideValue)) {
+      out[key] = Object.assign({}, baseValue, overrideValue);
+    } else {
+      out[key] = overrideValue !== undefined ? overrideValue : baseValue;
     }
   });
   return out;
