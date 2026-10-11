@@ -9,6 +9,7 @@
     "prebuild": "npm run sync-types && npm run build:widget",
     "dev": "vite",
     "build": "vite build",
+    "test": "node --test",
     "preview": "vite preview"
   },
   "dependencies": {
@@ -16,6 +17,7 @@
   },
   "devDependencies": {
     "esbuild": "^0.25.0",
+    "jsdom": "^29.1.1",
     "vite": "^6.0.0"
   }
 }
