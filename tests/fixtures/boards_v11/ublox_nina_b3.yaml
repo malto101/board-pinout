@@ -1,0 +1,9 @@
+schema_version: "1.1"
+board: ublox_nina_b3
+kind: module
+soc: nrf52840
+pins:
+  J2: {pad: P0.13, silk: GPIO_1}
+  J4: {pad: P0.27, silk: GPIO_2}
+  "30": {net: {role: ground}}
+  "31": {net: {role: power_in, rail: VCC, v_range: [1.7, 3.6]}}

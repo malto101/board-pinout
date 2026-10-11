@@ -15,12 +15,13 @@ from typing import Any
 
 def _walk_ensure(parts: list[dict[str, Any]]) -> None:
     for part in parts:
-        # Prefer a neutral "status" if present; keep optional zephyr.* as authored.
-        if "status" not in part:
-            z = dict(part.get("zephyr") or {})
-            z.setdefault("status", "unknown")
-            part["zephyr"] = z
+        # Assignment status is neutral and belongs on each software assignment.
+        for assignment in part.get("assignments") or []:
+            if "status" not in assignment:
+                assignment["status"] = "unknown"
         _walk_ensure(part.get("children") or [])
+
+
 
 
 def ensure_status_defaults(resolved: dict[str, Any]) -> dict[str, Any]:

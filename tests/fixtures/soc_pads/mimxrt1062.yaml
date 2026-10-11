@@ -1,0 +1,52 @@
+# Archetype 2: ALT index per pad plus peripheral-side daisy (input select).
+# Drive strength in ohms (DSE), pads named by IOMUXC pad, BGA balls.
+schema_version: "1.0"
+soc: mimxrt1062
+reference: {title: i.MX RT1060 Reference Manual, revision: "3", section: "11 IOMUXC"}
+packages:
+  MAPBGA196:
+    pads: {GPIO_AD_B0_12: {ball: K14}, GPIO_AD_B0_13: {ball: L14}, GPIO_AD_B1_06: {ball: J12},
+           GPIO_AD_B1_07: {ball: K10}, GPIO_SD_B0_00: {ball: J4}}
+domains:
+  NVCC_GPIO: {io_voltages: [3.3]}
+  NVCC_SD0: {io_voltages: [1.8, 3.3], configurable: true}
+pad_defaults:
+  type: io
+  domain: NVCC_GPIO
+  drive_options: [{value: 150, unit: ohm}, {value: 75, unit: ohm}, {value: 50, unit: ohm},
+                  {value: 37, unit: ohm}, {value: 30, unit: ohm}, {value: 25, unit: ohm}, {value: 21, unit: ohm}]
+  pull: {pu_ohm: [22000, 47000, 100000], pd_ohm: 100000, bus_hold: true}
+  slew_options: [slow, fast]
+  reset: {mode: function, function: GPIO, bias: pull_down}
+pads:
+  GPIO_AD_B0_12:
+    aliases: [GPIO1_IO12]
+    functions:
+      - {function: LPUART1_TX, peripheral: LPUART1, signal: TX, mode: ALT2, direction: out,
+         vendor: {raw: "IOMUXC_GPIO_AD_B0_12_LPUART1_TX"}}
+      - {function: GPIO1_IO12, class: gpio, mode: ALT5}
+      - {function: ADC1_IN1, peripheral: ADC1, signal: IN1, class: analog, mode: ALT5,
+         requires: [Disable keeper (PKE=0)], analog: {channel: 1}}
+  GPIO_AD_B0_13:
+    aliases: [GPIO1_IO13]
+    functions:
+      - {function: LPUART1_RX, peripheral: LPUART1, signal: RX, mode: ALT2, direction: in}
+      - {function: GPIO1_IO13, class: gpio, mode: ALT5}
+  GPIO_AD_B1_06:
+    aliases: [GPIO1_IO22]
+    functions:
+      - {function: LPUART3_TX, peripheral: LPUART3, signal: TX, mode: ALT2,
+         input_select: {register: IOMUXC_LPUART3_TX_SELECT_INPUT, value: 0}}
+      - {function: GPIO1_IO22, class: gpio, mode: ALT5}
+  GPIO_AD_B1_07:
+    aliases: [GPIO1_IO23]
+    functions:
+      - {function: LPUART3_RX, peripheral: LPUART3, signal: RX, mode: ALT2,
+         input_select: {register: IOMUXC_LPUART3_RX_SELECT_INPUT, value: 0}}
+  GPIO_SD_B0_00:
+    domain: NVCC_SD0
+    aliases: [GPIO3_IO12]
+    functions:
+      - {function: USDHC1_CMD, peripheral: USDHC1, signal: CMD, mode: ALT0, direction: inout}
+      - {function: LPUART3_TX, peripheral: LPUART3, signal: TX, mode: ALT4,
+         input_select: {register: IOMUXC_LPUART3_TX_SELECT_INPUT, value: 1}}

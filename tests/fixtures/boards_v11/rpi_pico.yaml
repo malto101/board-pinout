@@ -1,0 +1,39 @@
+# Castellated edge pins, many power/GND pins, ADC_VREF, 3V3_EN, SMPS-mode pin.
+schema_version: "1.1"
+board: rpi_pico
+soc: rp2040
+mux_source: soc
+faces:
+  top:
+    underlay: rpi_pico.webp
+    children:
+      - id: left
+        kind: group
+        point: [0.1, 0.5]
+        connector: {binding: "raspberrypi,pico-header", refdes: J1}
+        children:
+          - {id: gp0, kind: pin, contact: "1", silk: GP0, nexus_index: 0, pad: GPIO0}
+          - {id: gp1, kind: pin, contact: "2", silk: GP1, nexus_index: 1, pad: GPIO1}
+          - {id: gnd3, kind: pin, contact: "3", silk: GND, net: {role: ground}}
+          - {id: gp12, kind: pin, contact: "16", silk: GP12, nexus_index: 12, pad: GPIO12, mux_exclude: ["PIO1"]}
+      - id: right
+        kind: group
+        point: [0.9, 0.5]
+        connector: {binding: "raspberrypi,pico-header", refdes: J2}
+        children:
+          - {id: gp26, kind: pin, contact: "31", silk: GP26, nexus_index: 26, pad: GPIO26}
+          - {id: run, kind: pin, contact: "30", silk: RUN, pad: RUN, electrical: {active_level: low, bias: pull_up, bias_source: external}}
+          - {id: adc_vref, kind: pin, contact: "35", silk: ADC_VREF, net: {role: ref, rail: ADC_VREF, nominal_v: 3.3}}
+          - {id: v3v3, kind: pin, contact: "36", silk: 3V3, net: {role: power_out, rail: 3V3, nominal_v: 3.3, max_current_ma: 300}}
+          - {id: v3v3_en, kind: pin, contact: "37", silk: 3V3_EN, net: {role: enable, active_level: high}}
+          - {id: vsys, kind: pin, contact: "39", silk: VSYS, net: {role: power_bidir, rail: VSYS, v_range: [1.8, 5.5]}}
+          - {id: vbus, kind: pin, contact: "40", silk: VBUS, net: {role: power_out, rail: VBUS, nominal_v: 5.0}}
+      - id: swd
+        kind: group
+        point: [0.5, 0.95]
+        connector: {binding: "arm,swd", refdes: J3}
+        children:
+          - {id: swclk, kind: pin, contact: "1", silk: SWCLK, pad: SWCLK}
+          - {id: swd_gnd, kind: pin, contact: "2", silk: GND, net: {role: ground}}
+          - {id: swdio, kind: pin, contact: "3", silk: SWDIO, pad: SWDIO}
+      - {id: led, ref: led_indicator, silk: LED, point: [0.5, 0.1], pad: GPIO0, notes: GP25 on real board}

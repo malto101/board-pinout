@@ -1,0 +1,35 @@
+# Archetype 4: signal-owned select bits (DEVALT). The pad does not own an AF
+# index; a function picks among candidate pads via its own register bits.
+schema_version: "1.0"
+soc: npcx9m6f
+reference: {title: NPCX9 Datasheet, section: "Device Alternate Function (DEVALT)"}
+domains:
+  VHIF: {io_voltages: [1.8, 3.3], configurable: true}
+  VSPI: {io_voltages: [1.8, 3.3]}
+pad_defaults:
+  type: io
+  domain: VHIF
+  pull: {pu_ohm: 40000, pd_ohm: 40000}
+  reset: {mode: input, bias: none}
+pads:
+  GP10: {aliases: [GPIO10], functions: [{function: GPIO10, class: gpio}]}
+  GP11: {aliases: [GPIO11], functions: [{function: GPIO11, class: gpio}]}
+  GP64: {aliases: [GPIO64], functions: [{function: GPIO64, class: gpio}]}
+  GP65: {aliases: [GPIO65], functions: [{function: GPIO65, class: gpio}]}
+  GPB2: {aliases: [GPIOB2], tolerance: {class: 5V_TOL, max_v: 5.0}, functions: [{function: GPIOB2, class: gpio}]}
+  GPB3: {aliases: [GPIOB3], functions: [{function: GPIOB3, class: gpio}]}
+  GP90: {aliases: [GPIO90], domain: VSPI, functions: [{function: GPIO90, class: gpio}]}
+  VREF_ADC: {type: analog_only, functions: [{function: ADC_VREF, class: analog, direction: in}]}
+signal_select:
+  UART1_SIN:
+    - {set: SL1, pad: GP10, vendor: {alts: "&alt9_cr_sin1_sl1"}}
+    - {set: SL2, pad: GP64, vendor: {alts: "&alt0a_cr_sin1_sl2"}}
+  UART1_SOUT:
+    - {set: SL1, pad: GP11}
+    - {set: SL2, pad: GP65}
+  I2C0_0_SDA:
+    - {set: SL0_0, pad: GPB3, requires: [Clear DEVALT2 SMB0SDA0 low-voltage select for 1.8 V]}
+  I2C0_0_SCL:
+    - {set: SL0_0, pad: GPB2}
+  ADC0_CH0:
+    - {pad: GP90, mode: ANALOG}

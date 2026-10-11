@@ -1,0 +1,7 @@
+# Part delta: inherits mimxrt1062 and drops pads/functions the smaller part lacks
+# (the NXP header #undef pattern).
+schema_version: "1.0"
+soc: mimxrt1061
+based_on: mimxrt1062
+pads_exclude: [GPIO_SD_B0_00]
+functions_exclude: ["LCDIF.*"]

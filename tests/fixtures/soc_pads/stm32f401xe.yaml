@@ -1,0 +1,80 @@
+# Archetype 1: fixed AF index per pad. Packages, 5 V tolerance (FT), analog
+# loses FT, multiple reset states (SWD), package-limited functions.
+schema_version: "1.0"
+soc: stm32f401xe
+reference: {title: RM0368 / DS10086, revision: "5"}
+packages:
+  LQFP64:
+    pads: {PA0: {pin: "14"}, PA2: {pin: "16"}, PA3: {pin: "17"}, PA5: {pin: "21"}, PA13: {pin: "46"},
+           PA14: {pin: "49"}, PB8: {pin: "61"}, PB9: {pin: "62"}, PC13: {pin: "2"}, PH0: {pin: "5"}}
+  UFQFPN48:
+    pads: {PA0: {pin: "10"}, PA2: {pin: "12"}, PA3: {pin: "13"}, PA5: {pin: "15"}, PA13: {pin: "34"},
+           PA14: {pin: "37"}, PB8: {pin: "45"}, PB9: {pin: "46"}, PC13: {pin: "2"}, PH0: {pin: "5"}}
+  WLCSP49:
+    pads: {PA0: {ball: "E5"}, PA2: {ball: "G6"}, PA13: {ball: "A2"}}
+    functions_exclude: [TIM5_CH1]
+domains:
+  VDD: {range: [1.7, 3.6], io_voltages: [3.3]}
+  VBAT: {range: [1.65, 3.6]}
+pad_defaults:
+  type: io
+  domain: VDD
+  tolerance: {class: FT, max_v: 5.5, lost_in_analog: true}
+  drive_options: [{value: 0, unit: level, label: low}, {value: 1, unit: level, label: medium},
+                  {value: 2, unit: level, label: fast}, {value: 3, unit: level, label: high}]
+  slew_options: [slow, medium, fast, very_fast]
+  pull: {pu_ohm: [30000, 50000], pd_ohm: [30000, 50000]}
+  schmitt: true
+  max_current_ma: 25
+  reset: {mode: input, bias: none}
+pads:
+  PA0:
+    tolerance: {class: TC, max_v: 3.6}
+    functions:
+      - {function: TIM2_CH1, peripheral: TIM2, signal: CH1, mode: AF1, vendor: {raw: "STM32_PINMUX('A', 0, AF1)"}}
+      - {function: TIM5_CH1, peripheral: TIM5, signal: CH1, mode: AF2}
+      - {function: USART2_CTS, peripheral: USART2, signal: CTS, mode: AF7, class: digital, direction: in}
+      - {function: ADC1_IN0, peripheral: ADC1, signal: IN0, mode: ANALOG, class: analog, analog: {channel: 0}}
+      - {function: WKUP, class: wakeup, mode: SYS}
+  PA2:
+    functions:
+      - {function: USART2_TX, peripheral: USART2, signal: TX, mode: AF7, direction: out}
+      - {function: ADC1_IN2, peripheral: ADC1, signal: IN2, mode: ANALOG, class: analog, analog: {channel: 2}}
+  PA3:
+    functions:
+      - {function: USART2_RX, peripheral: USART2, signal: RX, mode: AF7, direction: in}
+      - {function: ADC1_IN3, peripheral: ADC1, signal: IN3, mode: ANALOG, class: analog, analog: {channel: 3}}
+  PA5:
+    functions:
+      - {function: SPI1_SCK, peripheral: SPI1, signal: SCK, mode: AF5}
+      - {function: TIM2_CH1_ETR, peripheral: TIM2, signal: CH1, mode: AF1, group: ETR}
+  PA13:
+    reset: {mode: function, bias: pull_up, function: SWDIO}
+    functions: [{function: SWDIO, peripheral: SWD, signal: DIO, mode: AF0, class: debug, direction: inout}]
+  PA14:
+    reset: {mode: function, bias: pull_down, function: SWCLK}
+    functions: [{function: SWCLK, peripheral: SWD, signal: CLK, mode: AF0, class: debug, direction: in}]
+  PB8:
+    functions:
+      - {function: I2C1_SCL, peripheral: I2C1, signal: SCL, mode: AF4}
+      - {function: SDIO_D4, peripheral: SDIO, signal: D4, mode: AF12, packages: [LQFP64]}
+  PB9:
+    functions: [{function: I2C1_SDA, peripheral: I2C1, signal: SDA, mode: AF4}]
+  PC13:
+    domain: VBAT
+    tolerance: {class: FT, max_v: 5.5}
+    drive_options: [{value: 3, unit: mA}]
+    max_current_ma: 3
+    functions: [{function: RTC_AF1, class: wakeup, mode: SYS}]
+  PH0:
+    functions: [{function: RCC_OSC_IN, class: clock, mode: SYS, direction: in}]
+  BOOT0:
+    type: input_only
+    tolerance: {class: B}
+    strap: {function: BOOT0, sampled_at: reset, level: low}
+    functions: [{function: BOOT0, class: system, direction: in}]
+  VDD:
+    type: power
+    domain: VDD
+  VSS:
+    type: ground

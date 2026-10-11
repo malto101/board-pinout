@@ -1,0 +1,41 @@
+# Archetype 3: peripheral-wide remap (AFIO_MAPR). Pads list only GPIO/analog;
+# digital peripherals reach pads through remaps.
+schema_version: "1.0"
+soc: stm32f103xb
+reference: {title: RM0008, revision: "21", section: "9.3 Alternate function I/O and debug configuration"}
+domains:
+  VDD: {range: [2.0, 3.6]}
+pad_defaults: {type: io, domain: VDD, tolerance: {class: FT, max_v: 5.5, lost_in_analog: true}}
+pads:
+  PA2: {functions: [{function: ADC12_IN2, class: analog, mode: ANALOG, analog: {channel: 2}}]}
+  PA3: {functions: [{function: ADC12_IN3, class: analog, mode: ANALOG, analog: {channel: 3}}]}
+  PA9: {}
+  PA10: {}
+  PB6: {}
+  PB7: {}
+  PB10: {}
+  PB11: {}
+  PC10: {}
+  PC11: {}
+  PD8: {}
+  PD9: {}
+  PA0: {tolerance: {class: TC, max_v: 3.6}}
+  PA15: {reset: {mode: function, bias: pull_up, function: JTDI}}
+  PB3: {reset: {mode: function, bias: none, function: JTDO}}
+remaps:
+  USART1:
+    - {value: 0, label: USART1_REMAP0, pads: {TX: PA9, RX: PA10},
+       vendor: {raw: "STM32F1_PINMUX('A', 9, ALTERNATE, USART1_REMAP0)"}}
+    - {value: 1, label: USART1_REMAP1, pads: {TX: PB6, RX: PB7},
+       vendor: {raw: "STM32F1_PINMUX('B', 6, ALTERNATE, USART1_REMAP1)"}}
+  USART3:
+    - {value: 0, pads: {TX: PB10, RX: PB11}}
+    - {value: 1, pads: {TX: PC10, RX: PC11}, packages: [LQFP100]}
+    - {value: 3, pads: {TX: PD8, RX: PD9}, packages: [LQFP100]}
+  TIM2:
+    - {value: 0, pads: {CH1_ETR: PA0, CH3: PB10, CH4: PB11}}
+    - {value: 3, label: full remap, pads: {CH1_ETR: PA15, CH2: PB3, CH3: PB10, CH4: PB11},
+       vendor: {requires_jtag_disable: true}}
+packages:
+  LQFP48: {pads: {PA0: {pin: "10"}, PA9: {pin: "30"}, PA10: {pin: "31"}, PB6: {pin: "42"}, PB7: {pin: "43"}}}
+  LQFP100: {}
