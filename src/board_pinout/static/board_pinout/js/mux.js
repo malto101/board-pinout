@@ -15,13 +15,17 @@ export function normalizeMuxEntry(entry) {
       peripheral = fn;
     }
   }
-  return {
+  // Keep the complete authored entry for details and round-trip export. The
+  // fields below are the canonical display projection, but normalization must
+  // never discard schema-valid mux metadata (direction, analog, packages,
+  // input selection, vendor data, and so on).
+  return Object.assign({}, entry, {
     mode: entry.mode,
     function: fn,
     peripheral: peripheral.toLowerCase(),
     signal: signal || fn,
     source: entry.source,
-  };
+  });
 }
 
 /** Same rule as soc_pads._function_matches: ``PERIPH.*`` or an exact function name. */

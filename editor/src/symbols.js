@@ -1,18 +1,8 @@
 import { state } from "./state.js";
 import { escapeAttr } from "./util.js";
+import { PART_SYMBOLS as SHARED_PART_SYMBOLS, visualForPart } from "../../src/board_pinout/static/board_pinout/js/visual.js";
 
-export const PART_SYMBOLS = {
-  group: { title: "Group", color: "#a78bfa", glyph: "▦" },
-  gnd: { title: "GND", color: "#9aa3b5", glyph: "⊥" },
-  power: { title: "Power", color: "#e35d6a", glyph: "+" },
-  led: { title: "LED", color: "#fbbf24", glyph: "◆" },
-  button: { title: "Button", color: "#2dd4bf", glyph: "■" },
-  switch: { title: "Switch", color: "#60a5fa", glyph: "◗" },
-  sensor: { title: "Sensor", color: "#34d399", glyph: "◎" },
-  port: { title: "Port", color: "#38bdf8", glyph: "▣" },
-  io: { title: "I/O", color: "#f5a623", glyph: "●" },
-  nc: { title: "NC", color: "#6b7280", glyph: "×" },
-};
+export const PART_SYMBOLS = SHARED_PART_SYMBOLS;
 
 /** Roles you can assign to a pin / selection (not groups). */
 export const PIN_ROLES = ["io", "gnd", "power", "led", "button", "switch", "sensor", "port", "nc"];
@@ -72,27 +62,7 @@ export function applyRoleToPart(part, roleKey) {
 
 export function resolvePartVisual(part) {
   if (!part) return { key: "io", ...PART_SYMBOLS.io };
-  const typ = state.types[part.ref || ""] || {};
-  const kind = part.kind || typ.kind || "";
-  const net = NET_ROLES[(part.net || typ.default_net || {}).role] || "";
-  const control = (part.control_type || typ.control_type || "").toLowerCase();
-  const recept = part.receptacle_type || typ.receptacle_type || "";
-  const text = [part.silk, part.id, part.ref, part.pad, part.notes].filter(Boolean).join(" ").toLowerCase();
-
-  let key = "io";
-  if (net === "gnd" || /\bgnd\b|\bground\b/.test(text)) key = "gnd";
-  else if (net === "power" || /\b(vcc|vdd|vbus|vin|3v3|5v|pwr|power)\b/.test(text)) key = "power";
-  else if (net === "nc" || /(^|\b)nc(\b|$)/.test(text)) key = "nc";
-  else if (kind === "group" || kind === "pin_array") key = "group";
-  else if (control === "led" || part.ref === "led_indicator" || /\bleds?\b/.test(text)) key = "led";
-  else if (control === "button" || part.ref === "tactile_button" || /\b(btn|button)\b/.test(text)) key = "button";
-  else if (control === "switch" || part.ref === "power_switch" || /\b(switch|\bsw\d*)\b/.test(text)) key = "switch";
-  else if (recept || kind === "receptacle" || /usb|hdmi|eth|rj45/.test(text)) key = "port";
-  else if (/sensor|imu|temp|accel|gyro|humid|press/.test(text)) key = "sensor";
-  else key = "io";
-
-  const meta = PART_SYMBOLS[key] || PART_SYMBOLS.io;
-  return { key, title: meta.title, color: meta.color, glyph: meta.glyph };
+  return visualForPart(part, state.types);
 }
 
 export function partSymBadge(partOrKey) {

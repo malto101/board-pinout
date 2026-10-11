@@ -2,8 +2,8 @@ import { state, els, pushHistory } from "./state.js";
 import {
   findPart,
   visibleMarkers,
-  partHasPeripheral,
-  partMuxEntries,
+  effectivePartHasPeripheral,
+  muxEntriesForView,
 } from "./model.js";
 import { markerSymbolMarkup, resolvePartVisual } from "./symbols.js";
 import {
@@ -306,8 +306,8 @@ export function renderOverlay() {
       const off = labelOffset(idx, markers.length, p, box, autoOffs);
       const primary = p.id === state.selectedId;
       const inMulti = state.selectedIds.has(p.id);
-      const muxHit = state.peripheralFilter && partHasPeripheral(p, state.peripheralFilter);
-      const dimmed = state.peripheralFilter && !partHasPeripheral(p, state.peripheralFilter);
+      const muxHit = state.peripheralFilter && effectivePartHasPeripheral(p, state.peripheralFilter);
+      const dimmed = state.peripheralFilter && !effectivePartHasPeripheral(p, state.peripheralFilter);
       const active = primary || inMulti || !!muxHit;
       const visual = resolvePartVisual(p);
       const label = p.silk || p.id;
@@ -338,7 +338,7 @@ export function renderOverlay() {
           : "";
       const muxSig =
         muxHit && state.peripheralFilter
-          ? partMuxEntries(p)
+          ? muxEntriesForView(p)
               .filter((m) => m.peripheral === state.peripheralFilter)
               .map((m) => m.signal)
               .join(",")

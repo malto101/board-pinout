@@ -1,0 +1,517 @@
+# ESP32-S3 pad table for board-pinout.
+# IO_MUX functions: hal_espressif components/soc/esp32s3/register/soc/io_mux_reg.h
+# GPIO matrix signals: include/zephyr/dt-bindings/pinctrl/esp32s3-pinctrl.h
+schema_version: "1.0"
+soc: esp32s3
+description: ESP32-S3 (Xtensa LX7 dual core, Wi-Fi, Bluetooth LE)
+reference: {title: ESP32-S3 Technical Reference Manual, section: "6 IO MUX and GPIO Matrix", url: "https://www.espressif.com/sites/default/files/documentation/esp32-s3_technical_reference_manual_en.pdf"}
+domains:
+  VDD3P3_RTC: {io_voltages: [3.3], notes: RTC IO domain (GPIO0-GPIO21)}
+  VDD3P3_CPU: {io_voltages: [3.3], notes: Digital IO domain (GPIO38-GPIO48)}
+  VDD_SPI: {io_voltages: [1.8, 3.3], configurable: true, notes: "Flash/PSRAM domain (GPIO26-GPIO37), selected by GPIO45 strap or eFuse"}
+pad_defaults:
+  type: io
+  domain: VDD3P3_RTC
+  drive_options: [{value: 5, unit: mA}, {value: 10, unit: mA}, {value: 20, unit: mA}, {value: 40, unit: mA}]
+  pull: {pu_ohm: 45000, pd_ohm: 45000}
+  reset: {mode: input, bias: none}
+pads:
+  GPIO0:
+    reset: {mode: input, bias: pull_up}
+    strap: {function: BOOT_MODE, sampled_at: reset, level: high, notes: Low (with GPIO46 low) enters download mode}
+    functions:
+      - {function: GPIO0, class: gpio, mode: 1}
+      - {function: RTC_GPIO0, class: wakeup, mode: RTC}
+  GPIO1:
+    functions:
+      - {function: GPIO1, class: gpio, mode: 1}
+      - {function: ADC1_CH0, peripheral: ADC1, signal: CH0, class: analog, mode: ANALOG, analog: {channel: 0, polarity: single}}
+      - {function: TOUCH1, peripheral: TOUCH, signal: CH1, class: analog, mode: RTC}
+      - {function: RTC_GPIO1, class: wakeup, mode: RTC}
+  GPIO2:
+    functions:
+      - {function: GPIO2, class: gpio, mode: 1}
+      - {function: ADC1_CH1, peripheral: ADC1, signal: CH1, class: analog, mode: ANALOG, analog: {channel: 1, polarity: single}}
+      - {function: TOUCH2, peripheral: TOUCH, signal: CH2, class: analog, mode: RTC}
+      - {function: RTC_GPIO2, class: wakeup, mode: RTC}
+  GPIO3:
+    strap: {function: JTAG_SEL, sampled_at: reset, level: any, notes: Selects JTAG source when eFuse STRAP_JTAG_SEL is set}
+    functions:
+      - {function: GPIO3, class: gpio, mode: 1}
+      - {function: ADC1_CH2, peripheral: ADC1, signal: CH2, class: analog, mode: ANALOG, analog: {channel: 2, polarity: single}}
+      - {function: TOUCH3, peripheral: TOUCH, signal: CH3, class: analog, mode: RTC}
+      - {function: RTC_GPIO3, class: wakeup, mode: RTC}
+  GPIO4:
+    functions:
+      - {function: GPIO4, class: gpio, mode: 1}
+      - {function: ADC1_CH3, peripheral: ADC1, signal: CH3, class: analog, mode: ANALOG, analog: {channel: 3, polarity: single}}
+      - {function: TOUCH4, peripheral: TOUCH, signal: CH4, class: analog, mode: RTC}
+      - {function: RTC_GPIO4, class: wakeup, mode: RTC}
+  GPIO5:
+    functions:
+      - {function: GPIO5, class: gpio, mode: 1}
+      - {function: ADC1_CH4, peripheral: ADC1, signal: CH4, class: analog, mode: ANALOG, analog: {channel: 4, polarity: single}}
+      - {function: TOUCH5, peripheral: TOUCH, signal: CH5, class: analog, mode: RTC}
+      - {function: RTC_GPIO5, class: wakeup, mode: RTC}
+  GPIO6:
+    functions:
+      - {function: GPIO6, class: gpio, mode: 1}
+      - {function: ADC1_CH5, peripheral: ADC1, signal: CH5, class: analog, mode: ANALOG, analog: {channel: 5, polarity: single}}
+      - {function: TOUCH6, peripheral: TOUCH, signal: CH6, class: analog, mode: RTC}
+      - {function: RTC_GPIO6, class: wakeup, mode: RTC}
+  GPIO7:
+    functions:
+      - {function: GPIO7, class: gpio, mode: 1}
+      - {function: ADC1_CH6, peripheral: ADC1, signal: CH6, class: analog, mode: ANALOG, analog: {channel: 6, polarity: single}}
+      - {function: TOUCH7, peripheral: TOUCH, signal: CH7, class: analog, mode: RTC}
+      - {function: RTC_GPIO7, class: wakeup, mode: RTC}
+  GPIO8:
+    functions:
+      - {function: SUBSPICS1, peripheral: SUBSPI, signal: CS1, class: digital, direction: out, mode: 3}
+      - {function: GPIO8, class: gpio, mode: 1}
+      - {function: ADC1_CH7, peripheral: ADC1, signal: CH7, class: analog, mode: ANALOG, analog: {channel: 7, polarity: single}}
+      - {function: TOUCH8, peripheral: TOUCH, signal: CH8, class: analog, mode: RTC}
+      - {function: RTC_GPIO8, class: wakeup, mode: RTC}
+  GPIO9:
+    functions:
+      - {function: SUBSPIHD, peripheral: SUBSPI, signal: HD, class: digital, direction: inout, mode: 3}
+      - {function: FSPIHD, peripheral: SPI2, signal: HD, class: digital, direction: inout, mode: 4}
+      - {function: GPIO9, class: gpio, mode: 1}
+      - {function: ADC1_CH8, peripheral: ADC1, signal: CH8, class: analog, mode: ANALOG, analog: {channel: 8, polarity: single}}
+      - {function: TOUCH9, peripheral: TOUCH, signal: CH9, class: analog, mode: RTC}
+      - {function: RTC_GPIO9, class: wakeup, mode: RTC}
+  GPIO10:
+    functions:
+      - {function: FSPIIO4, peripheral: SPI2, signal: IO4, class: digital, direction: inout, mode: 2}
+      - {function: SUBSPICS0, peripheral: SUBSPI, signal: CS0, class: digital, direction: out, mode: 3}
+      - {function: FSPICS0, peripheral: SPI2, signal: CS0, class: digital, direction: out, mode: 4}
+      - {function: GPIO10, class: gpio, mode: 1}
+      - {function: ADC1_CH9, peripheral: ADC1, signal: CH9, class: analog, mode: ANALOG, analog: {channel: 9, polarity: single}}
+      - {function: TOUCH10, peripheral: TOUCH, signal: CH10, class: analog, mode: RTC}
+      - {function: RTC_GPIO10, class: wakeup, mode: RTC}
+  GPIO11:
+    functions:
+      - {function: FSPIIO5, peripheral: SPI2, signal: IO5, class: digital, direction: inout, mode: 2}
+      - {function: SUBSPID, peripheral: SUBSPI, signal: D, class: digital, direction: inout, mode: 3}
+      - {function: FSPID, peripheral: SPI2, signal: D, class: digital, direction: inout, mode: 4}
+      - {function: GPIO11, class: gpio, mode: 1}
+      - {function: ADC2_CH0, peripheral: ADC2, signal: CH0, class: analog, mode: ANALOG, analog: {channel: 0, polarity: single}}
+      - {function: TOUCH11, peripheral: TOUCH, signal: CH11, class: analog, mode: RTC}
+      - {function: RTC_GPIO11, class: wakeup, mode: RTC}
+  GPIO12:
+    functions:
+      - {function: FSPIIO6, peripheral: SPI2, signal: IO6, class: digital, direction: inout, mode: 2}
+      - {function: SUBSPICLK, peripheral: SUBSPI, signal: CLK, class: digital, direction: out, mode: 3}
+      - {function: FSPICLK, peripheral: SPI2, signal: CLK, class: digital, direction: out, mode: 4}
+      - {function: GPIO12, class: gpio, mode: 1}
+      - {function: ADC2_CH1, peripheral: ADC2, signal: CH1, class: analog, mode: ANALOG, analog: {channel: 1, polarity: single}}
+      - {function: TOUCH12, peripheral: TOUCH, signal: CH12, class: analog, mode: RTC}
+      - {function: RTC_GPIO12, class: wakeup, mode: RTC}
+  GPIO13:
+    functions:
+      - {function: FSPIIO7, peripheral: SPI2, signal: IO7, class: digital, direction: inout, mode: 2}
+      - {function: SUBSPIQ, peripheral: SUBSPI, signal: Q, class: digital, direction: inout, mode: 3}
+      - {function: FSPIQ, peripheral: SPI2, signal: Q, class: digital, direction: inout, mode: 4}
+      - {function: GPIO13, class: gpio, mode: 1}
+      - {function: ADC2_CH2, peripheral: ADC2, signal: CH2, class: analog, mode: ANALOG, analog: {channel: 2, polarity: single}}
+      - {function: TOUCH13, peripheral: TOUCH, signal: CH13, class: analog, mode: RTC}
+      - {function: RTC_GPIO13, class: wakeup, mode: RTC}
+  GPIO14:
+    functions:
+      - {function: FSPIDQS, peripheral: SPI2, signal: DQS, class: digital, direction: inout, mode: 2}
+      - {function: SUBSPIWP, peripheral: SUBSPI, signal: WP, class: digital, direction: inout, mode: 3}
+      - {function: FSPIWP, peripheral: SPI2, signal: WP, class: digital, direction: inout, mode: 4}
+      - {function: GPIO14, class: gpio, mode: 1}
+      - {function: ADC2_CH3, peripheral: ADC2, signal: CH3, class: analog, mode: ANALOG, analog: {channel: 3, polarity: single}}
+      - {function: TOUCH14, peripheral: TOUCH, signal: CH14, class: analog, mode: RTC}
+      - {function: RTC_GPIO14, class: wakeup, mode: RTC}
+  GPIO15:
+    functions:
+      - {function: U0RTS, peripheral: UART0, signal: RTS, class: digital, direction: out, mode: 2}
+      - {function: GPIO15, class: gpio, mode: 1}
+      - {function: ADC2_CH4, peripheral: ADC2, signal: CH4, class: analog, mode: ANALOG, analog: {channel: 4, polarity: single}}
+      - {function: XTAL_32K_P, peripheral: XTAL_32K, signal: P, class: clock, mode: RTC}
+      - {function: RTC_GPIO15, class: wakeup, mode: RTC}
+  GPIO16:
+    functions:
+      - {function: U0CTS, peripheral: UART0, signal: CTS, class: digital, direction: in, mode: 2}
+      - {function: GPIO16, class: gpio, mode: 1}
+      - {function: ADC2_CH5, peripheral: ADC2, signal: CH5, class: analog, mode: ANALOG, analog: {channel: 5, polarity: single}}
+      - {function: XTAL_32K_N, peripheral: XTAL_32K, signal: N, class: clock, mode: RTC}
+      - {function: RTC_GPIO16, class: wakeup, mode: RTC}
+  GPIO17:
+    functions:
+      - {function: U1TXD, peripheral: UART1, signal: TXD, class: digital, direction: out, mode: 2}
+      - {function: GPIO17, class: gpio, mode: 1}
+      - {function: ADC2_CH6, peripheral: ADC2, signal: CH6, class: analog, mode: ANALOG, analog: {channel: 6, polarity: single}}
+      - {function: RTC_GPIO17, class: wakeup, mode: RTC}
+  GPIO18:
+    functions:
+      - {function: U1RXD, peripheral: UART1, signal: RXD, class: digital, direction: in, mode: 2}
+      - {function: CLK_OUT3, peripheral: CLK_OUT, signal: OUT3, class: clock, direction: out, mode: 3}
+      - {function: GPIO18, class: gpio, mode: 1}
+      - {function: ADC2_CH7, peripheral: ADC2, signal: CH7, class: analog, mode: ANALOG, analog: {channel: 7, polarity: single}}
+      - {function: RTC_GPIO18, class: wakeup, mode: RTC}
+  GPIO19:
+    functions:
+      - {function: U1RTS, peripheral: UART1, signal: RTS, class: digital, direction: out, mode: 2}
+      - {function: CLK_OUT2, peripheral: CLK_OUT, signal: OUT2, class: clock, direction: out, mode: 3}
+      - {function: GPIO19, class: gpio, mode: 1}
+      - {function: ADC2_CH8, peripheral: ADC2, signal: CH8, class: analog, mode: ANALOG, analog: {channel: 8, polarity: single}}
+      - {function: USB_D_N, peripheral: USB, signal: "D-", class: digital, direction: inout, mode: ANALOG}
+      - {function: RTC_GPIO19, class: wakeup, mode: RTC}
+  GPIO20:
+    functions:
+      - {function: U1CTS, peripheral: UART1, signal: CTS, class: digital, direction: in, mode: 2}
+      - {function: CLK_OUT1, peripheral: CLK_OUT, signal: OUT1, class: clock, direction: out, mode: 3}
+      - {function: GPIO20, class: gpio, mode: 1}
+      - {function: ADC2_CH9, peripheral: ADC2, signal: CH9, class: analog, mode: ANALOG, analog: {channel: 9, polarity: single}}
+      - {function: USB_D_P, peripheral: USB, signal: "D+", class: digital, direction: inout, mode: ANALOG}
+      - {function: RTC_GPIO20, class: wakeup, mode: RTC}
+  GPIO21:
+    functions:
+      - {function: GPIO21, class: gpio, mode: 1}
+      - {function: RTC_GPIO21, class: wakeup, mode: RTC}
+  GPIO26:
+    domain: VDD_SPI
+    notes: Connected to in-package or module flash/PSRAM on most parts
+    functions:
+      - {function: SPICS1, peripheral: SPI0, signal: CS1, class: digital, direction: out, mode: 0}
+      - {function: GPIO26, class: gpio, mode: 1}
+  GPIO27:
+    domain: VDD_SPI
+    notes: Connected to in-package or module flash/PSRAM on most parts
+    functions:
+      - {function: SPIHD, peripheral: SPI0, signal: HD, class: digital, direction: inout, mode: 0}
+      - {function: GPIO27, class: gpio, mode: 1}
+  GPIO28:
+    domain: VDD_SPI
+    notes: Connected to in-package or module flash/PSRAM on most parts
+    functions:
+      - {function: SPIWP, peripheral: SPI0, signal: WP, class: digital, direction: inout, mode: 0}
+      - {function: GPIO28, class: gpio, mode: 1}
+  GPIO29:
+    domain: VDD_SPI
+    notes: Connected to in-package or module flash/PSRAM on most parts
+    functions:
+      - {function: SPICS0, peripheral: SPI0, signal: CS0, class: digital, direction: out, mode: 0}
+      - {function: GPIO29, class: gpio, mode: 1}
+  GPIO30:
+    domain: VDD_SPI
+    notes: Connected to in-package or module flash/PSRAM on most parts
+    functions:
+      - {function: SPICLK, peripheral: SPI0, signal: CLK, class: digital, direction: out, mode: 0}
+      - {function: GPIO30, class: gpio, mode: 1}
+  GPIO31:
+    domain: VDD_SPI
+    notes: Connected to in-package or module flash/PSRAM on most parts
+    functions:
+      - {function: SPIQ, peripheral: SPI0, signal: Q, class: digital, direction: inout, mode: 0}
+      - {function: GPIO31, class: gpio, mode: 1}
+  GPIO32:
+    domain: VDD_SPI
+    notes: Connected to in-package or module flash/PSRAM on most parts
+    functions:
+      - {function: SPID, peripheral: SPI0, signal: D, class: digital, direction: inout, mode: 0}
+      - {function: GPIO32, class: gpio, mode: 1}
+  GPIO33:
+    domain: VDD_SPI
+    notes: Connected to in-package or module flash/PSRAM on most parts
+    functions:
+      - {function: FSPIHD, peripheral: SPI2, signal: HD, class: digital, direction: inout, mode: 2}
+      - {function: SUBSPIHD, peripheral: SUBSPI, signal: HD, class: digital, direction: inout, mode: 3}
+      - {function: SPIIO4, peripheral: SPI0, signal: IO4, class: digital, direction: inout, mode: 4}
+      - {function: GPIO33, class: gpio, mode: 1}
+  GPIO34:
+    domain: VDD_SPI
+    notes: Connected to in-package or module flash/PSRAM on most parts
+    functions:
+      - {function: FSPICS0, peripheral: SPI2, signal: CS0, class: digital, direction: out, mode: 2}
+      - {function: SUBSPICS0, peripheral: SUBSPI, signal: CS0, class: digital, direction: out, mode: 3}
+      - {function: SPIIO5, peripheral: SPI0, signal: IO5, class: digital, direction: inout, mode: 4}
+      - {function: GPIO34, class: gpio, mode: 1}
+  GPIO35:
+    domain: VDD_SPI
+    notes: Connected to in-package or module flash/PSRAM on most parts
+    functions:
+      - {function: FSPID, peripheral: SPI2, signal: D, class: digital, direction: inout, mode: 2}
+      - {function: SUBSPID, peripheral: SUBSPI, signal: D, class: digital, direction: inout, mode: 3}
+      - {function: SPIIO6, peripheral: SPI0, signal: IO6, class: digital, direction: inout, mode: 4}
+      - {function: GPIO35, class: gpio, mode: 1}
+  GPIO36:
+    domain: VDD_SPI
+    notes: Connected to in-package or module flash/PSRAM on most parts
+    functions:
+      - {function: FSPICLK, peripheral: SPI2, signal: CLK, class: digital, direction: out, mode: 2}
+      - {function: SUBSPICLK, peripheral: SUBSPI, signal: CLK, class: digital, direction: out, mode: 3}
+      - {function: SPIIO7, peripheral: SPI0, signal: IO7, class: digital, direction: inout, mode: 4}
+      - {function: GPIO36, class: gpio, mode: 1}
+  GPIO37:
+    domain: VDD_SPI
+    notes: Connected to in-package or module flash/PSRAM on most parts
+    functions:
+      - {function: FSPIQ, peripheral: SPI2, signal: Q, class: digital, direction: inout, mode: 2}
+      - {function: SUBSPIQ, peripheral: SUBSPI, signal: Q, class: digital, direction: inout, mode: 3}
+      - {function: SPIDQS, peripheral: SPI0, signal: DQS, class: digital, direction: inout, mode: 4}
+      - {function: GPIO37, class: gpio, mode: 1}
+  GPIO38:
+    domain: VDD3P3_CPU
+    functions:
+      - {function: FSPIWP, peripheral: SPI2, signal: WP, class: digital, direction: inout, mode: 2}
+      - {function: SUBSPIWP, peripheral: SUBSPI, signal: WP, class: digital, direction: inout, mode: 3}
+      - {function: GPIO38, class: gpio, mode: 1}
+  GPIO39:
+    domain: VDD3P3_CPU
+    functions:
+      - {function: MTCK, peripheral: JTAG, signal: TCK, class: debug, direction: in, mode: 0}
+      - {function: CLK_OUT3, peripheral: CLK_OUT, signal: OUT3, class: clock, direction: out, mode: 2}
+      - {function: SUBSPICS1, peripheral: SUBSPI, signal: CS1, class: digital, direction: out, mode: 3}
+      - {function: GPIO39, class: gpio, mode: 1}
+  GPIO40:
+    domain: VDD3P3_CPU
+    functions:
+      - {function: MTDO, peripheral: JTAG, signal: TDO, class: debug, direction: out, mode: 0}
+      - {function: CLK_OUT2, peripheral: CLK_OUT, signal: OUT2, class: clock, direction: out, mode: 2}
+      - {function: GPIO40, class: gpio, mode: 1}
+  GPIO41:
+    domain: VDD3P3_CPU
+    functions:
+      - {function: MTDI, peripheral: JTAG, signal: TDI, class: debug, direction: in, mode: 0}
+      - {function: CLK_OUT1, peripheral: CLK_OUT, signal: OUT1, class: clock, direction: out, mode: 2}
+      - {function: GPIO41, class: gpio, mode: 1}
+  GPIO42:
+    domain: VDD3P3_CPU
+    functions:
+      - {function: MTMS, peripheral: JTAG, signal: TMS, class: debug, direction: in, mode: 0}
+      - {function: GPIO42, class: gpio, mode: 1}
+  GPIO43:
+    domain: VDD3P3_CPU
+    reset: {mode: function, bias: none, function: U0TXD}
+    functions:
+      - {function: U0TXD, peripheral: UART0, signal: TXD, class: digital, direction: out, mode: 0}
+      - {function: CLK_OUT1, peripheral: CLK_OUT, signal: OUT1, class: clock, direction: out, mode: 2}
+      - {function: GPIO43, class: gpio, mode: 1}
+  GPIO44:
+    domain: VDD3P3_CPU
+    reset: {mode: function, bias: pull_up, function: U0RXD}
+    functions:
+      - {function: U0RXD, peripheral: UART0, signal: RXD, class: digital, direction: in, mode: 0}
+      - {function: CLK_OUT2, peripheral: CLK_OUT, signal: OUT2, class: clock, direction: out, mode: 2}
+      - {function: GPIO44, class: gpio, mode: 1}
+  GPIO45:
+    domain: VDD3P3_CPU
+    reset: {mode: input, bias: pull_down}
+    strap: {function: VDD_SPI_VOLTAGE, sampled_at: reset, level: low, notes: "Low selects 3.3 V, high selects 1.8 V VDD_SPI"}
+    functions:
+      - {function: GPIO45, class: gpio, mode: 1}
+  GPIO46:
+    domain: VDD3P3_CPU
+    reset: {mode: input, bias: pull_down}
+    strap: {function: BOOT_MODE, sampled_at: reset, level: low, notes: Must be low for download mode}
+    functions:
+      - {function: GPIO46, class: gpio, mode: 1}
+  GPIO47:
+    domain: VDD3P3_CPU
+    functions:
+      - {function: SPICLK_P, peripheral: SPI0, signal: CLK_P, class: digital, direction: out, mode: 0}
+      - {function: SUBSPICLK_P, peripheral: SUBSPI, signal: CLK_P, class: digital, direction: out, mode: 2}
+      - {function: GPIO47, class: gpio, mode: 1}
+  GPIO48:
+    domain: VDD3P3_CPU
+    functions:
+      - {function: SPICLK_N, peripheral: SPI0, signal: CLK_N, class: digital, direction: out, mode: 0}
+      - {function: SUBSPICLK_N, peripheral: SUBSPI, signal: CLK_N, class: digital, direction: out, mode: 2}
+      - {function: GPIO48, class: gpio, mode: 1}
+  CHIP_PU:
+    aliases: [EN]
+    type: special
+    domain: VDD3P3_RTC
+    notes: Chip enable; high enables the chip, low resets it
+    functions: [{function: CHIP_PU, class: system, direction: in}]
+routing:
+  - kind: any_pin
+    label: GPIO matrix
+    pads: {range: [GPIO0, GPIO48]}
+    notes: Any signal can be routed to any GPIO through GPIO_FUNCn_OUT_SEL / GPIO_FUNCy_IN_SEL
+    functions:
+      - {function: I2C0_SCL, peripheral: I2C0, signal: SCL, direction: inout, vendor: {in: I2CEXT0_SCL_IN, out: I2CEXT0_SCL_OUT}}
+      - {function: I2C0_SDA, peripheral: I2C0, signal: SDA, direction: inout, vendor: {in: I2CEXT0_SDA_IN, out: I2CEXT0_SDA_OUT}}
+      - {function: I2C1_SCL, peripheral: I2C1, signal: SCL, direction: inout, vendor: {in: I2CEXT1_SCL_IN, out: I2CEXT1_SCL_OUT}}
+      - {function: I2C1_SDA, peripheral: I2C1, signal: SDA, direction: inout, vendor: {in: I2CEXT1_SDA_IN, out: I2CEXT1_SDA_OUT}}
+      - {function: I2S0_I_BCK, peripheral: I2S0, signal: I_BCK, direction: inout, vendor: {in: I2S0I_BCK_IN, out: I2S0I_BCK_OUT}}
+      - {function: I2S0_I_SD, peripheral: I2S0, signal: I_SD, direction: in, vendor: {in: I2S0I_SD_IN}}
+      - {function: I2S0_I_WS, peripheral: I2S0, signal: I_WS, direction: inout, vendor: {in: I2S0I_WS_IN, out: I2S0I_WS_OUT}}
+      - {function: I2S0_MCLK, peripheral: I2S0, signal: MCLK, direction: out, vendor: {out: I2S0_MCLK_OUT}}
+      - {function: I2S0_O_BCK, peripheral: I2S0, signal: O_BCK, direction: inout, vendor: {in: I2S0O_BCK_IN, out: I2S0O_BCK_OUT}}
+      - {function: I2S0_O_SD, peripheral: I2S0, signal: O_SD, direction: out, vendor: {out: I2S0O_SD_OUT}}
+      - {function: I2S0_O_WS, peripheral: I2S0, signal: O_WS, direction: inout, vendor: {in: I2S0O_WS_IN, out: I2S0O_WS_OUT}}
+      - {function: I2S1_I_BCK, peripheral: I2S1, signal: I_BCK, direction: inout, vendor: {in: I2S1I_BCK_IN, out: I2S1I_BCK_OUT}}
+      - {function: I2S1_I_SD, peripheral: I2S1, signal: I_SD, direction: in, vendor: {in: I2S1I_SD_IN}}
+      - {function: I2S1_I_WS, peripheral: I2S1, signal: I_WS, direction: inout, vendor: {in: I2S1I_WS_IN, out: I2S1I_WS_OUT}}
+      - {function: I2S1_MCLK, peripheral: I2S1, signal: MCLK, direction: out, vendor: {out: I2S1_MCLK_OUT}}
+      - {function: I2S1_O_BCK, peripheral: I2S1, signal: O_BCK, direction: inout, vendor: {in: I2S1O_BCK_IN, out: I2S1O_BCK_OUT}}
+      - {function: I2S1_O_SD, peripheral: I2S1, signal: O_SD, direction: out, vendor: {out: I2S1O_SD_OUT}}
+      - {function: I2S1_O_WS, peripheral: I2S1, signal: O_WS, direction: inout, vendor: {in: I2S1O_WS_IN, out: I2S1O_WS_OUT}}
+      - {function: LCD_CAM_CAM_CLK, peripheral: LCD_CAM, signal: CAM_CLK, direction: out, vendor: {out: CAM_CLK}}
+      - {function: LCD_CAM_CAM_PCLK, peripheral: LCD_CAM, signal: CAM_PCLK, direction: in, vendor: {in: CAM_PCLK}}
+      - {function: LCD_CAM_DATA_IN0, peripheral: LCD_CAM, signal: DATA_IN0, direction: in, vendor: {in: CAM_DATA_IN0}}
+      - {function: LCD_CAM_DATA_IN1, peripheral: LCD_CAM, signal: DATA_IN1, direction: in, vendor: {in: CAM_DATA_IN1}}
+      - {function: LCD_CAM_DATA_IN10, peripheral: LCD_CAM, signal: DATA_IN10, direction: in, vendor: {in: CAM_DATA_IN10}}
+      - {function: LCD_CAM_DATA_IN11, peripheral: LCD_CAM, signal: DATA_IN11, direction: in, vendor: {in: CAM_DATA_IN11}}
+      - {function: LCD_CAM_DATA_IN12, peripheral: LCD_CAM, signal: DATA_IN12, direction: in, vendor: {in: CAM_DATA_IN12}}
+      - {function: LCD_CAM_DATA_IN13, peripheral: LCD_CAM, signal: DATA_IN13, direction: in, vendor: {in: CAM_DATA_IN13}}
+      - {function: LCD_CAM_DATA_IN14, peripheral: LCD_CAM, signal: DATA_IN14, direction: in, vendor: {in: CAM_DATA_IN14}}
+      - {function: LCD_CAM_DATA_IN15, peripheral: LCD_CAM, signal: DATA_IN15, direction: in, vendor: {in: CAM_DATA_IN15}}
+      - {function: LCD_CAM_DATA_IN2, peripheral: LCD_CAM, signal: DATA_IN2, direction: in, vendor: {in: CAM_DATA_IN2}}
+      - {function: LCD_CAM_DATA_IN3, peripheral: LCD_CAM, signal: DATA_IN3, direction: in, vendor: {in: CAM_DATA_IN3}}
+      - {function: LCD_CAM_DATA_IN4, peripheral: LCD_CAM, signal: DATA_IN4, direction: in, vendor: {in: CAM_DATA_IN4}}
+      - {function: LCD_CAM_DATA_IN5, peripheral: LCD_CAM, signal: DATA_IN5, direction: in, vendor: {in: CAM_DATA_IN5}}
+      - {function: LCD_CAM_DATA_IN6, peripheral: LCD_CAM, signal: DATA_IN6, direction: in, vendor: {in: CAM_DATA_IN6}}
+      - {function: LCD_CAM_DATA_IN7, peripheral: LCD_CAM, signal: DATA_IN7, direction: in, vendor: {in: CAM_DATA_IN7}}
+      - {function: LCD_CAM_DATA_IN8, peripheral: LCD_CAM, signal: DATA_IN8, direction: in, vendor: {in: CAM_DATA_IN8}}
+      - {function: LCD_CAM_DATA_IN9, peripheral: LCD_CAM, signal: DATA_IN9, direction: in, vendor: {in: CAM_DATA_IN9}}
+      - {function: LCD_CAM_DATA_OUT0, peripheral: LCD_CAM, signal: DATA_OUT0, direction: out, vendor: {out: LCD_DATA_OUT0}}
+      - {function: LCD_CAM_DATA_OUT1, peripheral: LCD_CAM, signal: DATA_OUT1, direction: out, vendor: {out: LCD_DATA_OUT1}}
+      - {function: LCD_CAM_DATA_OUT10, peripheral: LCD_CAM, signal: DATA_OUT10, direction: out, vendor: {out: LCD_DATA_OUT10}}
+      - {function: LCD_CAM_DATA_OUT11, peripheral: LCD_CAM, signal: DATA_OUT11, direction: out, vendor: {out: LCD_DATA_OUT11}}
+      - {function: LCD_CAM_DATA_OUT12, peripheral: LCD_CAM, signal: DATA_OUT12, direction: out, vendor: {out: LCD_DATA_OUT12}}
+      - {function: LCD_CAM_DATA_OUT13, peripheral: LCD_CAM, signal: DATA_OUT13, direction: out, vendor: {out: LCD_DATA_OUT13}}
+      - {function: LCD_CAM_DATA_OUT14, peripheral: LCD_CAM, signal: DATA_OUT14, direction: out, vendor: {out: LCD_DATA_OUT14}}
+      - {function: LCD_CAM_DATA_OUT15, peripheral: LCD_CAM, signal: DATA_OUT15, direction: out, vendor: {out: LCD_DATA_OUT15}}
+      - {function: LCD_CAM_DATA_OUT2, peripheral: LCD_CAM, signal: DATA_OUT2, direction: out, vendor: {out: LCD_DATA_OUT2}}
+      - {function: LCD_CAM_DATA_OUT3, peripheral: LCD_CAM, signal: DATA_OUT3, direction: out, vendor: {out: LCD_DATA_OUT3}}
+      - {function: LCD_CAM_DATA_OUT4, peripheral: LCD_CAM, signal: DATA_OUT4, direction: out, vendor: {out: LCD_DATA_OUT4}}
+      - {function: LCD_CAM_DATA_OUT5, peripheral: LCD_CAM, signal: DATA_OUT5, direction: out, vendor: {out: LCD_DATA_OUT5}}
+      - {function: LCD_CAM_DATA_OUT6, peripheral: LCD_CAM, signal: DATA_OUT6, direction: out, vendor: {out: LCD_DATA_OUT6}}
+      - {function: LCD_CAM_DATA_OUT7, peripheral: LCD_CAM, signal: DATA_OUT7, direction: out, vendor: {out: LCD_DATA_OUT7}}
+      - {function: LCD_CAM_DATA_OUT8, peripheral: LCD_CAM, signal: DATA_OUT8, direction: out, vendor: {out: LCD_DATA_OUT8}}
+      - {function: LCD_CAM_DATA_OUT9, peripheral: LCD_CAM, signal: DATA_OUT9, direction: out, vendor: {out: LCD_DATA_OUT9}}
+      - {function: LCD_CAM_DC, peripheral: LCD_CAM, signal: DC, direction: out, vendor: {out: LCD_DC}}
+      - {function: LCD_CAM_H_ENABLE_CAM, peripheral: LCD_CAM, signal: H_ENABLE_CAM, direction: in, vendor: {in: CAM_H_ENABLE}}
+      - {function: LCD_CAM_H_ENABLE_LCD, peripheral: LCD_CAM, signal: H_ENABLE_LCD, direction: out, vendor: {out: LCD_H_ENABLE}}
+      - {function: LCD_CAM_H_SYNC_CAM, peripheral: LCD_CAM, signal: H_SYNC_CAM, direction: in, vendor: {in: CAM_H_SYNC}}
+      - {function: LCD_CAM_H_SYNC_LCD, peripheral: LCD_CAM, signal: H_SYNC_LCD, direction: out, vendor: {out: LCD_H_SYNC}}
+      - {function: LCD_CAM_LCD_CLK, peripheral: LCD_CAM, signal: LCD_CLK, direction: out, vendor: {out: LCD_PCLK}}
+      - {function: LCD_CAM_V_SYNC_CAM, peripheral: LCD_CAM, signal: V_SYNC_CAM, direction: in, vendor: {in: CAM_V_SYNC}}
+      - {function: LCD_CAM_V_SYNC_LCD, peripheral: LCD_CAM, signal: V_SYNC_LCD, direction: out, vendor: {out: LCD_V_SYNC}}
+      - {function: LEDC_CH0, peripheral: LEDC, signal: CH0, direction: out, vendor: {out: LEDC_LS_SIG_OUT0}}
+      - {function: LEDC_CH1, peripheral: LEDC, signal: CH1, direction: out, vendor: {out: LEDC_LS_SIG_OUT1}}
+      - {function: LEDC_CH2, peripheral: LEDC, signal: CH2, direction: out, vendor: {out: LEDC_LS_SIG_OUT2}}
+      - {function: LEDC_CH3, peripheral: LEDC, signal: CH3, direction: out, vendor: {out: LEDC_LS_SIG_OUT3}}
+      - {function: LEDC_CH4, peripheral: LEDC, signal: CH4, direction: out, vendor: {out: LEDC_LS_SIG_OUT4}}
+      - {function: LEDC_CH5, peripheral: LEDC, signal: CH5, direction: out, vendor: {out: LEDC_LS_SIG_OUT5}}
+      - {function: LEDC_CH6, peripheral: LEDC, signal: CH6, direction: out, vendor: {out: LEDC_LS_SIG_OUT6}}
+      - {function: LEDC_CH7, peripheral: LEDC, signal: CH7, direction: out, vendor: {out: LEDC_LS_SIG_OUT7}}
+      - {function: MCPWM0_CAP0, peripheral: MCPWM0, signal: CAP0, direction: in, vendor: {in: PWM0_CAP0_IN}}
+      - {function: MCPWM0_CAP1, peripheral: MCPWM0, signal: CAP1, direction: in, vendor: {in: PWM0_CAP1_IN}}
+      - {function: MCPWM0_CAP2, peripheral: MCPWM0, signal: CAP2, direction: in, vendor: {in: PWM0_CAP2_IN}}
+      - {function: MCPWM0_FAULT0, peripheral: MCPWM0, signal: FAULT0, direction: in, vendor: {in: PWM0_F0_IN}}
+      - {function: MCPWM0_FAULT1, peripheral: MCPWM0, signal: FAULT1, direction: in, vendor: {in: PWM0_F1_IN}}
+      - {function: MCPWM0_FAULT2, peripheral: MCPWM0, signal: FAULT2, direction: in, vendor: {in: PWM0_F2_IN}}
+      - {function: MCPWM0_OUT0A, peripheral: MCPWM0, signal: OUT0A, direction: out, vendor: {out: PWM0_OUT0A}}
+      - {function: MCPWM0_OUT0B, peripheral: MCPWM0, signal: OUT0B, direction: out, vendor: {out: PWM0_OUT0B}}
+      - {function: MCPWM0_OUT1A, peripheral: MCPWM0, signal: OUT1A, direction: out, vendor: {out: PWM0_OUT1A}}
+      - {function: MCPWM0_OUT1B, peripheral: MCPWM0, signal: OUT1B, direction: out, vendor: {out: PWM0_OUT1B}}
+      - {function: MCPWM0_OUT2A, peripheral: MCPWM0, signal: OUT2A, direction: out, vendor: {out: PWM0_OUT2A}}
+      - {function: MCPWM0_OUT2B, peripheral: MCPWM0, signal: OUT2B, direction: out, vendor: {out: PWM0_OUT2B}}
+      - {function: MCPWM0_SYNC0, peripheral: MCPWM0, signal: SYNC0, direction: in, vendor: {in: PWM0_SYNC0_IN}}
+      - {function: MCPWM0_SYNC1, peripheral: MCPWM0, signal: SYNC1, direction: in, vendor: {in: PWM0_SYNC1_IN}}
+      - {function: MCPWM0_SYNC2, peripheral: MCPWM0, signal: SYNC2, direction: in, vendor: {in: PWM0_SYNC2_IN}}
+      - {function: MCPWM1_CAP0, peripheral: MCPWM1, signal: CAP0, direction: in, vendor: {in: PWM1_CAP0_IN}}
+      - {function: MCPWM1_CAP1, peripheral: MCPWM1, signal: CAP1, direction: in, vendor: {in: PWM1_CAP1_IN}}
+      - {function: MCPWM1_CAP2, peripheral: MCPWM1, signal: CAP2, direction: in, vendor: {in: PWM1_CAP2_IN}}
+      - {function: MCPWM1_FAULT0, peripheral: MCPWM1, signal: FAULT0, direction: in, vendor: {in: PWM1_F0_IN}}
+      - {function: MCPWM1_FAULT1, peripheral: MCPWM1, signal: FAULT1, direction: in, vendor: {in: PWM1_F1_IN}}
+      - {function: MCPWM1_FAULT2, peripheral: MCPWM1, signal: FAULT2, direction: in, vendor: {in: PWM1_F2_IN}}
+      - {function: MCPWM1_OUT0A, peripheral: MCPWM1, signal: OUT0A, direction: out, vendor: {out: PWM1_OUT0A}}
+      - {function: MCPWM1_OUT0B, peripheral: MCPWM1, signal: OUT0B, direction: out, vendor: {out: PWM1_OUT0B}}
+      - {function: MCPWM1_OUT1A, peripheral: MCPWM1, signal: OUT1A, direction: out, vendor: {out: PWM1_OUT1A}}
+      - {function: MCPWM1_OUT1B, peripheral: MCPWM1, signal: OUT1B, direction: out, vendor: {out: PWM1_OUT1B}}
+      - {function: MCPWM1_OUT2A, peripheral: MCPWM1, signal: OUT2A, direction: out, vendor: {out: PWM1_OUT2A}}
+      - {function: MCPWM1_OUT2B, peripheral: MCPWM1, signal: OUT2B, direction: out, vendor: {out: PWM1_OUT2B}}
+      - {function: MCPWM1_SYNC0, peripheral: MCPWM1, signal: SYNC0, direction: in, vendor: {in: PWM1_SYNC0_IN}}
+      - {function: MCPWM1_SYNC1, peripheral: MCPWM1, signal: SYNC1, direction: in, vendor: {in: PWM1_SYNC1_IN}}
+      - {function: MCPWM1_SYNC2, peripheral: MCPWM1, signal: SYNC2, direction: in, vendor: {in: PWM1_SYNC2_IN}}
+      - {function: PCNT0_CH0CTRL, peripheral: PCNT0, signal: CH0CTRL, direction: in, vendor: {in: PCNT_CTRL_CH0_IN0}}
+      - {function: PCNT0_CH0SIG, peripheral: PCNT0, signal: CH0SIG, direction: in, vendor: {in: PCNT_SIG_CH0_IN0}}
+      - {function: PCNT0_CH1CTRL, peripheral: PCNT0, signal: CH1CTRL, direction: in, vendor: {in: PCNT_CTRL_CH1_IN0}}
+      - {function: PCNT0_CH1SIG, peripheral: PCNT0, signal: CH1SIG, direction: in, vendor: {in: PCNT_SIG_CH1_IN0}}
+      - {function: PCNT1_CH0CTRL, peripheral: PCNT1, signal: CH0CTRL, direction: in, vendor: {in: PCNT_CTRL_CH0_IN1}}
+      - {function: PCNT1_CH0SIG, peripheral: PCNT1, signal: CH0SIG, direction: in, vendor: {in: PCNT_SIG_CH0_IN1}}
+      - {function: PCNT1_CH1CTRL, peripheral: PCNT1, signal: CH1CTRL, direction: in, vendor: {in: PCNT_CTRL_CH1_IN1}}
+      - {function: PCNT1_CH1SIG, peripheral: PCNT1, signal: CH1SIG, direction: in, vendor: {in: PCNT_SIG_CH1_IN1}}
+      - {function: PCNT2_CH0CTRL, peripheral: PCNT2, signal: CH0CTRL, direction: in, vendor: {in: PCNT_CTRL_CH0_IN2}}
+      - {function: PCNT2_CH0SIG, peripheral: PCNT2, signal: CH0SIG, direction: in, vendor: {in: PCNT_SIG_CH0_IN2}}
+      - {function: PCNT2_CH1CTRL, peripheral: PCNT2, signal: CH1CTRL, direction: in, vendor: {in: PCNT_CTRL_CH1_IN2}}
+      - {function: PCNT2_CH1SIG, peripheral: PCNT2, signal: CH1SIG, direction: in, vendor: {in: PCNT_SIG_CH1_IN2}}
+      - {function: PCNT3_CH0CTRL, peripheral: PCNT3, signal: CH0CTRL, direction: in, vendor: {in: PCNT_CTRL_CH0_IN3}}
+      - {function: PCNT3_CH0SIG, peripheral: PCNT3, signal: CH0SIG, direction: in, vendor: {in: PCNT_SIG_CH0_IN3}}
+      - {function: PCNT3_CH1CTRL, peripheral: PCNT3, signal: CH1CTRL, direction: in, vendor: {in: PCNT_CTRL_CH1_IN3}}
+      - {function: PCNT3_CH1SIG, peripheral: PCNT3, signal: CH1SIG, direction: in, vendor: {in: PCNT_SIG_CH1_IN3}}
+      - {function: RMT_IN0, peripheral: RMT, signal: IN0, direction: in, vendor: {in: RMT_SIG_IN0}}
+      - {function: RMT_IN1, peripheral: RMT, signal: IN1, direction: in, vendor: {in: RMT_SIG_IN1}}
+      - {function: RMT_IN2, peripheral: RMT, signal: IN2, direction: in, vendor: {in: RMT_SIG_IN2}}
+      - {function: RMT_IN3, peripheral: RMT, signal: IN3, direction: in, vendor: {in: RMT_SIG_IN3}}
+      - {function: RMT_OUT0, peripheral: RMT, signal: OUT0, direction: out, vendor: {out: RMT_SIG_OUT0}}
+      - {function: RMT_OUT1, peripheral: RMT, signal: OUT1, direction: out, vendor: {out: RMT_SIG_OUT1}}
+      - {function: RMT_OUT2, peripheral: RMT, signal: OUT2, direction: out, vendor: {out: RMT_SIG_OUT2}}
+      - {function: RMT_OUT3, peripheral: RMT, signal: OUT3, direction: out, vendor: {out: RMT_SIG_OUT3}}
+      - {function: SDHC0_CD, peripheral: SDHC0, signal: CD, direction: in, vendor: {in: SDHOST_CARD_DETECT_N_1}}
+      - {function: SDHC0_CLKOUT, peripheral: SDHC0, signal: CLKOUT, direction: out, vendor: {out: SDHOST_CCLK_OUT_1}}
+      - {function: SDHC0_CMD, peripheral: SDHC0, signal: CMD, direction: inout, vendor: {in: SDHOST_CCMD_IN_1, out: SDHOST_CCMD_OUT_1}}
+      - {function: SDHC0_DATA0, peripheral: SDHC0, signal: DATA0, direction: inout, vendor: {in: SDHOST_CDATA_IN_10, out: SDHOST_CDATA_OUT_10}}
+      - {function: SDHC0_DATA1, peripheral: SDHC0, signal: DATA1, direction: inout, vendor: {in: SDHOST_CDATA_IN_11, out: SDHOST_CDATA_OUT_11}}
+      - {function: SDHC0_DATA2, peripheral: SDHC0, signal: DATA2, direction: inout, vendor: {in: SDHOST_CDATA_IN_12, out: SDHOST_CDATA_OUT_12}}
+      - {function: SDHC0_DATA3, peripheral: SDHC0, signal: DATA3, direction: inout, vendor: {in: SDHOST_CDATA_IN_13, out: SDHOST_CDATA_OUT_13}}
+      - {function: SDHC0_WP, peripheral: SDHC0, signal: WP, direction: in, vendor: {in: SDHOST_CARD_WRITE_PRT_1}}
+      - {function: SDHC1_CD, peripheral: SDHC1, signal: CD, direction: in, vendor: {in: SDHOST_CARD_DETECT_N_2}}
+      - {function: SDHC1_CLKOUT, peripheral: SDHC1, signal: CLKOUT, direction: out, vendor: {out: SDHOST_CCLK_OUT_2}}
+      - {function: SDHC1_CMD, peripheral: SDHC1, signal: CMD, direction: inout, vendor: {in: SDHOST_CCMD_IN_2, out: SDHOST_CCMD_OUT_2}}
+      - {function: SDHC1_DATA0, peripheral: SDHC1, signal: DATA0, direction: inout, vendor: {in: SDHOST_CDATA_IN_20, out: SDHOST_CDATA_OUT_20}}
+      - {function: SDHC1_DATA1, peripheral: SDHC1, signal: DATA1, direction: inout, vendor: {in: SDHOST_CDATA_IN_21, out: SDHOST_CDATA_OUT_21}}
+      - {function: SDHC1_DATA2, peripheral: SDHC1, signal: DATA2, direction: inout, vendor: {in: SDHOST_CDATA_IN_22, out: SDHOST_CDATA_OUT_22}}
+      - {function: SDHC1_DATA3, peripheral: SDHC1, signal: DATA3, direction: inout, vendor: {in: SDHOST_CDATA_IN_23, out: SDHOST_CDATA_OUT_23}}
+      - {function: SDHC1_WP, peripheral: SDHC1, signal: WP, direction: in, vendor: {in: SDHOST_CARD_WRITE_PRT_2}}
+      - {function: SPIM2_CSEL, peripheral: SPIM2, signal: CSEL, direction: out, vendor: {out: FSPICS0_OUT}}
+      - {function: SPIM2_CSEL1, peripheral: SPIM2, signal: CSEL1, direction: out, vendor: {out: FSPICS1_OUT}}
+      - {function: SPIM2_CSEL2, peripheral: SPIM2, signal: CSEL2, direction: out, vendor: {out: FSPICS2_OUT}}
+      - {function: SPIM2_CSEL3, peripheral: SPIM2, signal: CSEL3, direction: out, vendor: {out: FSPICS3_OUT}}
+      - {function: SPIM2_CSEL4, peripheral: SPIM2, signal: CSEL4, direction: out, vendor: {out: FSPICS4_OUT}}
+      - {function: SPIM2_CSEL5, peripheral: SPIM2, signal: CSEL5, direction: out, vendor: {out: FSPICS5_OUT}}
+      - {function: SPIM2_MISO, peripheral: SPIM2, signal: MISO, direction: in, vendor: {in: FSPIQ_IN}}
+      - {function: SPIM2_MOSI, peripheral: SPIM2, signal: MOSI, direction: out, vendor: {out: FSPID_OUT}}
+      - {function: SPIM2_SCLK, peripheral: SPIM2, signal: SCLK, direction: out, vendor: {out: FSPICLK_OUT}}
+      - {function: SPIM3_CSEL, peripheral: SPIM3, signal: CSEL, direction: out, vendor: {out: SPI3_CS0_OUT}}
+      - {function: SPIM3_CSEL1, peripheral: SPIM3, signal: CSEL1, direction: out, vendor: {out: SPI3_CS1_OUT}}
+      - {function: SPIM3_CSEL2, peripheral: SPIM3, signal: CSEL2, direction: out, vendor: {out: SPI3_CS2_OUT}}
+      - {function: SPIM3_MISO, peripheral: SPIM3, signal: MISO, direction: in, vendor: {in: SPI3_Q_IN}}
+      - {function: SPIM3_MOSI, peripheral: SPIM3, signal: MOSI, direction: out, vendor: {out: SPI3_D_OUT}}
+      - {function: SPIM3_SCLK, peripheral: SPIM3, signal: SCLK, direction: out, vendor: {out: SPI3_CLK_OUT}}
+      - {function: SPIS2_CSEL, peripheral: SPIS2, signal: CSEL, direction: in, vendor: {in: FSPICS0_IN}}
+      - {function: SPIS2_MISO, peripheral: SPIS2, signal: MISO, direction: out, vendor: {out: FSPIQ_OUT}}
+      - {function: SPIS2_MOSI, peripheral: SPIS2, signal: MOSI, direction: in, vendor: {in: FSPID_IN}}
+      - {function: SPIS2_SCLK, peripheral: SPIS2, signal: SCLK, direction: in, vendor: {in: FSPICLK_IN}}
+      - {function: SPIS3_CSEL, peripheral: SPIS3, signal: CSEL, direction: in, vendor: {in: SPI3_CS0_IN}}
+      - {function: SPIS3_MISO, peripheral: SPIS3, signal: MISO, direction: out, vendor: {out: SPI3_Q_OUT}}
+      - {function: SPIS3_MOSI, peripheral: SPIS3, signal: MOSI, direction: in, vendor: {in: SPI3_D_IN}}
+      - {function: SPIS3_SCLK, peripheral: SPIS3, signal: SCLK, direction: in, vendor: {in: SPI3_CLK_IN}}
+      - {function: TWAI_BUS_OFF, peripheral: TWAI, signal: BUS_OFF, direction: out, vendor: {out: TWAI_BUS_OFF_ON}}
+      - {function: TWAI_CLKOUT, peripheral: TWAI, signal: CLKOUT, direction: out, vendor: {out: TWAI_CLKOUT}}
+      - {function: TWAI_RX, peripheral: TWAI, signal: RX, direction: in, vendor: {in: TWAI_RX}}
+      - {function: TWAI_TX, peripheral: TWAI, signal: TX, direction: out, vendor: {out: TWAI_TX}}
+      - {function: UART0_CTS, peripheral: UART0, signal: CTS, direction: in, vendor: {in: U0CTS_IN}}
+      - {function: UART0_DSR, peripheral: UART0, signal: DSR, direction: in, vendor: {in: U0DSR_IN}}
+      - {function: UART0_DTR, peripheral: UART0, signal: DTR, direction: out, vendor: {out: U0DTR_OUT}}
+      - {function: UART0_RTS, peripheral: UART0, signal: RTS, direction: out, vendor: {out: U0RTS_OUT}}
+      - {function: UART0_RX, peripheral: UART0, signal: RX, direction: in, vendor: {in: U0RXD_IN}}
+      - {function: UART0_TX, peripheral: UART0, signal: TX, direction: out, vendor: {out: U0TXD_OUT}}
+      - {function: UART1_CTS, peripheral: UART1, signal: CTS, direction: in, vendor: {in: U1CTS_IN}}
+      - {function: UART1_DSR, peripheral: UART1, signal: DSR, direction: in, vendor: {in: U1DSR_IN}}
+      - {function: UART1_DTR, peripheral: UART1, signal: DTR, direction: out, vendor: {out: U1DTR_OUT}}
+      - {function: UART1_RTS, peripheral: UART1, signal: RTS, direction: out, vendor: {out: U1RTS_OUT}}
+      - {function: UART1_RX, peripheral: UART1, signal: RX, direction: in, vendor: {in: U1RXD_IN}}
+      - {function: UART1_TX, peripheral: UART1, signal: TX, direction: out, vendor: {out: U1TXD_OUT}}
+      - {function: UART2_CTS, peripheral: UART2, signal: CTS, direction: in, vendor: {in: U2CTS_IN}}
+      - {function: UART2_RTS, peripheral: UART2, signal: RTS, direction: out, vendor: {out: U2RTS_OUT}}
+      - {function: UART2_RX, peripheral: UART2, signal: RX, direction: in, vendor: {in: U2RXD_IN}}
+      - {function: UART2_TX, peripheral: UART2, signal: TX, direction: out, vendor: {out: U2TXD_OUT}}

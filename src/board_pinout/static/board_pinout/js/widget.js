@@ -1160,6 +1160,96 @@ export function mountWidget(root, payload) {
       .join(" · ");
   }
 
+  function valueText(value) {
+    if (value === undefined || value === null || value === "") return "";
+    if (typeof value === "object") return JSON.stringify(value);
+    return String(value);
+  }
+
+  function electricalRows(electrical) {
+    if (!electrical || typeof electrical !== "object") return "";
+    var labels = {
+      io_voltage: "I/O voltage",
+      io_voltage_configurable: "Configurable voltage",
+      bias: "Bias",
+      bias_source: "Bias source",
+      pull_ohm: "Pull resistance",
+      drive: "Drive",
+      drive_strength: "Drive strength",
+      slew_rate: "Slew rate",
+      schmitt: "Schmitt trigger",
+      boot_state: "Boot state",
+      active_level: "Active level",
+      level_shifted: "Level shifted",
+      vendor: "Vendor",
+      notes: "Notes",
+    };
+    return Object.keys(electrical)
+      .map(function (key) {
+        return metaRow(labels[key] || key, valueText(electrical[key]));
+      })
+      .join("");
+  }
+
+  function padInfoRows(info) {
+    if (!info || typeof info !== "object") return "";
+    var fields = [
+      ["SoC", info.soc],
+      ["Pad", info.pad],
+      ["Domain", info.domain],
+      ["Domain voltage", info.domain_info],
+      ["Type", info.type],
+      ["Tolerance", info.tolerance],
+      ["Drive options", info.drive_options],
+      ["Maximum current", info.max_current_ma != null ? info.max_current_ma + " mA" : ""],
+      ["Pull capability", info.pull],
+      ["Schmitt capability", info.schmitt],
+      ["Slew options", info.slew_options],
+      ["Reset", info.reset],
+      ["Strap", info.strap],
+      ["Vendor", info.vendor],
+      ["Notes", info.notes],
+    ];
+    var rows = fields.map(function (pair) { return metaRow(pair[0], valueText(pair[1])); }).join("");
+    if (info.package) rows += metaRow("Package", info.package);
+    return rows;
+  }
+
+  function netRows(net) {
+    if (!net || typeof net !== "object") return "";
+    return [
+      ["Role", net.role],
+      ["Rail", net.rail],
+      ["Nominal voltage", net.nominal_v != null ? net.nominal_v + " V" : ""],
+      ["Voltage range", net.v_range],
+      ["Maximum current", net.max_current_ma != null ? net.max_current_ma + " mA" : ""],
+      ["Active level", net.active_level],
+      ["Notes", net.notes],
+    ].map(function (pair) { return metaRow(pair[0], valueText(pair[1])); }).join("");
+  }
+
+  function muxExtraRows(mux) {
+    if (!mux || typeof mux !== "object") return "";
+    return [
+      ["Class", mux.class],
+      ["Direction", mux.direction],
+      ["Role options", mux.role_options],
+      ["Group", mux.group],
+      ["Analog", mux.analog],
+      ["Input select", mux.input_select],
+      ["Requires", mux.requires],
+      ["Packages", mux.packages],
+      ["Source", mux.source],
+      ["Vendor", mux.vendor],
+    ].map(function (pair) { return metaRow(pair[0], valueText(pair[1])); }).join("");
+  }
+
+  function muxDetailRows(mux) {
+    return (mux || []).map(function (m) {
+      return muxExtraRows(m);
+    }).join("");
+  }
+
   // "solder bridge SB62 (open)" for a pin reached through board options.
   function gatingText(g) {
     if (!g || !g.kind) return "";
@@ -1203,6 +1293,9 @@ export function mountWidget(root, payload) {
       metaRow("Net", netText(part.net)) +
       metaRow("Gated by", gatingText(part.gating)) +
       "</dl>";
+    var netBody = netRows(part.net);
+    var electricalBody = electricalRows(part.electrical);
+    var padInfoBody = padInfoRows(part.pad_info);
 
     var muxBody = "";
     var dflt = defaultFunction(part);
@@ -1312,7 +1405,11 @@ export function mountWidget(root, payload) {
     return (
       '<div class="zbp-meta">' +
       metaSection("Identity", identity) +
+      metaSection("Electrical", electricalBody ? '<dl class="zbp-meta-dl">' + electricalBody + '</dl>' : '') +
+      metaSection("SoC pad capability", padInfoBody ? '<dl class="zbp-meta-dl">' + padInfoBody + '</dl>' : '') +
+      metaSection("Net", netBody ? '<dl class="zbp-meta-dl">' + netBody + '</dl>' : '') +
       metaSection("Mux", muxBody || '<p class="zbp-meta-empty">No mux entries</p>') +
+      metaSection("Mux metadata", muxDetailRows(mux) ? '<dl class="zbp-meta-dl">' + muxDetailRows(mux) + '</dl>' : '') +
       metaSection("Software", assignments) +
       metaSection("Notes", notes) +
       "</div>"

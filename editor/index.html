@@ -152,8 +152,27 @@
             <label>Description <input id="socDescription" type="text" /></label>
             <label>Reference URL <input id="socReference" type="url" /></label>
             <label>Table YAML/JSON
-              <textarea id="socJson" rows="12" spellcheck="false"></textarea>
+              <textarea id="socJson" rows="8" spellcheck="false"></textarea>
             </label>
+            <div class="soc-authoring">
+              <div class="panel-head"><span class="panel-title">Pads</span>
+                <button id="socPadAddBtn" class="btn small" type="button">＋ Pad</button>
+              </div>
+              <select id="socPadSelect" aria-label="Select SoC pad"><option value="">Select a pad</option></select>
+              <label>Pad name <input id="socPadName" type="text" /></label>
+              <label>Aliases <input id="socPadAliases" type="text" placeholder="IO0, GPIO0_ALT" /></label>
+              <label>Type <input id="socPadType" type="text" placeholder="io" /></label>
+              <label>Domain <input id="socPadDomain" type="text" /></label>
+              <label>Pad electrical JSON
+                <textarea id="socPadJson" rows="4" spellcheck="false" placeholder='{"pull":{"pu_ohm":45000}}'></textarea>
+              </label>
+              <label>Functions JSON
+                <textarea id="socPadFunctions" rows="5" spellcheck="false" placeholder='[{"function":"GPIO0","class":"gpio"}]'></textarea>
+              </label>
+              <button id="socPadSaveBtn" class="btn small" type="button">Save pad</button>
+              <button id="socPadDeleteBtn" class="btn small danger" type="button">Delete pad</button>
+              <p id="socDiagnostics" class="hint-mini" role="status"></p>
+            </div>
             <button id="socExportBtn" class="btn small" type="button">Export socpad.yaml</button>
           </div>
           <div class="panel thin">

@@ -10,10 +10,28 @@
   --marker: #f5a623;
   --marker-active: #2dd4bf;
   --line: rgba(245, 166, 35, 0.75);
+  --scroll-track: #161922;
+  --scroll-thumb: #3a4252;
+  --scroll-thumb-hover: #505b70;
   font-family: "Inter", "Segoe UI", system-ui, sans-serif;
 }
 
 * { box-sizing: border-box; }
+
+/* Keep native scrollbars inside the dark editor theme. */
+* {
+  scrollbar-color: var(--scroll-thumb) var(--scroll-track);
+  scrollbar-width: thin;
+}
+*::-webkit-scrollbar { width: 9px; height: 9px; }
+*::-webkit-scrollbar-track { background: var(--scroll-track); }
+*::-webkit-scrollbar-thumb {
+  background: var(--scroll-thumb);
+  border: 2px solid var(--scroll-track);
+  border-radius: 999px;
+}
+*::-webkit-scrollbar-thumb:hover { background: var(--scroll-thumb-hover); }
+
 
 html, body, #app {
   margin: 0;

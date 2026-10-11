@@ -18,6 +18,8 @@ import {
   ensurePoint,
   level0Parts,
   collectPeripherals,
+  activeSocIndex,
+  socPadCandidates,
   CENTER_POINT,
   isOpen,
 } from "./model.js";
@@ -39,6 +41,7 @@ import {
   updateSnapToggle,
 } from "./view.js";
 import { escapeAttr } from "./util.js";
+import { socDiagnostics } from "../../src/board_pinout/static/board_pinout/js/soc.js";
 import {
   renderOverlay,
   markersInRect,
@@ -1026,10 +1029,15 @@ export function scrubMuxForExport(parts) {
       part.mux = part.mux
         .map((m) => {
           if (!m || !String(m.function || "").trim()) return null;
-          const out = { function: String(m.function).trim() };
+          // Keep rich SoC mux metadata lossless. The editor only normalizes
+          // the fields it exposes; unsupported fields remain in the export.
+          const out = structuredClone(m);
+          out.function = String(m.function).trim();
           if (m.peripheral) out.peripheral = String(m.peripheral).trim();
+          else delete out.peripheral;
           if (m.signal) out.signal = String(m.signal).trim();
-          if (m.mode !== undefined && m.mode !== null && m.mode !== "") out.mode = m.mode;
+          else delete out.signal;
+          if (m.mode === undefined || m.mode === null || m.mode === "") delete out.mode;
           return out;
         })
         .filter(Boolean);
@@ -1059,6 +1067,80 @@ export function renderSocEditor() {
   if (els.socJson && document.activeElement !== els.socJson) {
     els.socJson.value = yaml.dump(table, { lineWidth: 100, noRefs: true });
   }
+  const pads = table.pads || {};
+  if (els.socPadSelect) {
+    const current = els.socPadSelect.value;
+    els.socPadSelect.innerHTML = '<option value="">Select a pad</option>' +
+      Object.keys(pads).sort().map((name) => `<option value="${escapeAttr(name)}">${escapeAttr(name)}</option>`).join("");
+    if (pads[current]) els.socPadSelect.value = current;
+  }
+  const selected = els.socPadSelect?.value;
+  const pad = selected ? pads[selected] || {} : {};
+  if (els.socPadName && document.activeElement !== els.socPadName) els.socPadName.value = selected || "";
+  if (els.socPadAliases && document.activeElement !== els.socPadAliases) els.socPadAliases.value = (pad.aliases || []).join(", ");
+  if (els.socPadType && document.activeElement !== els.socPadType) els.socPadType.value = pad.type || "";
+  if (els.socPadDomain && document.activeElement !== els.socPadDomain) els.socPadDomain.value = pad.domain || "";
+  if (els.socPadJson && document.activeElement !== els.socPadJson) {
+    const intrinsic = structuredClone(pad);
+    delete intrinsic.aliases;
+    delete intrinsic.functions;
+    delete intrinsic.port;
+    delete intrinsic.index;
+    els.socPadJson.value = yaml.dump(intrinsic, { lineWidth: 100, noRefs: true });
+  }
+  if (els.socPadFunctions && document.activeElement !== els.socPadFunctions) {
+    els.socPadFunctions.value = JSON.stringify(pad.functions || [], null, 2);
+  }
+  if (els.socDiagnostics) {
+    const errors = socDiagnostics(table);
+    els.socDiagnostics.textContent = errors.length ? `Validation: ${errors.join("; ")}` : "SoC table is structurally valid";
+    els.socDiagnostics.classList.toggle("error", errors.length > 0);
+  }
+}
+
+export function saveSocPad() {
+  const name = els.socPadName?.value.trim();
+  if (!name) return alert("Pad name is required");
+  let intrinsic = {};
+  let functions = [];
+  try {
+    intrinsic = els.socPadJson?.value.trim() ? yaml.load(els.socPadJson.value) : {};
+    functions = els.socPadFunctions?.value.trim() ? JSON.parse(els.socPadFunctions.value) : [];
+    if (!intrinsic || typeof intrinsic !== "object" || Array.isArray(intrinsic)) throw new Error("pad data must be a mapping");
+    if (!Array.isArray(functions)) throw new Error("functions must be a JSON array");
+  } catch (err) {
+    alert(`Invalid pad data: ${err.message}`);
+    return;
+  }
+  pushHistory();
+  const pad = { ...intrinsic };
+  const aliases = (els.socPadAliases?.value || "").split(",").map((x) => x.trim()).filter(Boolean);
+  if (aliases.length) pad.aliases = aliases; else delete pad.aliases;
+  if (els.socPadType?.value.trim()) pad.type = els.socPadType.value.trim(); else delete pad.type;
+  if (els.socPadDomain?.value.trim()) pad.domain = els.socPadDomain.value.trim(); else delete pad.domain;
+  if (functions.length) pad.functions = functions; else delete pad.functions;
+  state.socTable.pads = { ...(state.socTable.pads || {}), [name]: pad };
+  els.socPadSelect.value = name;
+  renderSocEditor();
+}
+
+export function deleteSocPad() {
+  const name = els.socPadSelect?.value;
+  if (!name || !state.socTable.pads?.[name]) return;
+  pushHistory();
+  delete state.socTable.pads[name];
+  els.socPadSelect.value = "";
+  renderSocEditor();
+}
+
+export function addSocPad() {
+  els.socPadSelect.value = "";
+  if (els.socPadName) els.socPadName.value = "";
+  if (els.socPadAliases) els.socPadAliases.value = "";
+  if (els.socPadType) els.socPadType.value = "io";
+  if (els.socPadDomain) els.socPadDomain.value = "";
+  if (els.socPadJson) els.socPadJson.value = "";
+  if (els.socPadFunctions) els.socPadFunctions.value = "[]";
 }
 
 export function setDocumentMode(mode) {
@@ -1074,23 +1156,31 @@ export function setDocumentMode(mode) {
 }
 
 export function applySocText() {
-  if (!els.socJson) return;
+  if (!els.socJson) return false;
   try {
     const doc = yaml.load(els.socJson.value);
     if (!doc || typeof doc !== "object" || Array.isArray(doc) || !doc.soc) {
       throw new Error("SoC table must be a mapping with a soc id");
     }
+    const errors = socDiagnostics(doc);
+    if (errors.length) throw new Error(errors.join("; "));
     pushHistory();
     state.socTable = doc;
     renderSocEditor();
+    return true;
   } catch (err) {
+    if (els.socDiagnostics) {
+      els.socDiagnostics.textContent = `Validation: ${err.message}`;
+      els.socDiagnostics.classList.add("error");
+    }
     alert(`Invalid SoC table: ${err.message}`);
+    return false;
   }
 }
 
 export function exportYaml() {
   if (state.documentMode === "soc") {
-    applySocText();
+    if (!applySocText()) return;
     downloadYaml(structuredClone(state.socTable), "socpad.yaml");
     return;
   }
@@ -1370,6 +1460,10 @@ export function bindUi() {
     renderSocEditor();
   });
   els.socJson?.addEventListener("change", applySocText);
+  els.socPadSelect?.addEventListener("change", renderSocEditor);
+  els.socPadAddBtn?.addEventListener("click", addSocPad);
+  els.socPadSaveBtn?.addEventListener("click", saveSocPad);
+  els.socPadDeleteBtn?.addEventListener("click", deleteSocPad);
   els.socExportBtn?.addEventListener("click", exportYaml);
   els.underlayRotation?.addEventListener("change", () => {
     pushHistory();
@@ -1753,10 +1847,19 @@ export function bindUi() {
 
 
 export async function loadEsp32Sample() {
-  const resp = await fetch(`${import.meta.env.BASE_URL}examples/esp32s3_devkitc/pinout.yaml`);
-  if (!resp.ok) throw new Error(`Failed to load sample (${resp.status})`);
-  const text = await resp.text();
+  const [boardResp, socResp] = await Promise.all([
+    fetch(`${import.meta.env.BASE_URL}examples/esp32s3_devkitc/pinout.yaml`),
+    fetch(`${import.meta.env.BASE_URL}examples/esp32s3_devkitc/esp32s3.yaml`),
+  ]);
+  if (!boardResp.ok || !socResp.ok) {
+    throw new Error(`Failed to load ESP32 sample (${boardResp.status}/${socResp.status})`);
+  }
+  const [text, socText] = await Promise.all([boardResp.text(), socResp.text()]);
+  const soc = yaml.load(socText);
+  const errors = socDiagnostics(soc);
+  if (errors.length) throw new Error(`Invalid sample SoC table: ${errors.join("; ")}`);
   importYamlText(text);
+  state.socTable = soc;
   if (state.underlayObjectUrl) {
     URL.revokeObjectURL(state.underlayObjectUrl);
     state.underlayObjectUrl = null;
