@@ -3,10 +3,11 @@
 from __future__ import annotations
 
 import json
+from collections.abc import Callable, Iterator
 from dataclasses import dataclass, field
 from functools import lru_cache
 from pathlib import Path
-from typing import Any, Callable, Iterator
+from typing import Any
 
 import yaml
 from jsonschema import Draft202012Validator
@@ -32,7 +33,7 @@ _YamlLoader = getattr(yaml, "CSafeLoader", yaml.SafeLoader)
 
 def load_yaml(path: Path) -> Any:
     with path.open(encoding="utf-8") as fh:
-        return yaml.load(fh, Loader=_YamlLoader)  # noqa: S506 - safe loader
+        return yaml.load(fh, Loader=_YamlLoader)
 
 
 def load_json(path: Path) -> Any:
@@ -71,7 +72,7 @@ def _fast_validator() -> Callable[[Any], Any] | None:
     schema["$schema"] = "http://json-schema.org/draft-07/schema#"
     try:
         return fastjsonschema.compile(schema, use_default=False, detailed_exceptions=False)
-    except Exception:  # pragma: no cover - fall back to the reference validator
+    except (TypeError, ValueError, SyntaxError):  # pragma: no cover
         return None
 
 
@@ -81,7 +82,7 @@ def _schema_is_valid_fast(doc: Any) -> bool:
         return False
     try:
         fast(doc)
-    except Exception:
+    except (TypeError, ValueError, SyntaxError):
         return False
     return True
 

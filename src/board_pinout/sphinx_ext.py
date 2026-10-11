@@ -274,7 +274,7 @@ class BoardPinoutDirective(SphinxDirective):
                 logger.warning(
                     "board-pinout: %s: %s", yaml_path.name, warning, location=self.get_location()
                 )
-        except Exception as exc:
+        except Exception as exc:  # noqa: BLE001 - keep one bad board from breaking docs
             logger.warning(
                 "board-pinout: failed to resolve %s: %s",
                 yaml_path,
