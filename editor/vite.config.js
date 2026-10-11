@@ -3,6 +3,7 @@ import path from "node:path";
 
 export default defineConfig({
   root: ".",
+  base: "/board-pinout/editor/",
   publicDir: "public",
   server: {
     port: 5173,

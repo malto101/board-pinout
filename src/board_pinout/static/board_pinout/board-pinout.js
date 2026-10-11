@@ -43,52 +43,6 @@
       source: entry.source
     };
   }
-  function excludedBy(patterns, raw) {
-    for (var i = 0; i < patterns.length; i++) {
-      var pat = patterns[i];
-      if (pat.slice(-2) === ".*") {
-        var prefix = pat.slice(0, -2);
-        if (raw.peripheral ? raw.peripheral === prefix : String(raw.function).indexOf(prefix + "_") === 0) {
-          return true;
-        }
-      } else if (raw.function === pat) {
-        return true;
-      }
-    }
-    return false;
-  }
-  function routedEntries(part, socRouting, cache) {
-    var ids = part && part.routing || [];
-    if (!ids.length || !socRouting) return [];
-    var excludes = part.routing_exclude || [];
-    var out = [];
-    for (var i = 0; i < ids.length; i++) {
-      var rule = socRouting[ids[i]];
-      if (!rule) continue;
-      var all = cache && cache.get(ids[i]);
-      if (!all) {
-        all = (rule.functions || []).map(function(f) {
-          return { raw: f, mux: normalizeMuxEntry(Object.assign({ source: "routing" }, f)) };
-        }).filter(function(x) {
-          return x.mux;
-        });
-        if (cache) cache.set(ids[i], all);
-      }
-      var kept = excludes.length ? all.filter(function(x) {
-        return !excludedBy(excludes, x.raw);
-      }) : all;
-      out.push({
-        id: ids[i],
-        kind: rule.kind,
-        label: rule.label || rule.kind,
-        notes: rule.notes,
-        mux: kept.map(function(x) {
-          return x.mux;
-        })
-      });
-    }
-    return out;
-  }
   function partAssignments(part) {
     return (part && part.assignments || []).filter(Boolean);
   }
@@ -97,116 +51,43 @@
     var ids = Object.keys(software || {});
     return ids.length === 1 ? ids[0] : "";
   }
-  function assignmentMatcher(a) {
-    if (a.function) {
-      var fn = String(a.function).toUpperCase();
-      return function(m) {
-        return String(m.function).toUpperCase() === fn;
-      };
-    }
-    if (!a.owner || !a.role) return null;
-    var owner = String(a.owner).toLowerCase();
-    var role = String(a.role).toLowerCase();
-    return function(m) {
-      return m.peripheral === owner && String(m.signal).toLowerCase() === role;
-    };
-  }
 
   // ../src/board_pinout/static/board_pinout/js/model.js
-  function buildIndex(topParts, socRouting, software) {
+  function buildIndex(topParts) {
     var byId = /* @__PURE__ */ new Map();
     var order = [];
     var periRows = {};
-    var ruleCache = /* @__PURE__ */ new Map();
-    var routedRuleCount = 0;
-    function addPeri(peris, m, id) {
-      peris.add(m.peripheral);
-      var row = periRows[m.peripheral];
-      if (!row) {
-        row = periRows[m.peripheral] = {
-          id: m.peripheral,
-          signals: {},
-          pinIds: [],
-          seen: /* @__PURE__ */ new Set()
-        };
-      }
-      row.signals[m.signal] = true;
-      if (!row.seen.has(id)) {
-        row.seen.add(id);
-        row.pinIds.push(id);
-      }
-    }
-    function assignmentPicks(p, mux, routed) {
-      var fns = /* @__PURE__ */ new Map();
-      var by = /* @__PURE__ */ new Set();
-      var added = [];
-      function pick(fn, owner) {
-        if (!fns.has(fn)) fns.set(fn, []);
-        if (fns.get(fn).indexOf(owner) < 0) fns.get(fn).push(owner);
-      }
-      partAssignments(p).forEach(function(a) {
-        var owner = assignmentOwner(a, software);
-        by.add(owner);
-        var match = assignmentMatcher(a);
-        if (!match) return;
-        var hit = mux.find(match);
-        if (hit) {
-          pick(hit.function, owner);
-          return;
-        }
-        for (var g = 0; g < routed.length; g++) {
-          hit = routed[g].mux.find(match);
-          if (hit) {
-            pick(hit.function, owner);
-            if (!added.some(function(m) {
-              return m.function === hit.function;
-            })) {
-              added.push(Object.assign({}, hit, { mode: routed[g].label }));
-            }
-            return;
-          }
-        }
-      });
-      return { fns, by, added };
-    }
     function walk(list, parent, trail) {
       for (var i = 0; i < (list || []).length; i++) {
         var p = list[i];
         if (!p || p.id == null) continue;
         var path = trail.concat([p.id]);
-        var all = (p.mux || []).map(normalizeMuxEntry).filter(Boolean);
-        var mux = all.filter(function(m) {
-          return m.source !== "routing";
-        });
+        var mux = (p.mux || []).map(normalizeMuxEntry).filter(Boolean);
         var peris = /* @__PURE__ */ new Set();
-        for (var j = 0; j < mux.length; j++) addPeri(peris, mux[j], p.id);
-        var routed = routedEntries(p, socRouting, ruleCache);
-        if (mux.length !== all.length) {
-          routed = routed.concat([{
-            id: null,
-            kind: "routing",
-            label: "Routable",
-            notes: null,
-            mux: all.filter(function(m) {
-              return m.source === "routing";
-            })
-          }]);
+        for (var j = 0; j < mux.length; j++) {
+          var m = mux[j];
+          peris.add(m.peripheral);
+          var row = periRows[m.peripheral];
+          if (!row) {
+            row = periRows[m.peripheral] = {
+              id: m.peripheral,
+              signals: {},
+              pinIds: [],
+              seen: /* @__PURE__ */ new Set()
+            };
+          }
+          row.signals[m.signal] = true;
+          if (!row.seen.has(p.id)) {
+            row.seen.add(p.id);
+            row.pinIds.push(p.id);
+          }
         }
-        if (routed.length) routedRuleCount += 1;
-        var picks = assignmentPicks(p, mux, routed);
-        picks.added.forEach(function(m) {
-          addPeri(peris, m, p.id);
-        });
-        mux = mux.concat(picks.added);
         var entry = {
           part: p,
           parent,
           path,
           mux,
-          routed,
           peris,
-          assignedFns: picks.fns,
-          usedBy: picks.by,
           hay: null
         };
         if (!byId.has(p.id)) byId.set(p.id, entry);
@@ -235,18 +116,11 @@
     function haystack(entry) {
       if (entry.hay === null) {
         var part = entry.part;
-        var aHay = partAssignments(part).map(function(a) {
-          var sw = (software || {})[assignmentOwner(a, software)];
-          var cfg = Object.keys(a.config || {}).map(function(k) {
-            var v = a.config[k];
-            return typeof v === "object" ? JSON.stringify(v) : String(v);
-          });
-          return [sw && sw.name, a.owner, a.role, a.function].concat(cfg).filter(Boolean).join(" ");
-        }).join(" ");
+        var z = part.zephyr || {};
         var muxHay = entry.mux.map(function(m) {
           return [m.peripheral, m.signal, m.function, m.mode].filter(Boolean).join(" ");
         }).join(" ");
-        entry.hay = [part.id, part.silk, part.pad, part.ref, part.kind, part.notes, aHay, muxHay].filter(Boolean).join(" ").toLowerCase();
+        entry.hay = [part.id, part.silk, part.pad, part.ref, part.kind, part.notes, z.compatible, muxHay].filter(Boolean).join(" ").toLowerCase();
       }
       return entry.hay;
     }
@@ -272,22 +146,6 @@
         var e = entryFor(part);
         return !!e && e.peris.has(String(peri).toLowerCase());
       },
-      /** ``[{id, kind, label, notes, mux}]`` routing groups that apply to ``part``. */
-      routed: function(part) {
-        var e = entryFor(part);
-        return e ? e.routed : routedEntries(part, socRouting, ruleCache);
-      },
-      /** ``Map<function, softwareId[]>`` of functions software selects on ``part``. */
-      assignedFunctions: function(part) {
-        var e = entryFor(part);
-        return e ? e.assignedFns : /* @__PURE__ */ new Map();
-      },
-      /** True when ``part`` has an assignment by software ``id`` (any when empty). */
-      usedBy: function(part, id) {
-        if (!id) return true;
-        var e = entryFor(part);
-        return !!e && e.usedBy.has(id);
-      },
       signalsFor: function(part, peri) {
         var key = String(peri || "").toLowerCase();
         return this.mux(part).filter(function(m) {
@@ -295,10 +153,6 @@
         }).map(function(m) {
           return m.signal;
         });
-      },
-      /** Number of parts that have routing groups (crossbar etc.). */
-      routedParts: function() {
-        return routedRuleCount;
       },
       /** Same shape and order as collectPeripherals(). */
       peripherals: function() {

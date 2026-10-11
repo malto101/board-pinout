@@ -1,6 +1,7 @@
 /** Mutable app state, DOM refs, library catalog, history helpers. */
 
 export const state = {
+  documentMode: "board", // "board" | "soc"
   board: {
     schema_version: "1.0",
     board: "new_board",
@@ -11,6 +12,12 @@ export const state = {
         children: [],
       },
     },
+  },
+  socTable: {
+    schema_version: "1.0",
+    soc: "new_soc",
+    description: "",
+    pads: {},
   },
   types: {},
   selectedId: null,
@@ -54,8 +61,17 @@ export const history = {
   pausing: false,
 };
 export const els = {
+  documentMode: document.getElementById("documentMode"),
   boardName: document.getElementById("boardName"),
   boardSoc: document.getElementById("boardSoc"),
+  boardMuxSource: document.getElementById("boardMuxSource"),
+  socName: document.getElementById("socName"),
+  socDescription: document.getElementById("socDescription"),
+  socReference: document.getElementById("socReference"),
+  socJson: document.getElementById("socJson"),
+  socExportBtn: document.getElementById("socExportBtn"),
+  boardPanel: document.getElementById("boardPanel"),
+  socPanel: document.getElementById("socPanel"),
   partTree: document.getElementById("partTree"),
   libraryList: document.getElementById("libraryList"),
   libraryToggle: document.getElementById("libraryToggle"),
@@ -98,7 +114,9 @@ export const els = {
 
 export function takeSnapshot() {
   return {
+    documentMode: state.documentMode,
     board: structuredClone(state.board),
+    socTable: structuredClone(state.socTable),
     selectedId: state.selectedId,
     selectedIds: [...state.selectedIds],
     treeOpen: { ...state.treeOpen },
