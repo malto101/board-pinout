@@ -25,7 +25,11 @@ def test_widget_index_matches_recursive_helpers(tmp_path: Path, parts: int, mux:
     data = tmp_path / "board.json"
     data.write_text(json.dumps(resolved), encoding="utf-8")
     proc = subprocess.run(
-        ["node", str(SCRIPT), str(data)], capture_output=True, text=True, timeout=60
+        ["node", str(SCRIPT), str(data)],
+        check=False,
+        capture_output=True,
+        text=True,
+        timeout=60,
     )
     assert proc.returncode == 0, proc.stdout + proc.stderr
     report = json.loads(proc.stdout)

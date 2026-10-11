@@ -6,7 +6,7 @@ from pathlib import Path
 import pytest
 
 pytest.importorskip("sphinx")
-from sphinx.application import Sphinx  # noqa: E402
+from sphinx.application import Sphinx
 
 ROOT = Path(__file__).resolve().parents[1]
 FIXTURE = ROOT / "schema" / "fixtures" / "nrf_shaped.yaml"
