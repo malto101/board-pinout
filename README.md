@@ -5,11 +5,22 @@ includes a visual editor for placing parts, a Python CLI for validating and
 resolving board data, and a Sphinx extension that embeds the interactive
 viewer in any Sphinx documentation site.
 
-> **Status:** Alpha (`0.1.0`). There is no hosted demo yet. The repository
-> includes a complete local ESP32-S3 example and a Sphinx demo site so you can
-> see the result before integrating it.
+> **Status:** Alpha (`0.2.0`). The hosted documentation and editor are available
+> at the links below, and the repository includes a complete ESP32-S3 example.
 
 ![Board Pinout preview](gif/board-pinout-preview.gif)
+
+**Hosted editor:** <https://malto101.github.io/board-pinout/editor/>
+
+**Documentation:** <https://malto101.github.io/board-pinout/>
+
+The editor creates board `pinout.yaml` files. Boards using `mux_source: soc` also
+need a separate SoC pad table, conventionally stored in Zephyr at
+`soc/<vendor>/<soc>/doc/pinmux/<soc>.yaml`.
+
+> **Note:** The editor is an authoring aid; validate exported files with
+> `board-pinout validate` and `board-pinout soc-pads validate` before committing.
+
 
 The GIF is a compact visual preview. For the interactive version, build the
 [local Sphinx demo](#try-the-interactive-demo) or run the editor.
@@ -30,9 +41,10 @@ software-facing information can be explored together. Board Pinout provides:
 - packaged schema, base types, JavaScript, and CSS, so a consuming docs tree
   does not need to copy a private `_data` directory.
 
-The current release does **not** automatically import or join a reusable SoC
-pad database. Author each board pin's `mux` entries directly in its YAML;
-`join.py` only fills missing software status values with `unknown`.
+Boards may use `mux_source: soc` to join a reusable SoC pad table at resolve time.
+Provide the table with `--soc-tables` (or the Sphinx search configuration), and
+validate it separately with `board-pinout soc-pads validate`. Inline mux entries
+remain supported for boards that do not use a SoC table.
 
 ## Choose your path
 
@@ -247,9 +259,26 @@ faces:
             mode: 0
 ```
 
-Peripheral filtering in the widget is derived from these authored `mux`
-entries. There is no separate SoC pad-table file or automatic SoC database join
-in this release; add the pad and mux rows directly to each board YAML.
+Peripheral filtering in the widget is derived from the effective `mux` entries.
+For reusable SoC data, set `mux_source: soc` and keep the board-specific table
+separate:
+
+```yaml
+schema_version: "1.1"
+board: my_board
+soc: my_soc
+mux_source: soc
+faces:
+  top:
+    children:
+      - id: gpio4
+        kind: pin
+        pad: GPIO4
+        point: [0.30, 0.25]
+```
+
+Resolve it with `--soc-tables path/to/soc-tables`; the canonical Zephyr layout is
+`soc/<vendor>/<soc>/doc/pinmux/<soc>.yaml`.
 
 ## Use the editor
 
