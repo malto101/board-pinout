@@ -76,19 +76,31 @@ jobs:
           PY
 
       - name: Smoke-test wheel
+        env:
+          EXPECTED_VERSION: ${{ github.ref_type == 'tag' && github.ref_name || '' }}
         run: |
+          package_args=()
+          if [[ -n "$EXPECTED_VERSION" ]]; then
+            package_args=(--expected-version "${EXPECTED_VERSION#v}")
+          fi
           python -m venv /tmp/board-pinout-wheel
           /tmp/board-pinout-wheel/bin/python -m pip install dist/*.whl
-          /tmp/board-pinout-wheel/bin/python scripts/check_package.py --expected-version "${GITHUB_REF_NAME#v}"
+          /tmp/board-pinout-wheel/bin/python scripts/check_package.py "${package_args[@]}"
 
       - name: Smoke-test sdist
+        env:
+          EXPECTED_VERSION: ${{ github.ref_type == 'tag' && github.ref_name || '' }}
         run: |
+          package_args=()
+          if [[ -n "$EXPECTED_VERSION" ]]; then
+            package_args=(--expected-version "${EXPECTED_VERSION#v}")
+          fi
           mkdir /tmp/board-pinout-sdist
           tar -xzf dist/*.tar.gz -C /tmp/board-pinout-sdist
           source_dir="$(find /tmp/board-pinout-sdist -mindepth 1 -maxdepth 1 -type d -print -quit)"
           python -m venv /tmp/board-pinout-sdist-venv
           /tmp/board-pinout-sdist-venv/bin/python -m pip install "$source_dir"
-          PYTHONPATH="$source_dir/src" /tmp/board-pinout-sdist-venv/bin/python scripts/check_package.py --expected-version "${GITHUB_REF_NAME#v}"
+          /tmp/board-pinout-sdist-venv/bin/python "$source_dir/scripts/check_package.py" "${package_args[@]}"
           /tmp/board-pinout-sdist-venv/bin/python -m board_pinout.cli --version
           /tmp/board-pinout-sdist-venv/bin/board-pinout soc-pads validate "$source_dir/tests/fixtures/soc_pads"
 
