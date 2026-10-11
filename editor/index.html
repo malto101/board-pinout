@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Board Pinout Editor</title>
-    <link rel="stylesheet" href="/src/styles.css" />
+    <link rel="stylesheet" href="./src/styles.css" />
   </head>
   <body>
     <div id="app">
@@ -13,6 +13,13 @@
         <div class="topbar-cluster" title="History">
           <button id="undoBtn" class="icon-btn" type="button" title="Undo (⌘Z)">↶</button>
           <button id="redoBtn" class="icon-btn" type="button" title="Redo (⌘⇧Z)">↷</button>
+        </div>
+        <div class="topbar-cluster" title="Document">
+          <label class="text-btn" for="documentMode">Document</label>
+          <select id="documentMode" class="snap-step" title="Choose board or SoC document">
+            <option value="board" selected>Board pinout</option>
+            <option value="soc">SoC pad table</option>
+          </select>
         </div>
         <div class="topbar-cluster" title="File">
           <label class="text-btn" title="Upload board underlay image">
@@ -123,14 +130,31 @@
             </div>
             <button id="gridPickerAdd" class="text-btn block" type="button">Add typed size</button>
           </div>
-          <div class="panel thin">
+          <div class="panel thin" id="boardPanel">
             <div class="panel-head"><span class="panel-title">Board</span></div>
             <label title="Board name">Name <input id="boardName" type="text" /></label>
             <label title="SoC id">SoC <input id="boardSoc" type="text" /></label>
+            <label title="Mux source">Mux source
+              <select id="boardMuxSource">
+                <option value="inline">Inline</option>
+                <option value="soc">SoC table</option>
+              </select>
+            </label>
             <label title="Default underlay rotation when opening docs / reset view">
               Underlay °
               <input id="underlayRotation" type="number" step="90" value="0" />
             </label>
+          </div>
+          <div class="panel thin" id="socPanel" hidden>
+            <div class="panel-head"><span class="panel-title">SoC pad table</span></div>
+            <p class="hint-mini">Advanced fields stay lossless in the JSON/YAML editor.</p>
+            <label>SoC id <input id="socName" type="text" /></label>
+            <label>Description <input id="socDescription" type="text" /></label>
+            <label>Reference URL <input id="socReference" type="url" /></label>
+            <label>Table YAML/JSON
+              <textarea id="socJson" rows="12" spellcheck="false"></textarea>
+            </label>
+            <button id="socExportBtn" class="btn small" type="button">Export socpad.yaml</button>
           </div>
           <div class="panel thin">
             <div class="panel-head"><span class="panel-title">Selected</span></div>
@@ -146,6 +170,6 @@
         </aside>
       </div>
     </div>
-    <script type="module" src="/src/main.js"></script>
+    <script type="module" src="./src/main.js"></script>
   </body>
 </html>

@@ -61,7 +61,9 @@ import {
 
 export function restoreSnapshot(snap) {
   history.pausing = true;
+  state.documentMode = snap.documentMode || "board";
   state.board = structuredClone(snap.board);
+  state.socTable = structuredClone(snap.socTable || state.socTable);
   state.selectedId = snap.selectedId;
   state.selectedIds = new Set(snap.selectedIds);
   state.treeOpen = { ...snap.treeOpen };
@@ -728,6 +730,11 @@ export function synthesizePins(part) {
 export function refresh() {
   els.boardName.value = state.board.board || "";
   els.boardSoc.value = state.board.soc || "";
+  if (els.boardMuxSource) els.boardMuxSource.value = state.board.mux_source || "inline";
+  if (els.documentMode) els.documentMode.value = state.documentMode;
+  if (els.boardPanel) els.boardPanel.hidden = state.documentMode !== "board";
+  if (els.socPanel) els.socPanel.hidden = state.documentMode !== "soc";
+  renderSocEditor();
   if (els.underlayRotation) {
     const ur = Number(face().underlay_rotation);
     els.underlayRotation.value = Number.isFinite(ur) ? ur : 0;
@@ -1033,23 +1040,78 @@ export function scrubMuxForExport(parts) {
 }
 
 
-export function exportYaml() {
-  const doc = structuredClone(state.board);
-  for (const face of Object.values(doc.faces || {})) {
-    scrubMuxForExport(face.children);
-  }
+export function downloadYaml(doc, filename) {
   const text = yaml.dump(doc, { lineWidth: 100, noRefs: true });
   const blob = new Blob([text], { type: "text/yaml" });
   const a = document.createElement("a");
   a.href = URL.createObjectURL(blob);
-  a.download = "pinout.yaml";
+  a.download = filename;
   a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 0);
+}
+
+export function renderSocEditor() {
+  if (!els.socPanel || state.documentMode !== "soc") return;
+  const table = state.socTable || {};
+  if (els.socName) els.socName.value = table.soc || "";
+  if (els.socDescription) els.socDescription.value = table.description || "";
+  if (els.socReference) els.socReference.value = table.reference?.url || "";
+  if (els.socJson && document.activeElement !== els.socJson) {
+    els.socJson.value = yaml.dump(table, { lineWidth: 100, noRefs: true });
+  }
+}
+
+export function setDocumentMode(mode) {
+  state.documentMode = mode === "soc" ? "soc" : "board";
+  if (els.documentMode) els.documentMode.value = state.documentMode;
+  if (els.boardPanel) els.boardPanel.hidden = state.documentMode !== "board";
+  if (els.socPanel) els.socPanel.hidden = state.documentMode !== "soc";
+  renderSocEditor();
+  if (state.documentMode === "board") {
+    applyUnderlayFromBoard();
+    refresh();
+  }
+}
+
+export function applySocText() {
+  if (!els.socJson) return;
+  try {
+    const doc = yaml.load(els.socJson.value);
+    if (!doc || typeof doc !== "object" || Array.isArray(doc) || !doc.soc) {
+      throw new Error("SoC table must be a mapping with a soc id");
+    }
+    pushHistory();
+    state.socTable = doc;
+    renderSocEditor();
+  } catch (err) {
+    alert(`Invalid SoC table: ${err.message}`);
+  }
+}
+
+export function exportYaml() {
+  if (state.documentMode === "soc") {
+    applySocText();
+    downloadYaml(structuredClone(state.socTable), "socpad.yaml");
+    return;
+  }
+  const doc = structuredClone(state.board);
+  for (const face of Object.values(doc.faces || {})) {
+    scrubMuxForExport(face.children);
+  }
+  downloadYaml(doc, "pinout.yaml");
 }
 
 export function importYamlText(text, { recordHistory = true } = {}) {
   const doc = yaml.load(text);
+  if (doc?.soc && doc?.pads && !doc?.faces) {
+    if (recordHistory) pushHistory();
+    state.socTable = doc;
+    setDocumentMode("soc");
+    return;
+  }
   if (!doc?.faces?.top) throw new Error("Invalid board document");
   if (recordHistory) pushHistory();
+  state.documentMode = "board";
   state.board = doc;
   level0Parts().forEach((p) => ensurePoint(p));
   state.selectedId = null;
@@ -1273,6 +1335,9 @@ export function setPlaceholderUnderlay() {
 
 
 export function bindUi() {
+  els.documentMode?.addEventListener("change", () => {
+    setDocumentMode(els.documentMode.value);
+  });
   els.boardName.addEventListener("change", () => {
     pushHistory();
     state.board.board = els.boardName.value.trim();
@@ -1281,6 +1346,31 @@ export function bindUi() {
     pushHistory();
     state.board.soc = els.boardSoc.value.trim();
   });
+  els.boardMuxSource?.addEventListener("change", () => {
+    pushHistory();
+    if (els.boardMuxSource.value === "soc") state.board.mux_source = "soc";
+    else delete state.board.mux_source;
+  });
+  els.socName?.addEventListener("change", () => {
+    pushHistory();
+    state.socTable.soc = els.socName.value.trim();
+    renderSocEditor();
+  });
+  els.socDescription?.addEventListener("change", () => {
+    pushHistory();
+    if (els.socDescription.value.trim()) state.socTable.description = els.socDescription.value.trim();
+    else delete state.socTable.description;
+    renderSocEditor();
+  });
+  els.socReference?.addEventListener("change", () => {
+    pushHistory();
+    const url = els.socReference.value.trim();
+    if (url) state.socTable.reference = { ...(state.socTable.reference || {}), url };
+    else if (state.socTable.reference) delete state.socTable.reference.url;
+    renderSocEditor();
+  });
+  els.socJson?.addEventListener("change", applySocText);
+  els.socExportBtn?.addEventListener("click", exportYaml);
   els.underlayRotation?.addEventListener("change", () => {
     pushHistory();
     const v = Number(els.underlayRotation.value);
@@ -1663,7 +1753,7 @@ export function bindUi() {
 
 
 export async function loadEsp32Sample() {
-  const resp = await fetch("/examples/esp32s3_devkitc/pinout.yaml");
+  const resp = await fetch(`${import.meta.env.BASE_URL}examples/esp32s3_devkitc/pinout.yaml`);
   if (!resp.ok) throw new Error(`Failed to load sample (${resp.status})`);
   const text = await resp.text();
   importYamlText(text);
@@ -1672,7 +1762,7 @@ export async function loadEsp32Sample() {
     state.underlayObjectUrl = null;
     state.underlayFileName = null;
   }
-  face().underlay = "/examples/esp32s3_devkitc/esp32s3_devkitc.webp";
+  face().underlay = `${import.meta.env.BASE_URL}examples/esp32s3_devkitc/esp32s3_devkitc.webp`;
   applyUnderlayFromBoard();
   refresh();
 }

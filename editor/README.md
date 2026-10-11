@@ -1,6 +1,7 @@
 # Board Pinout Editor
 
-Visual authoring tool for Zephyr board pinout YAML (out of tree).
+Visual authoring tool for board pinout YAML and SoC pad-table documents.
+The exported board format is compatible with Zephyr's out-of-tree integration.
 
 ## Run
 
@@ -9,7 +10,8 @@ npm install
 npm run dev
 ```
 
-Open http://localhost:5173
+Open http://localhost:5173. The published editor is at
+https://malto101.github.io/board-pinout/editor/.
 
 `npm run sync-types` (also run automatically via `predev` / `prebuild`) regenerates `public/types.bundle.json` from the repo-root `types/` YAML. That bundle is gitignored and fetched at boot.
 
@@ -31,7 +33,9 @@ and the matching WebP in that folder.
 
 ## Source layout
 
-Vite entry remains `index.html` → `/src/main.js` (`boot()`). Logic is split under `src/`:
+Vite entry remains `index.html` → `src/main.js` (`boot()`). Runtime asset URLs
+use Vite's base path, so the same build works below `/board-pinout/editor/`.
+Logic is split under `src/`:
 
 | Module | Role |
 |--------|------|
@@ -54,3 +58,10 @@ Vite entry remains `index.html` → `/src/main.js` (`boot()`). Logic is split un
 - **Parts tree** — drag to nest, multi-select, right-click menu, ⌘G to group
 - **Preview** — top-level markers + drill-down (docs UX)
 - **Export** — downloads `pinout.yaml` (+ remember to ship the underlay image)
+- **SoC references** — set the board SoC and `mux_source: soc` in the exported
+  YAML, then author/validate the separate SoC table using the schema and CLI.
+
+The current visual controls focus on board layout and pad/mux metadata. Advanced
+SoC table fields should be edited as YAML and validated with
+`board-pinout soc-pads validate`; the editor must not silently discard fields it
+does not understand.

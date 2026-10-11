@@ -14,7 +14,7 @@ import {
 /** Boot entry — Vite loads this module from index.html. */
 async function boot() {
   bindUi();
-  const typesResp = await fetch("/types.bundle.json");
+  const typesResp = await fetch(`${import.meta.env.BASE_URL}types.bundle.json`);
   const typesDoc = await typesResp.json();
   state.types = typesDoc.types || {};
   setLibraryOpen(false);
