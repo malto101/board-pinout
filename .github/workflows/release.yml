@@ -1,0 +1,123 @@
+name: Release package
+
+on:
+  workflow_dispatch:
+    inputs:
+      repository:
+        description: "Package index to publish to"
+        required: true
+        default: testpypi
+        type: choice
+        options:
+          - testpypi
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build and verify distributions
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - name: Set up Python
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: "3.12"
+
+      - name: Build distributions
+        run: |
+          python -m pip install build twine
+          python -m build
+          python -m twine check dist/*
+
+      - name: Verify tag and package versions
+        env:
+          RELEASE_TAG: ${{ github.ref_type == 'tag' && github.ref_name || '' }}
+        run: |
+          python - <<'PY'
+          import os
+          import re
+          import tarfile
+          import zipfile
+          from pathlib import Path
+
+          tag = os.environ.get("RELEASE_TAG", "")
+          expected = tag.removeprefix("v")
+          if tag and not re.fullmatch(r"[0-9]+(?:\.[0-9]+)+(?:[-+][0-9A-Za-z.-]+)?", expected):
+              raise SystemExit(f"invalid release tag: {tag}")
+          version_text = Path("src/board_pinout/_version.py").read_text()
+          match = re.search(r'^__version__ = "([^"]+)"$', version_text, re.MULTILINE)
+          if not match:
+              raise SystemExit("could not read package version")
+          package_version = match.group(1)
+          if tag and package_version != expected:
+              raise SystemExit(f"tag {tag} does not match package {package_version}")
+          wheel = next(Path("dist").glob("*.whl"))
+          sdist = next(Path("dist").glob("*.tar.gz"))
+          with zipfile.ZipFile(wheel) as archive:
+              names = set(archive.namelist())
+              required = {
+                  "board_pinout/schema/soc_pads.schema.json",
+                  "board_pinout/static/board_pinout/board-pinout.js",
+              }
+              missing = required - names
+              if missing:
+                  raise SystemExit(f"wheel missing: {sorted(missing)}")
+          with tarfile.open(sdist) as archive:
+              names = archive.getnames()
+              if not any(name.endswith("/src/board_pinout/__init__.py") for name in names):
+                  raise SystemExit("sdist missing package source")
+          PY
+
+      - name: Smoke-test wheel
+        run: |
+          python -m venv /tmp/board-pinout-wheel
+          /tmp/board-pinout-wheel/bin/python -m pip install dist/*.whl
+          /tmp/board-pinout-wheel/bin/python scripts/check_package.py --expected-version "${GITHUB_REF_NAME#v}"
+
+      - name: Smoke-test sdist
+        run: |
+          mkdir /tmp/board-pinout-sdist
+          tar -xzf dist/*.tar.gz -C /tmp/board-pinout-sdist
+          source_dir="$(find /tmp/board-pinout-sdist -mindepth 1 -maxdepth 1 -type d -print -quit)"
+          python -m venv /tmp/board-pinout-sdist-venv
+          /tmp/board-pinout-sdist-venv/bin/python -m pip install "$source_dir"
+          PYTHONPATH="$source_dir/src" /tmp/board-pinout-sdist-venv/bin/python scripts/check_package.py --expected-version "${GITHUB_REF_NAME#v}"
+          /tmp/board-pinout-sdist-venv/bin/python -m board_pinout.cli --version
+          /tmp/board-pinout-sdist-venv/bin/board-pinout soc-pads validate "$source_dir/tests/fixtures/soc_pads"
+
+      - name: Upload distributions
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: python-distributions
+          path: dist/
+
+  publish:
+    name: Publish package
+    needs: build
+    if: github.event_name == 'push' || inputs.repository == 'testpypi'
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+    environment:
+      name: ${{ github.event_name == 'push' && 'pypi' || 'testpypi' }}
+    steps:
+      - name: Download distributions
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          name: python-distributions
+          path: dist/
+      - name: Publish to TestPyPI
+        if: github.event_name != 'push'
+        uses: pypa/gh-action-pypi-publish@4bb033805d9e19112d8c697528791ff53f6c2f74 # v1.9.0
+        with:
+          repository-url: https://test.pypi.org/legacy/
+      - name: Publish to PyPI
+        if: github.event_name == 'push'
+        uses: pypa/gh-action-pypi-publish@4bb033805d9e19112d8c697528791ff53f6c2f74 # v1.9.0
