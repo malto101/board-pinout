@@ -1,0 +1,59 @@
+schema_version: "1.1"
+board: zedboard_zynq7000
+soc: xc7z020
+soc_package: xc7z020
+mux_source: soc
+faces:
+  top:
+    underlay: zedboard.webp
+    children:
+      - id: uart1_tx
+        kind: pin
+        silk: UART1 TX / MIO48
+        pad: MIO48
+        point: [0.18, 0.28]
+      - id: uart1_rx
+        kind: pin
+        silk: UART1 RX / MIO49
+        pad: MIO49
+        point: [0.18, 0.40]
+      - id: ld_mio
+        kind: pin
+        silk: LD_MIO / MIO7
+        pad: MIO7
+        point: [0.18, 0.52]
+      - id: pb1
+        kind: pin
+        silk: PB1 / MIO50
+        pad: MIO50
+        point: [0.18, 0.64]
+      - id: pb2
+        kind: pin
+        silk: PB2 / MIO51
+        pad: MIO51
+        point: [0.18, 0.76]
+      - id: ethernet
+        kind: receptacle
+        silk: GEM0 Ethernet
+        connector: {binding: eth-rj45}
+        point: [0.82, 0.35]
+      - id: pmod_ja
+        kind: receptacle
+        silk: Pmod JA
+        connector: {binding: other}
+        point: [0.82, 0.55]
+      - id: pmod_jb
+        kind: receptacle
+        silk: Pmod JB
+        connector: {binding: other}
+        point: [0.82, 0.70]
+      - id: power
+        kind: pin
+        silk: 3V3 PS
+        net: {role: power_out, rail: 3V3, nominal_v: 3.3}
+        point: [0.46, 0.88]
+      - id: ground
+        kind: pin
+        silk: GND
+        net: {role: ground}
+        point: [0.56, 0.88]

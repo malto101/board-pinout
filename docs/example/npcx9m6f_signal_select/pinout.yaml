@@ -1,0 +1,15 @@
+schema_version: "1.1"
+board: npcx9m6f_signal_select
+soc: npcx9m6f
+mux_source: soc
+faces:
+  top:
+    underlay: npcx9m6f_evb.webp
+    children:
+      - {id: uart1_sin_gp10, kind: pin, silk: UART1_SIN GP10, pad: GP10, point: [0.18, 0.28]}
+      - {id: uart1_sin_gp64, kind: pin, silk: UART1_SIN GP64, pad: GP64, point: [0.82, 0.28]}
+      - {id: uart1_sout_gp11, kind: pin, silk: UART1_SOUT GP11, pad: GP11, point: [0.18, 0.48]}
+      - {id: uart1_sout_gp65, kind: pin, silk: UART1_SOUT GP65, pad: GP65, point: [0.82, 0.48]}
+      - {id: i2c0_sda, kind: pin, silk: I2C0 SDA GPB3, pad: GPB3, point: [0.18, 0.70]}
+      - {id: i2c0_scl, kind: pin, silk: I2C0 SCL GPB2, pad: GPB2, point: [0.82, 0.70]}
+      - {id: adc0_ch0, kind: pin, silk: ADC0 CH0, pad: GP90, point: [0.50, 0.88]}

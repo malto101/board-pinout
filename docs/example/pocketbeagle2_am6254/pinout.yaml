@@ -1,0 +1,128 @@
+schema_version: "1.1"
+board: pocketbeagle2_am6254
+soc: am6254
+soc_package: am6254
+mux_source: soc
+faces:
+  top:
+    underlay: pocketbeagle_2.webp
+    children:
+      - id: p1_26
+        kind: pin
+        contact: "26"
+        silk: I2C2_SDA / GPIO0_44
+        pad: GPMC0_CSn3
+        point: [0.20, 0.29]
+      - id: p1_28
+        kind: pin
+        contact: "28"
+        silk: I2C2_SCL / GPIO0_43
+        pad: GPMC0_CSn2
+        point: [0.20, 0.38]
+      - id: p1_30
+        kind: pin
+        contact: "30"
+        silk: UART0_TXD / GPIO1_21
+        pad: UART0_TXD
+        point: [0.20, 0.47]
+      - id: p1_32
+        kind: pin
+        contact: "32"
+        silk: UART0_RXD / GPIO1_20
+        pad: UART0_RXD
+        point: [0.20, 0.56]
+      - id: p1_33
+        kind: pin
+        contact: "33"
+        silk: I2C1_SDA / GPIO1_29
+        pad: I2C1_SDA
+        point: [0.20, 0.65]
+      - id: p1_36
+        kind: pin
+        contact: "36"
+        silk: I2C1_SCL / GPIO1_28
+        pad: I2C1_SCL
+        point: [0.20, 0.74]
+      - id: p2_05
+        kind: pin
+        contact: "5"
+        silk: MCAN0_TX / UART5_RXD
+        pad: MCAN0_TX
+        point: [0.80, 0.29]
+      - id: p2_07
+        kind: pin
+        contact: "7"
+        silk: MCAN0_RX / UART5_TXD
+        pad: MCAN0_RX
+        point: [0.80, 0.38]
+      - id: p2_09
+        kind: pin
+        contact: "9"
+        silk: I2C3_SCL / UART0_CTSn
+        pad: UART0_CTSn
+        point: [0.80, 0.47]
+      - id: p2_11
+        kind: pin
+        contact: "11"
+        silk: I2C3_SDA / UART0_RTSn
+        pad: UART0_RTSn
+        point: [0.80, 0.56]
+      - id: p2_25
+        kind: pin
+        contact: "25"
+        silk: SPI0_D1
+        pad: SPI0_D1
+        point: [0.80, 0.65]
+      - id: p2_27
+        kind: pin
+        contact: "27"
+        silk: SPI0_D0
+        pad: SPI0_D0
+        point: [0.80, 0.74]
+      - id: p2_29
+        kind: pin
+        contact: "29"
+        silk: SPI0_CLK
+        pad: SPI0_CLK
+        point: [0.80, 0.83]
+      - id: p2_31
+        kind: pin
+        contact: "31"
+        silk: SPI0_CS0
+        pad: SPI0_CS0
+        point: [0.80, 0.92]
+      - id: led1
+        kind: pin
+        silk: USER LED 1 / GPIO0_6
+        pad: OSPI0_D3
+        point: [0.39, 0.86]
+      - id: led2
+        kind: pin
+        silk: USER LED 2 / GPIO0_5
+        pad: OSPI0_D2
+        point: [0.46, 0.86]
+      - id: led3
+        kind: pin
+        silk: USER LED 3 / GPIO0_4
+        pad: OSPI0_D1
+        point: [0.53, 0.86]
+      - id: led4
+        kind: pin
+        silk: USER LED 4 / GPIO0_3
+        pad: OSPI0_D0
+        point: [0.60, 0.86]
+      - id: power_3v3
+        kind: pin
+        silk: 3V3
+        net: {role: power_out, rail: 3V3, nominal_v: 3.3}
+        point: [0.38, 0.20]
+      - id: power_5v
+        kind: pin
+        silk: 5V
+        net: {role: power_bidir, rail: 5V0, nominal_v: 5.0}
+        point: [0.50, 0.20]
+      - id: ground
+        kind: pin
+        silk: GND
+        net: {role: ground}
+        point: [0.62, 0.20]

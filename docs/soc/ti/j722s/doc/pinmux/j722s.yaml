@@ -1,0 +1,251 @@
+# J722S (AM67A) pad table for board-pinout.
+# Pad names are TI mode-0 signal names; aliases are AMW package balls.
+# mode is the PADCONFIG MUXMODE value (K3_PINMUX MUX_MODE_n).
+schema_version: '1.0'
+soc: j722s
+description: 'TI J722S / AM67A. Partial: general-purpose pads so far; extend from the datasheet as boards need more.'
+reference:
+  title: AM67A Processors datasheet (SPRSP77)
+  section: Pin Attributes / Signal Descriptions
+  url: https://www.ti.com/lit/ds/symlink/am67a.pdf
+domains:
+  VDDSHV_MAIN:
+    io_voltages: [1.8, 3.3]
+    notes: MAIN domain general-purpose IO supply
+  VDDSHV_MCU:
+    io_voltages: [1.8, 3.3]
+    notes: MCU/WKUP domain IO supply
+pad_defaults:
+  type: io
+  schmitt: true
+pads:
+  MCU_I2C0_SDA:
+    aliases: [E11]
+    domain: VDDSHV_MCU
+    functions:
+    - {function: MCU_I2C0_SDA, peripheral: MCU_I2C0, signal: SDA, class: digital, mode: 0}
+    - {function: MCU_GPIO0_18, peripheral: MCU_GPIO0, signal: '18', class: gpio, mode: 7}
+  MCU_I2C0_SCL:
+    aliases: [B13]
+    domain: VDDSHV_MCU
+    functions:
+    - {function: MCU_I2C0_SCL, peripheral: MCU_I2C0, signal: SCL, class: digital, mode: 0}
+    - {function: MCU_GPIO0_17, peripheral: MCU_GPIO0, signal: '17', class: gpio, mode: 7}
+  GPMC0_WAIT1:
+    aliases: [W26]
+    domain: VDDSHV_MAIN
+    functions:
+    - {function: GPMC0_WAIT1, peripheral: GPMC0, signal: WAIT1, class: digital, mode: 0}
+    - {function: VOUT0_EXTPCLKIN, peripheral: VOUT0, signal: EXTPCLKIN, class: clock, mode: 1}
+    - {function: GPMC0_A21, peripheral: GPMC0, signal: A21, class: digital, mode: 2}
+    - {function: UART6_RXD, peripheral: UART6, signal: RXD, class: digital, mode: 3}
+    - {function: AUDIO_EXT_REFCLK2, peripheral: AUDIO_EXT_REFCLK, signal: REFCLK2, class: clock, mode: 4}
+    - {function: GPIO0_38, peripheral: GPIO0, signal: '38', class: gpio, mode: 7}
+    - {function: EQEP2_I, peripheral: EQEP2, signal: I, class: digital, mode: 8}
+  MCASP0_ACLKR:
+    aliases: [F24]
+    domain: VDDSHV_MAIN
+    functions:
+    - {function: MCASP0_ACLKR, peripheral: MCASP0, signal: ACLKR, class: digital, mode: 0}
+    - {function: SPI2_CLK, peripheral: SPI2, signal: CLK, class: digital, mode: 1}
+    - {function: UART1_TXD, peripheral: UART1, signal: TXD, class: digital, mode: 2}
+    - {function: EHRPWM0_B, peripheral: EHRPWM0, signal: B, class: digital, mode: 6}
+    - {function: GPIO1_14, peripheral: GPIO1, signal: '14', class: gpio, mode: 7}
+    - {function: EQEP1_I, peripheral: EQEP1, signal: I, class: digital, mode: 8}
+  MCASP0_AFSR:
+    aliases: [C27]
+    domain: VDDSHV_MAIN
+    functions:
+    - {function: MCASP0_AFSR, peripheral: MCASP0, signal: AFSR, class: digital, mode: 0}
+    - {function: SPI2_CS0, peripheral: SPI2, signal: CS0, class: digital, mode: 1}
+    - {function: UART1_RXD, peripheral: UART1, signal: RXD, class: digital, mode: 2}
+    - {function: EHRPWM0_A, peripheral: EHRPWM0, signal: A, class: digital, mode: 6}
+    - {function: GPIO1_13, peripheral: GPIO1, signal: '13', class: gpio, mode: 7}
+    - {function: EQEP1_S, peripheral: EQEP1, signal: S, class: digital, mode: 8}
+  MCASP0_AXR2:
+    aliases: [A26]
+    domain: VDDSHV_MAIN
+    functions:
+    - {function: MCASP0_AXR2, peripheral: MCASP0, signal: AXR2, class: digital, mode: 0}
+    - {function: SPI2_D1, peripheral: SPI2, signal: D1, class: digital, mode: 1}
+    - {function: UART1_RTSn, peripheral: UART1, signal: RTSn, class: digital, mode: 2}
+    - {function: UART6_TXD, peripheral: UART6, signal: TXD, class: digital, mode: 3}
+    - {function: ECAP2_IN_APWM_OUT, peripheral: ECAP2, signal: IN_APWM_OUT, class: digital, mode: 5}
+    - {function: GPIO1_8, peripheral: GPIO1, signal: '8', class: gpio, mode: 7}
+    - {function: EQEP0_B, peripheral: EQEP0, signal: B, class: digital, mode: 8}
+  MCASP0_ACLKX:
+    aliases: [D25]
+    domain: VDDSHV_MAIN
+    functions:
+    - {function: MCASP0_ACLKX, peripheral: MCASP0, signal: ACLKX, class: digital, mode: 0}
+    - {function: SPI2_CS1, peripheral: SPI2, signal: CS1, class: digital, mode: 1}
+    - {function: ECAP2_IN_APWM_OUT, peripheral: ECAP2, signal: IN_APWM_OUT, class: digital, mode: 2}
+    - {function: GPIO1_11, peripheral: GPIO1, signal: '11', class: gpio, mode: 7}
+    - {function: EQEP1_A, peripheral: EQEP1, signal: A, class: digital, mode: 8}
+  GPMC0_OEn_REn:
+    aliases: [N22]
+    domain: VDDSHV_MAIN
+    functions:
+    - {function: GPMC0_OEn_REn, peripheral: GPMC0, signal: OEn_REn, class: digital, mode: 0}
+    - {function: MCASP1_AXR1, peripheral: MCASP1, signal: AXR1, class: digital, mode: 2}
+    - {function: TRC_DATA8, peripheral: TRC, signal: DATA8, class: debug, mode: 6}
+    - {function: GPIO0_33, peripheral: GPIO0, signal: '33', class: gpio, mode: 7}
+  GPMC0_CSn0:
+    aliases: [R27]
+    domain: VDDSHV_MAIN
+    functions:
+    - {function: GPMC0_CSn0, peripheral: GPMC0, signal: CSn0, class: digital, mode: 0}
+    - {function: I2C4_SCL, peripheral: I2C4, signal: SCL, class: digital, mode: 1}
+    - {function: MCASP2_AXR14, peripheral: MCASP2, signal: AXR14, class: digital, mode: 3}
+    - {function: TRC_DATA15, peripheral: TRC, signal: DATA15, class: debug, mode: 6}
+    - {function: GPIO0_41, peripheral: GPIO0, signal: '41', class: gpio, mode: 7}
+  MCU_UART0_CTSn:
+    aliases: [B5]
+    domain: VDDSHV_MCU
+    functions:
+    - {function: MCU_UART0_CTSn, peripheral: MCU_UART0, signal: CTSn, class: digital, mode: 0}
+    - {function: MCU_TIMER_IO0, peripheral: MCU_TIMER, signal: IO0, class: digital, mode: 1}
+    - {function: MCU_SPI1_D0, peripheral: MCU_SPI1, signal: D0, class: digital, mode: 3}
+    - {function: MCU_GPIO0_7, peripheral: MCU_GPIO0, signal: '7', class: gpio, mode: 7}
+  WKUP_UART0_TXD:
+    aliases: [C8]
+    domain: VDDSHV_MCU
+    functions:
+    - {function: WKUP_UART0_TXD, peripheral: WKUP_UART0, signal: TXD, class: digital, mode: 0}
+    - {function: MCU_SPI1_CS2, peripheral: MCU_SPI1, signal: CS2, class: digital, mode: 2}
+    - {function: MCU_GPIO0_10, peripheral: MCU_GPIO0, signal: '10', class: gpio, mode: 7}
+  MCU_SPI0_D0:
+    aliases: [B12]
+    domain: VDDSHV_MCU
+    functions:
+    - {function: MCU_SPI0_D0, peripheral: MCU_SPI0, signal: D0, class: digital, mode: 0}
+    - {function: MCU_GPIO0_3, peripheral: MCU_GPIO0, signal: '3', class: gpio, mode: 7}
+  MCU_SPI0_D1:
+    aliases: [C11]
+    domain: VDDSHV_MCU
+    functions:
+    - {function: MCU_SPI0_D1, peripheral: MCU_SPI0, signal: D1, class: digital, mode: 0}
+    - {function: MCU_GPIO0_4, peripheral: MCU_GPIO0, signal: '4', class: gpio, mode: 7}
+  GPMC0_CSn1:
+    aliases: [P21]
+    domain: VDDSHV_MAIN
+    functions:
+    - {function: GPMC0_CSn1, peripheral: GPMC0, signal: CSn1, class: digital, mode: 0}
+    - {function: I2C4_SDA, peripheral: I2C4, signal: SDA, class: digital, mode: 1}
+    - {function: MCASP2_AXR15, peripheral: MCASP2, signal: AXR15, class: digital, mode: 3}
+    - {function: TRC_DATA16, peripheral: TRC, signal: DATA16, class: debug, mode: 6}
+    - {function: GPIO0_42, peripheral: GPIO0, signal: '42', class: gpio, mode: 7}
+  MCU_SPI0_CLK:
+    aliases: [A9]
+    domain: VDDSHV_MCU
+    functions:
+    - {function: MCU_SPI0_CLK, peripheral: MCU_SPI0, signal: CLK, class: digital, mode: 0}
+    - {function: MCU_GPIO0_2, peripheral: MCU_GPIO0, signal: '2', class: gpio, mode: 7}
+  MCU_SPI0_CS0:
+    aliases: [C12]
+    domain: VDDSHV_MCU
+    functions:
+    - {function: MCU_SPI0_CS0, peripheral: MCU_SPI0, signal: CS0, class: digital, mode: 0}
+    - {function: WKUP_TIMER_IO1, peripheral: WKUP_TIMER, signal: IO1, class: digital, mode: 4}
+    - {function: MCU_GPIO0_0, peripheral: MCU_GPIO0, signal: '0', class: gpio, mode: 7}
+  WKUP_UART0_RXD:
+    aliases: [B3]
+    domain: VDDSHV_MCU
+    functions:
+    - {function: WKUP_UART0_RXD, peripheral: WKUP_UART0, signal: RXD, class: digital, mode: 0}
+    - {function: MCU_SPI0_CS2, peripheral: MCU_SPI0, signal: CS2, class: digital, mode: 2}
+    - {function: MCU_GPIO0_9, peripheral: MCU_GPIO0, signal: '9', class: gpio, mode: 7}
+  WKUP_I2C0_SDA:
+    aliases: [D11]
+    domain: VDDSHV_MCU
+    functions:
+    - {function: WKUP_I2C0_SDA, peripheral: WKUP_I2C0, signal: SDA, class: digital, mode: 0}
+    - {function: MCU_GPIO0_20, peripheral: MCU_GPIO0, signal: '20', class: gpio, mode: 7}
+  WKUP_I2C0_SCL:
+    aliases: [B9]
+    domain: VDDSHV_MCU
+    functions:
+    - {function: WKUP_I2C0_SCL, peripheral: WKUP_I2C0, signal: SCL, class: digital, mode: 0}
+    - {function: MCU_GPIO0_19, peripheral: MCU_GPIO0, signal: '19', class: gpio, mode: 7}
+  SPI0_CS0:
+    aliases: [B20]
+    domain: VDDSHV_MAIN
+    functions:
+    - {function: SPI0_CS0, peripheral: SPI0, signal: CS0, class: digital, mode: 0}
+    - {function: EHRPWM0_A, peripheral: EHRPWM0, signal: A, class: digital, mode: 2}
+    - {function: GPIO1_15, peripheral: GPIO1, signal: '15', class: gpio, mode: 7}
+  SPI0_CLK:
+    aliases: [D20]
+    domain: VDDSHV_MAIN
+    functions:
+    - {function: SPI0_CLK, peripheral: SPI0, signal: CLK, class: digital, mode: 0}
+    - {function: CP_GEMAC_CPTS0_TS_SYNC, peripheral: CP_GEMAC_CPTS0, signal: TS_SYNC, class: digital, mode: 1}
+    - {function: EHRPWM1_A, peripheral: EHRPWM1, signal: A, class: digital, mode: 2}
+    - {function: GPIO1_17, peripheral: GPIO1, signal: '17', class: gpio, mode: 7}
+  SPI0_CS1:
+    aliases: [C20]
+    domain: VDDSHV_MAIN
+    functions:
+    - {function: SPI0_CS1, peripheral: SPI0, signal: CS1, class: digital, mode: 0}
+    - {function: CP_GEMAC_CPTS0_TS_COMP, peripheral: CP_GEMAC_CPTS0, signal: TS_COMP, class: digital, mode: 1}
+    - {function: EHRPWM0_B, peripheral: EHRPWM0, signal: B, class: digital, mode: 2}
+    - {function: ECAP0_IN_APWM_OUT, peripheral: ECAP0, signal: IN_APWM_OUT, class: digital, mode: 3}
+    - {function: MAIN_ERRORn, peripheral: ESM, signal: ERRORn, class: system, mode: 5}
+    - {function: GPIO1_16, peripheral: GPIO1, signal: '16', class: gpio, mode: 7}
+    - {function: EHRPWM_TZn_IN5, peripheral: EHRPWM, signal: TZn_IN5, class: digital, mode: 9}
+  SPI0_D0:
+    aliases: [E19]
+    domain: VDDSHV_MAIN
+    functions:
+    - {function: SPI0_D0, peripheral: SPI0, signal: D0, class: digital, mode: 0}
+    - {function: CP_GEMAC_CPTS0_HW1TSPUSH, peripheral: CP_GEMAC_CPTS0, signal: HW1TSPUSH, class: digital, mode: 1}
+    - {function: EHRPWM1_B, peripheral: EHRPWM1, signal: B, class: digital, mode: 2}
+    - {function: GPIO1_18, peripheral: GPIO1, signal: '18', class: gpio, mode: 7}
+  MCASP0_AFSX:
+    aliases: [C26]
+    domain: VDDSHV_MAIN
+    functions:
+    - {function: MCASP0_AFSX, peripheral: MCASP0, signal: AFSX, class: digital, mode: 0}
+    - {function: SPI2_CS3, peripheral: SPI2, signal: CS3, class: digital, mode: 1}
+    - {function: AUDIO_EXT_REFCLK1, peripheral: AUDIO_EXT_REFCLK, signal: REFCLK1, class: clock, mode: 2}
+    - {function: GPIO1_12, peripheral: GPIO1, signal: '12', class: gpio, mode: 7}
+    - {function: EQEP1_B, peripheral: EQEP1, signal: B, class: digital, mode: 8}
+  MCASP0_AXR3:
+    aliases: [A25]
+    domain: VDDSHV_MAIN
+    functions:
+    - {function: MCASP0_AXR3, peripheral: MCASP0, signal: AXR3, class: digital, mode: 0}
+    - {function: SPI2_D0, peripheral: SPI2, signal: D0, class: digital, mode: 1}
+    - {function: UART1_CTSn, peripheral: UART1, signal: CTSn, class: digital, mode: 2}
+    - {function: UART6_RXD, peripheral: UART6, signal: RXD, class: digital, mode: 3}
+    - {function: ECAP1_IN_APWM_OUT, peripheral: ECAP1, signal: IN_APWM_OUT, class: digital, mode: 5}
+    - {function: GPIO1_7, peripheral: GPIO1, signal: '7', class: gpio, mode: 7}
+    - {function: EQEP0_A, peripheral: EQEP0, signal: A, class: digital, mode: 8}
+  GPMC0_BE1n:
+    aliases: [P26]
+    domain: VDDSHV_MAIN
+    functions:
+    - {function: GPMC0_BE1n, peripheral: GPMC0, signal: BE1n, class: digital, mode: 0}
+    - {function: MCASP2_AXR12, peripheral: MCASP2, signal: AXR12, class: digital, mode: 3}
+    - {function: TRC_DATA11, peripheral: TRC, signal: DATA11, class: debug, mode: 6}
+    - {function: GPIO0_36, peripheral: GPIO0, signal: '36', class: gpio, mode: 7}
+  MCASP0_AXR0:
+    aliases: [F23]
+    domain: VDDSHV_MAIN
+    functions:
+    - {function: MCASP0_AXR0, peripheral: MCASP0, signal: AXR0, class: digital, mode: 0}
+    - {function: AUDIO_EXT_REFCLK0, peripheral: AUDIO_EXT_REFCLK, signal: REFCLK0, class: clock, mode: 2}
+    - {function: EHRPWM1_B, peripheral: EHRPWM1, signal: B, class: digital, mode: 6}
+    - {function: GPIO1_10, peripheral: GPIO1, signal: '10', class: gpio, mode: 7}
+    - {function: EQEP0_I, peripheral: EQEP0, signal: I, class: digital, mode: 8}
+  MCASP0_AXR1:
+    aliases: [B25]
+    domain: VDDSHV_MAIN
+    functions:
+    - {function: MCASP0_AXR1, peripheral: MCASP0, signal: AXR1, class: digital, mode: 0}
+    - {function: SPI2_CS2, peripheral: SPI2, signal: CS2, class: digital, mode: 1}
+    - {function: ECAP1_IN_APWM_OUT, peripheral: ECAP1, signal: IN_APWM_OUT, class: digital, mode: 2}
+    - {function: MAIN_ERRORn, peripheral: ESM, signal: ERRORn, class: system, mode: 5}
+    - {function: EHRPWM1_A, peripheral: EHRPWM1, signal: A, class: digital, mode: 6}
+    - {function: GPIO1_9, peripheral: GPIO1, signal: '9', class: gpio, mode: 7}
+    - {function: EQEP0_S, peripheral: EQEP0, signal: S, class: digital, mode: 8}

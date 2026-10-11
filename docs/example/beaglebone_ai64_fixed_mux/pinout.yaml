@@ -1,0 +1,55 @@
+schema_version: "1.1"
+board: beaglebone_ai64_fixed_mux
+soc: j721e
+mux_source: soc
+faces:
+  top:
+    underlay: beaglebone_ai_64.webp
+    children:
+      - id: j14
+        kind: pin_array
+        silk: J14 GPIO / HAT header
+        rows: 2
+        cols: 20
+        point: [0.64, 0.70]
+        children:
+          - {id: j14_01, kind: pin, contact: "1", silk: 3V3, net: {role: power_out, rail: 3V3, nominal_v: 3.3}, point: [0.43, 0.22]}
+          - {id: j14_02, kind: pin, contact: "2", silk: 5V, net: {role: power_bidir, rail: 5V0, nominal_v: 5.0}, point: [0.57, 0.22]}
+          - {id: j14_03, kind: pin, contact: "3", silk: I2C6_SDA, pad: P9_18, point: [0.43, 0.28]}
+          - {id: j14_04, kind: pin, contact: "4", silk: 5V, net: {role: power_bidir, rail: 5V0, nominal_v: 5.0}, point: [0.57, 0.28]}
+          - {id: j14_05, kind: pin, contact: "5", silk: I2C6_SCL, pad: P9_17, point: [0.43, 0.34]}
+          - {id: j14_06, kind: pin, contact: "6", silk: GND, net: {role: ground}, point: [0.57, 0.34]}
+          - {id: j14_07, kind: pin, contact: "7", silk: GPIO0_0, pad: P8_03, point: [0.43, 0.40]}
+          - {id: j14_08, kind: pin, contact: "8", silk: GPIO0_1, pad: P8_04, point: [0.57, 0.40]}
+          - {id: j14_09, kind: pin, contact: "9", silk: GPIO0_2, pad: P8_05, point: [0.43, 0.46]}
+          - {id: j14_10, kind: pin, contact: "10", silk: GPIO0_3, pad: P8_06, point: [0.57, 0.46]}
+          - {id: j14_11, kind: pin, contact: "11", silk: GPIO0_4, pad: P8_07, point: [0.43, 0.52]}
+          - {id: j14_12, kind: pin, contact: "12", silk: GPIO0_5, pad: P8_08, point: [0.57, 0.52]}
+          - {id: j14_13, kind: pin, contact: "13", silk: GPIO0_6, pad: P8_09, point: [0.43, 0.58]}
+          - {id: j14_14, kind: pin, contact: "14", silk: GPIO0_7, pad: P8_10, point: [0.57, 0.58]}
+          - {id: j14_15, kind: pin, contact: "15", silk: GPIO0_8, pad: P8_11, point: [0.43, 0.64]}
+          - {id: j14_16, kind: pin, contact: "16", silk: GPIO0_9, pad: P8_12, point: [0.57, 0.64]}
+          - {id: j14_17, kind: pin, contact: "17", silk: GPIO0_10, pad: P8_13, point: [0.43, 0.70]}
+          - {id: j14_18, kind: pin, contact: "18", silk: GPIO0_11, pad: P8_14, point: [0.57, 0.70]}
+          - {id: j14_19, kind: pin, contact: "19", silk: GPIO0_12, pad: P8_15, point: [0.43, 0.76]}
+          - {id: j14_20, kind: pin, contact: "20", silk: GPIO0_15, pad: P8_16, point: [0.57, 0.76]}
+          - {id: j14_21, kind: pin, contact: "21", silk: GPIO0_16, pad: P8_17, point: [0.43, 0.82]}
+          - {id: j14_22, kind: pin, contact: "22", silk: UART2_RXD, pad: P8_22, point: [0.57, 0.82]}
+          - {id: j14_23, kind: pin, contact: "23", silk: GPIO0_21, pad: P8_23, point: [0.43, 0.88]}
+          - {id: j14_24, kind: pin, contact: "24", silk: GPIO0_22, pad: P8_24, point: [0.57, 0.88]}
+          - {id: j14_25, kind: pin, contact: "25", silk: GPIO0_23, pad: P8_25, point: [0.43, 0.94]}
+          - {id: j14_26, kind: pin, contact: "26", silk: GPIO0_24, pad: P8_26, point: [0.57, 0.94]}
+          - {id: j14_27, kind: pin, contact: "27", silk: GPIO0_25, pad: P8_27, point: [0.43, 0.98]}
+          - {id: j14_28, kind: pin, contact: "28", silk: GPIO0_26, pad: P8_28, point: [0.57, 0.98]}
+          - {id: j14_29, kind: pin, contact: "29", silk: GPIO0_27, pad: P8_29, point: [0.43, 0.99]}
+          - {id: j14_30, kind: pin, contact: "30", silk: GPIO0_28, pad: P8_30, point: [0.57, 0.99]}
+          - {id: j14_31, kind: pin, contact: "31", silk: GPIO0_29, pad: P8_31, point: [0.43, 0.995]}
+          - {id: j14_32, kind: pin, contact: "32", silk: GPIO0_30, pad: P8_32, point: [0.57, 0.995]}
+          - {id: j14_33, kind: pin, contact: "33", silk: GPIO0_31, pad: P8_33, point: [0.43, 0.997]}
+          - {id: j14_34, kind: pin, contact: "34", silk: GND, net: {role: ground}, point: [0.57, 0.997]}
+          - {id: j14_35, kind: pin, contact: "35", silk: UART2_TXD, pad: P8_34, point: [0.43, 0.999]}
+          - {id: j14_36, kind: pin, contact: "36", silk: GPIO0_17, pad: P8_18, point: [0.57, 0.999]}
+          - {id: j14_37, kind: pin, contact: "37", silk: GPIO0_18, pad: P8_19, point: [0.43, 0.999]}
+          - {id: j14_38, kind: pin, contact: "38", silk: GPIO0_19, pad: P8_20, point: [0.57, 0.999]}
+          - {id: j14_39, kind: pin, contact: "39", silk: GPIO0_20, pad: P8_21, point: [0.43, 0.999]}
+          - {id: j14_40, kind: pin, contact: "40", silk: GND, net: {role: ground}, point: [0.57, 0.999]}

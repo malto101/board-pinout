@@ -1,0 +1,14 @@
+schema_version: "1.1"
+board: mimxrt1062_alt_daisy
+soc: mimxrt1062
+soc_package: MAPBGA196
+mux_source: soc
+faces:
+  top:
+    underlay: mimxrt1062_fmurt6.webp
+    children:
+      - {id: lpuart1_tx, kind: pin, silk: LPUART1_TX, pad: GPIO_AD_B0_12, point: [0.18, 0.30]}
+      - {id: lpuart1_rx, kind: pin, silk: LPUART1_RX, pad: GPIO_AD_B0_13, point: [0.18, 0.42]}
+      - {id: lpuart3_tx, kind: pin, silk: LPUART3_TX, pad: GPIO_AD_B1_06, point: [0.18, 0.58]}
+      - {id: lpuart3_rx, kind: pin, silk: LPUART3_RX, pad: GPIO_AD_B1_07, point: [0.18, 0.70]}
+      - {id: usd_hc_cmd, kind: pin, silk: USDHC1_CMD, pad: GPIO_SD_B0_00, point: [0.82, 0.50]}

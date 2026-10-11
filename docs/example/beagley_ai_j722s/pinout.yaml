@@ -1,0 +1,563 @@
+schema_version: '1.1'
+board: beagley_ai_j722s
+soc: j722s
+mux_source: soc
+types_inline:
+  poe_header:
+    kind: receptacle
+    receptacle_type: other
+    description: 2x2 PoE HAT header
+  mipi_ffc_22:
+    kind: receptacle
+    receptacle_type: other
+    description: 22-pin 0.5 mm MIPI CSI/DSI FFC connector
+  debug_uart_3pin:
+    kind: receptacle
+    receptacle_type: uart-dbg
+    description: 3-pin JST-SH debug UART
+  battery_2pin:
+    kind: receptacle
+    receptacle_type: other
+    description: 2-pin RTC backup battery connector
+  pcie_ffc:
+    kind: receptacle
+    receptacle_type: other
+    description: 16-pin PCIe x1 FFC connector
+  ufl_antenna:
+    kind: receptacle
+    receptacle_type: other
+    description: U.FL RF antenna connector
+  fan_4pin:
+    kind: receptacle
+    receptacle_type: other
+    description: 4-pin JST-SH fan connector
+software:
+  zephyr:
+    name: Zephyr
+    kind: rtos
+    runs_on: [main_r5f0_0, mcu_r5f0_0]
+faces:
+  top:
+    underlay: assets/beagley_ai_top.webp
+    children:
+    - id: j14
+      kind: pin_array
+      silk: J14 GPIO
+      connector:
+        binding: raspberrypi-40pins-header
+        refdes: J14
+      rows: 2
+      cols: 20
+      electrical:
+        io_voltage: 3.3
+      notes: 40-pin HAT header; pin 1 is the inboard row at the end away from USB
+      point: [0.6436, 0.8091]
+      children:
+      - id: j14_01
+        kind: pin
+        contact: '1'
+        silk: 3V3
+        net:
+          role: power_out
+          rail: 3V3
+          nominal_v: 3.3
+        point: [0.9106, 0.791]
+      - id: j14_02
+        kind: pin
+        contact: '2'
+        silk: 5V
+        net:
+          role: power_bidir
+          rail: 5V
+          nominal_v: 5.0
+        notes: 5 V rail; can also power the board from a HAT
+        point: [0.9106, 0.8271]
+      - id: j14_03
+        kind: pin
+        contact: '3'
+        silk: GPIO2
+        pad: MCU_I2C0_SDA
+        notes: Ball E11, pad MCU_I2C0_SDA
+        point: [0.8826, 0.791]
+      - id: j14_04
+        kind: pin
+        contact: '4'
+        silk: 5V
+        net:
+          role: power_bidir
+          rail: 5V
+          nominal_v: 5.0
+        notes: 5 V rail; can also power the board from a HAT
+        point: [0.8826, 0.8271]
+      - id: j14_05
+        kind: pin
+        contact: '5'
+        silk: GPIO3
+        pad: MCU_I2C0_SCL
+        notes: Ball B13, pad MCU_I2C0_SCL
+        point: [0.8549, 0.791]
+      - id: j14_06
+        kind: pin
+        contact: '6'
+        silk: GND
+        net:
+          role: ground
+        point: [0.8549, 0.8271]
+      - id: j14_07
+        kind: pin
+        contact: '7'
+        silk: GPIO4
+        pad: GPMC0_WAIT1
+        notes: Ball W26, pad GPMC0_WAIT1
+        assignments:
+        - function: GPIO0_38
+          owner: gpio0
+          role: '38'
+          status: available
+          config:
+            pinctrl: [hat_07_gpio, hat_07_gpio_pu, hat_07_gpio_pd]
+        point: [0.8268, 0.791]
+      - id: j14_08
+        kind: pin
+        contact: '8'
+        silk: GPIO14
+        pad: MCASP0_ACLKR
+        notes: Ball F24, pad MCASP0_ACLKR
+        assignments:
+        - function: UART1_TXD
+          owner: uart1
+          role: TXD
+          status: enabled
+          config:
+            pinctrl: uart1_tx_default
+            compatible: ns16550
+            use: console
+        - function: GPIO1_14
+          owner: gpio1
+          role: '14'
+          status: unused
+          config:
+            pinctrl: [hat_08_gpio, hat_08_gpio_pu, hat_08_gpio_pd]
+        point: [0.8268, 0.8271]
+      - id: j14_09
+        kind: pin
+        contact: '9'
+        silk: GND
+        net:
+          role: ground
+        point: [0.7983, 0.791]
+      - id: j14_10
+        kind: pin
+        contact: '10'
+        silk: GPIO15
+        pad: MCASP0_AFSR
+        notes: Ball C27, pad MCASP0_AFSR
+        assignments:
+        - function: UART1_RXD
+          owner: uart1
+          role: RXD
+          status: enabled
+          config:
+            pinctrl: uart1_rx_default
+            compatible: ns16550
+            use: console
+        - function: GPIO1_13
+          owner: gpio1
+          role: '13'
+          status: unused
+          config:
+            pinctrl: [hat_10_gpio, hat_10_gpio_pu, hat_10_gpio_pd]
+        point: [0.7983, 0.8271]
+      - id: j14_11
+        kind: pin
+        contact: '11'
+        silk: GPIO17
+        pad: MCASP0_AXR2
+        notes: Ball A26, pad MCASP0_AXR2
+        assignments:
+        - function: GPIO1_8
+          owner: gpio1
+          role: '8'
+          status: available
+          config:
+            pinctrl: [hat_11_gpio, hat_11_gpio_pu, hat_11_gpio_pd]
+        point: [0.7698, 0.791]
+      - id: j14_12
+        kind: pin
+        contact: '12'
+        silk: GPIO18
+        pad: MCASP0_ACLKX
+        notes: Ball D25, pad MCASP0_ACLKX
+        assignments:
+        - function: GPIO1_11
+          owner: gpio1
+          role: '11'
+          status: available
+          config:
+            pinctrl: [hat_12_gpio, hat_12_gpio_pu, hat_12_gpio_pd]
+        point: [0.7698, 0.8271]
+      - id: j14_13
+        kind: pin
+        contact: '13'
+        silk: GPIO27
+        pad: GPMC0_OEn_REn
+        notes: Ball N22, pad GPMC0_OEn_REn
+        assignments:
+        - function: GPIO0_33
+          owner: gpio0
+          role: '33'
+          status: available
+          config:
+            pinctrl: [hat_13_gpio, hat_13_gpio_pu, hat_13_gpio_pd]
+        point: [0.7426, 0.791]
+      - id: j14_14
+        kind: pin
+        contact: '14'
+        silk: GND
+        net:
+          role: ground
+        point: [0.7426, 0.8271]
+      - id: j14_15
+        kind: pin
+        contact: '15'
+        silk: GPIO22
+        pad: GPMC0_CSn0
+        notes: Ball R27, pad GPMC0_CSn0
+        assignments:
+        - function: GPIO0_41
+          owner: gpio0
+          role: '41'
+          status: available
+          config:
+            pinctrl: [hat_15_gpio, hat_15_gpio_pu, hat_15_gpio_pd]
+        point: [0.7136, 0.791]
+      - id: j14_16
+        kind: pin
+        contact: '16'
+        silk: GPIO23
+        pad: MCU_UART0_CTSn
+        notes: Ball B5, pad MCU_UART0_CTSn
+        point: [0.7136, 0.8271]
+      - id: j14_17
+        kind: pin
+        contact: '17'
+        silk: 3V3
+        net:
+          role: power_out
+          rail: 3V3
+          nominal_v: 3.3
+        point: [0.686, 0.791]
+      - id: j14_18
+        kind: pin
+        contact: '18'
+        silk: GPIO24
+        pad: WKUP_UART0_TXD
+        notes: Ball C8, pad WKUP_UART0_TXD
+        point: [0.686, 0.8271]
+      - id: j14_19
+        kind: pin
+        contact: '19'
+        silk: GPIO10
+        pad: MCU_SPI0_D0
+        notes: Ball B12, pad MCU_SPI0_D0
+        point: [0.6574, 0.791]
+      - id: j14_20
+        kind: pin
+        contact: '20'
+        silk: GND
+        net:
+          role: ground
+        point: [0.6574, 0.8271]
+      - id: j14_21
+        kind: pin
+        contact: '21'
+        silk: GPIO9
+        pad: MCU_SPI0_D1
+        notes: Ball C11, pad MCU_SPI0_D1
+        point: [0.6294, 0.791]
+      - id: j14_22
+        kind: pin
+        contact: '22'
+        silk: GPIO25
+        pad: GPMC0_CSn1
+        notes: Ball P21, pad GPMC0_CSn1
+        assignments:
+        - function: GPIO0_42
+          owner: gpio0
+          role: '42'
+          status: available
+          config:
+            pinctrl: [hat_22_gpio, hat_22_gpio_pu, hat_22_gpio_pd]
+        point: [0.6294, 0.8271]
+      - id: j14_23
+        kind: pin
+        contact: '23'
+        silk: GPIO11
+        pad: MCU_SPI0_CLK
+        notes: Ball A9, pad MCU_SPI0_CLK
+        point: [0.6013, 0.791]
+      - id: j14_24
+        kind: pin
+        contact: '24'
+        silk: GPIO8
+        pad: MCU_SPI0_CS0
+        notes: Ball C12, pad MCU_SPI0_CS0
+        point: [0.6013, 0.8271]
+      - id: j14_25
+        kind: pin
+        contact: '25'
+        silk: GND
+        net:
+          role: ground
+        point: [0.5736, 0.791]
+      - id: j14_26
+        kind: pin
+        contact: '26'
+        silk: GPIO7
+        pad: WKUP_UART0_RXD
+        notes: Ball B3, pad WKUP_UART0_RXD
+        point: [0.5736, 0.8271]
+      - id: j14_27
+        kind: pin
+        contact: '27'
+        silk: GPIO0
+        pad: WKUP_I2C0_SDA
+        notes: Ball D11, pad WKUP_I2C0_SDA
+        point: [0.5451, 0.791]
+      - id: j14_28
+        kind: pin
+        contact: '28'
+        silk: GPIO1
+        pad: WKUP_I2C0_SCL
+        notes: Ball B9, pad WKUP_I2C0_SCL
+        point: [0.5451, 0.8271]
+      - id: j14_29
+        kind: pin
+        contact: '29'
+        silk: GPIO5
+        pad: SPI0_CS0
+        notes: Ball B20, pad SPI0_CS0
+        assignments:
+        - function: GPIO1_15
+          owner: gpio1
+          role: '15'
+          status: available
+          config:
+            pinctrl: [hat_29_gpio, hat_29_gpio_pu, hat_29_gpio_pd]
+        point: [0.517, 0.791]
+      - id: j14_30
+        kind: pin
+        contact: '30'
+        silk: GND
+        net:
+          role: ground
+        point: [0.517, 0.8271]
+      - id: j14_31
+        kind: pin
+        contact: '31'
+        silk: GPIO6
+        pad: SPI0_CLK
+        notes: Ball D20, pad SPI0_CLK
+        assignments:
+        - function: GPIO1_17
+          owner: gpio1
+          role: '17'
+          status: available
+          config:
+            pinctrl: [hat_31_gpio, hat_31_gpio_pu, hat_31_gpio_pd]
+        point: [0.4889, 0.791]
+      - id: j14_32
+        kind: pin
+        contact: '32'
+        silk: GPIO12
+        pad: SPI0_CS1
+        notes: Ball C20, pad SPI0_CS1
+        assignments:
+        - function: GPIO1_16
+          owner: gpio1
+          role: '16'
+          status: available
+          config:
+            pinctrl: [hat_32_gpio, hat_32_gpio_pu, hat_32_gpio_pd]
+        point: [0.4889, 0.8271]
+      - id: j14_33
+        kind: pin
+        contact: '33'
+        silk: GPIO13
+        pad: SPI0_D0
+        notes: Ball E19, pad SPI0_D0
+        assignments:
+        - function: GPIO1_18
+          owner: gpio1
+          role: '18'
+          status: available
+          config:
+            pinctrl: [hat_33_gpio, hat_33_gpio_pu, hat_33_gpio_pd]
+        point: [0.4609, 0.791]
+      - id: j14_34
+        kind: pin
+        contact: '34'
+        silk: GND
+        net:
+          role: ground
+        point: [0.4609, 0.8271]
+      - id: j14_35
+        kind: pin
+        contact: '35'
+        silk: GPIO19
+        pad: MCASP0_AFSX
+        notes: Ball C26, pad MCASP0_AFSX
+        assignments:
+        - function: GPIO1_12
+          owner: gpio1
+          role: '12'
+          status: available
+          config:
+            pinctrl: [hat_35_gpio, hat_35_gpio_pu, hat_35_gpio_pd]
+        point: [0.4328, 0.791]
+      - id: j14_36
+        kind: pin
+        contact: '36'
+        silk: GPIO16
+        pad: MCASP0_AXR3
+        notes: Ball A25, pad MCASP0_AXR3
+        assignments:
+        - function: GPIO1_7
+          owner: gpio1
+          role: '7'
+          status: available
+          config:
+            pinctrl: [hat_36_gpio, hat_36_gpio_pu, hat_36_gpio_pd]
+        point: [0.4328, 0.8271]
+      - id: j14_37
+        kind: pin
+        contact: '37'
+        silk: GPIO26
+        pad: GPMC0_BE1n
+        notes: Ball P26, pad GPMC0_BE1n
+        assignments:
+        - function: GPIO0_36
+          owner: gpio0
+          role: '36'
+          status: available
+          config:
+            pinctrl: [hat_37_gpio, hat_37_gpio_pu, hat_37_gpio_pd]
+        point: [0.4047, 0.791]
+      - id: j14_38
+        kind: pin
+        contact: '38'
+        silk: GPIO20
+        pad: MCASP0_AXR0
+        notes: Ball F23, pad MCASP0_AXR0
+        assignments:
+        - function: GPIO1_10
+          owner: gpio1
+          role: '10'
+          status: available
+          config:
+            pinctrl: [hat_38_gpio, hat_38_gpio_pu, hat_38_gpio_pd]
+        point: [0.4047, 0.8271]
+      - id: j14_39
+        kind: pin
+        contact: '39'
+        silk: GND
+        net:
+          role: ground
+        point: [0.3766, 0.791]
+      - id: j14_40
+        kind: pin
+        contact: '40'
+        silk: GPIO21
+        pad: MCASP0_AXR1
+        notes: Ball B25, pad MCASP0_AXR1
+        assignments:
+        - function: GPIO1_9
+          owner: gpio1
+          role: '9'
+          status: available
+          config:
+            pinctrl: [hat_40_gpio, hat_40_gpio_pu, hat_40_gpio_pd]
+        point: [0.3766, 0.8271]
+    - id: eth
+      ref: eth_rj45
+      silk: ETHERNET
+      point: [0.1362, 0.1864]
+      notes: Gigabit Ethernet (TI DP83867 PHY); PoE through J17
+      label_offset: [0, 0.13]
+    - id: j17_poe
+      ref: poe_header
+      silk: J17 PoE
+      point: [0.3191, 0.1751]
+      notes: 2x2 PoE header for a PoE HAT (Ethernet transformer centre taps)
+      label_offset: [0, -0.08]
+    - id: j16_csi1
+      ref: mipi_ffc_22
+      silk: J16 CSI1/DSI0
+      point: [0.3957, 0.1695]
+      notes: '22-pin FFC: MIPI CSI camera 1 or MIPI DSI display'
+      label_offset: [0, 0.14]
+    - id: j15_csi0
+      ref: mipi_ffc_22
+      silk: J15 CSI0
+      point: [0.4596, 0.1695]
+      notes: '22-pin FFC: MIPI CSI camera 0'
+      label_offset: [0, 0.22]
+    - id: j12_uart
+      ref: debug_uart_3pin
+      silk: J12 UART
+      point: [0.6383, 0.096]
+      notes: 3-pin JST-SH debug UART (TX, RX, GND), Raspberry Pi Debug Probe compatible; A53 Linux console
+      label_offset: [0, 0.09]
+    - id: hdmi
+      ref: hdmi
+      silk: HDMI
+      point: [0.7106, 0.0791]
+      notes: HDMI display output
+      label_offset: [0, 0.16]
+    - id: j9_rtc
+      ref: battery_2pin
+      silk: J9 RTC
+      point: [0.7872, 0.1017]
+      notes: 2-pin RTC backup battery connector
+      label_offset: [0, 0.09]
+    - id: j8_usbc
+      ref: usb_c
+      silk: J8 USB-C
+      point: [0.8723, 0.0734]
+      notes: 5 V power input and USB 2.0 device port
+      label_offset: [0, 0.16]
+    - id: led1
+      ref: led_indicator
+      silk: LED1
+      point: [0.9532, 0.1695]
+      notes: Power/status LED
+    - id: sw1
+      ref: tactile_button
+      silk: SW1 PWR
+      point: [0.9745, 0.2994]
+      notes: Power button
+    - id: j7_pcie
+      ref: pcie_ffc
+      silk: J7 PCIe
+      point: [0.966, 0.452]
+      notes: PCIe Gen3 x1 FFC (Raspberry Pi 5 style), e.g. NVMe HAT
+    - id: j5_wifi
+      ref: ufl_antenna
+      silk: J5 WIFI
+      point: [0.9702, 0.5989]
+      notes: U.FL antenna for the U16 WiFi 6 / Bluetooth module
+    - id: usb3_a
+      ref: usb_a
+      silk: USB3 x2
+      point: [0.1021, 0.4633]
+      notes: Two USB 3.1 Type-A host ports
+    - id: usb3_b
+      ref: usb_a
+      silk: USB3 x2
+      point: [0.1021, 0.7232]
+      notes: Two USB 3.1 Type-A host ports
+    - id: j18_fan
+      ref: fan_4pin
+      silk: J18 FAN
+      point: [0.2766, 0.7966]
+      notes: Fan connector (Raspberry Pi 5 active cooler compatible)

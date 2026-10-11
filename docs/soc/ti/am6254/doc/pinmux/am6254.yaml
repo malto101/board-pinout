@@ -1,0 +1,126 @@
+# Focused AM6254 pad table for the PocketBeagle 2 A1 documentation sample.
+# TI K3 MUX_MODE values are retained from the Zephyr board pinctrl source.
+schema_version: "1.0"
+soc: am6254
+description: "TI AM6254 (AM62x) pad subset used by PocketBeagle 2 A1"
+reference:
+  title: "PocketBeagle 2 AM6254 Zephyr pinctrl"
+  section: "pocketbeagle_2_am62_a53-pinctrl.dtsi"
+  url: "https://github.com/zephyrproject-rtos/zephyr/tree/main/boards/beagle/pocketbeagle_2"
+domains:
+  VDDSHV_MAIN:
+    io_voltages: [1.8, 3.3]
+    configurable: true
+    notes: "AM62x MAIN I/O supply domain"
+pad_defaults:
+  type: io
+  domain: VDDSHV_MAIN
+  schmitt: true
+packages:
+  am6254:
+    description: "AM6254 package; this focused table keeps all listed pads bonded out"
+pads:
+  GPMC0_CSn3:
+    aliases: [K24]
+    functions:
+      - {function: GPMC0_CSn3, peripheral: GPMC0, signal: CSn3, class: digital, mode: 0}
+      - {function: I2C2_SDA, peripheral: I2C2, signal: SDA, class: digital, direction: inout, mode: 1}
+      - {function: GPIO0_44, peripheral: GPIO0, signal: "44", class: gpio, mode: 7}
+  GPMC0_CSn2:
+    aliases: [K22]
+    functions:
+      - {function: GPMC0_CSn2, peripheral: GPMC0, signal: CSn2, class: digital, mode: 0}
+      - {function: I2C2_SCL, peripheral: I2C2, signal: SCL, class: digital, direction: inout, mode: 1}
+      - {function: GPIO0_43, peripheral: GPIO0, signal: "43", class: gpio, mode: 7}
+  UART0_TXD:
+    aliases: [E14]
+    functions:
+      - {function: UART0_TXD, peripheral: UART0, signal: TXD, class: digital, direction: out, mode: 0}
+      - {function: GPIO1_21, peripheral: GPIO1, signal: "21", class: gpio, mode: 7}
+  UART0_RXD:
+    aliases: [D14]
+    functions:
+      - {function: UART0_RXD, peripheral: UART0, signal: RXD, class: digital, direction: in, mode: 0}
+      - {function: GPIO1_20, peripheral: GPIO1, signal: "20", class: gpio, mode: 7}
+  I2C1_SDA:
+    aliases: [A17]
+    functions:
+      - {function: I2C1_SDA, peripheral: I2C1, signal: SDA, class: digital, direction: inout, mode: 0}
+      - {function: GPIO1_29, peripheral: GPIO1, signal: "29", class: gpio, mode: 7}
+  I2C1_SCL:
+    aliases: [B17]
+    functions:
+      - {function: I2C1_SCL, peripheral: I2C1, signal: SCL, class: digital, direction: inout, mode: 0}
+      - {function: GPIO1_28, peripheral: GPIO1, signal: "28", class: gpio, mode: 7}
+  MCAN0_TX:
+    aliases: [C15]
+    functions:
+      - {function: MCAN0_TX, peripheral: MCAN0, signal: TX, class: digital, direction: out, mode: 0}
+      - {function: UART5_RXD, peripheral: UART5, signal: RXD, class: digital, direction: in, mode: 1}
+      - {function: GPIO1_24, peripheral: GPIO1, signal: "24", class: gpio, mode: 7}
+  MCAN0_RX:
+    aliases: [E15]
+    functions:
+      - {function: MCAN0_RX, peripheral: MCAN0, signal: RX, class: digital, direction: in, mode: 0}
+      - {function: UART5_TXD, peripheral: UART5, signal: TXD, class: digital, direction: out, mode: 1}
+      - {function: GPIO1_25, peripheral: GPIO1, signal: "25", class: gpio, mode: 7}
+  UART0_CTSn:
+    aliases: [A15]
+    functions:
+      - {function: UART0_CTSn, peripheral: UART0, signal: CTSn, class: digital, direction: in, mode: 0}
+      - {function: I2C3_SCL, peripheral: I2C3, signal: SCL, class: digital, direction: inout, mode: 2}
+      - {function: GPIO1_22, peripheral: GPIO1, signal: "22", class: gpio, mode: 7}
+  UART0_RTSn:
+    aliases: [B15]
+    functions:
+      - {function: UART0_RTSn, peripheral: UART0, signal: RTSn, class: digital, direction: out, mode: 0}
+      - {function: I2C3_SDA, peripheral: I2C3, signal: SDA, class: digital, direction: inout, mode: 2}
+      - {function: GPIO1_23, peripheral: GPIO1, signal: "23", class: gpio, mode: 7}
+  SPI0_D1:
+    aliases: [B14]
+    functions:
+      - {function: SPI0_D1, peripheral: SPI0, signal: D1, class: digital, direction: out, mode: 0}
+      - {function: GPIO1_19, peripheral: GPIO1, signal: "19", class: gpio, mode: 7}
+  SPI0_D0:
+    aliases: [B13]
+    functions:
+      - {function: SPI0_D0, peripheral: SPI0, signal: D0, class: digital, direction: in, mode: 0}
+      - {function: GPIO1_18, peripheral: GPIO1, signal: "18", class: gpio, mode: 7}
+  SPI0_CLK:
+    aliases: [A14]
+    functions:
+      - {function: SPI0_CLK, peripheral: SPI0, signal: CLK, class: digital, direction: out, mode: 0}
+      - {function: GPIO1_17, peripheral: GPIO1, signal: "17", class: gpio, mode: 7}
+  SPI0_CS0:
+    aliases: [A13]
+    functions:
+      - {function: SPI0_CS0, peripheral: SPI0, signal: CS0, class: digital, direction: out, mode: 0}
+      - {function: GPIO1_15, peripheral: GPIO1, signal: "15", class: gpio, mode: 7}
+  SPI0_CS1:
+    aliases: [C13]
+    functions:
+      - {function: SPI0_CS1, peripheral: SPI0, signal: CS1, class: digital, mode: 0}
+      - {function: GPIO1_16, peripheral: GPIO1, signal: "16", class: gpio, mode: 7}
+  OSPI0_D3:
+    aliases: [F24]
+    functions:
+      - {function: OSPI0_D3, peripheral: OSPI0, signal: D3, class: digital, mode: 0}
+      - {function: GPIO0_6, peripheral: GPIO0, signal: "6", class: gpio, mode: 7}
+  OSPI0_D2:
+    aliases: [F25]
+    functions:
+      - {function: OSPI0_D2, peripheral: OSPI0, signal: D2, class: digital, mode: 0}
+      - {function: GPIO0_5, peripheral: GPIO0, signal: "5", class: gpio, mode: 7}
+  OSPI0_D1:
+    aliases: [G24]
+    functions:
+      - {function: OSPI0_D1, peripheral: OSPI0, signal: D1, class: digital, mode: 0}
+      - {function: GPIO0_4, peripheral: GPIO0, signal: "4", class: gpio, mode: 7}
+  OSPI0_D0:
+    aliases: [E25]
+    functions:
+      - {function: OSPI0_D0, peripheral: OSPI0, signal: D0, class: digital, mode: 0}
+      - {function: GPIO0_3, peripheral: GPIO0, signal: "3", class: gpio, mode: 7}
+  VDD_3V3: {type: power, domain: VDDSHV_MAIN}
+  VDD_5V: {type: power, domain: VDDSHV_MAIN}
+  GND: {type: ground}

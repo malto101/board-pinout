@@ -1,0 +1,48 @@
+# Focused Zynq-7000 MIO table for the Avnet/Digilent ZedBoard sample.
+# The group/vendor fields preserve the PS pinctrl encoding used by Zephyr.
+schema_version: "1.0"
+soc: xc7z020
+description: "Xilinx Zynq-7000 XC7Z020 MIO subset used by ZedBoard"
+reference:
+  title: "Zephyr ZedBoard device tree and pinctrl"
+  section: "zedboard.dts and zedboard-pinctrl.dtsi"
+  url: "https://github.com/zephyrproject-rtos/zephyr/tree/main/boards/digilent/zedboard"
+domains:
+  MIO:
+    io_voltages: [1.8, 3.3]
+    notes: "Zynq PS MIO supply; UART1 is configured as LVCMOS18"
+pad_defaults:
+  type: io
+  domain: MIO
+packages:
+  xc7z020:
+    description: "XC7Z020 package used by the ZedBoard"
+    pads:
+      MIO7: {pin: MIO7}
+      MIO48: {pin: MIO48}
+      MIO49: {pin: MIO49}
+      MIO50: {pin: MIO50}
+      MIO51: {pin: MIO51}
+pads:
+  MIO7:
+    aliases: [GPIO7, LD_MIO]
+    functions:
+      - {function: GPIO7, peripheral: GPIO, signal: "7", class: gpio, direction: out, mode: 0, vendor: {bank: 0, offset: 7}}
+  MIO48:
+    aliases: [GPIO48, UART1_TX]
+    functions:
+      - {function: UART1_TXD, peripheral: UART1, signal: TXD, class: digital, direction: out, mode: uart1_10_grp, group: uart1_10_grp, vendor: {function: uart1, power_source: LVCMOS18}}
+      - {function: GPIO48, peripheral: GPIO, signal: "48", class: gpio, mode: 0, vendor: {bank: 0, offset: 48}}
+  MIO49:
+    aliases: [GPIO49, UART1_RX]
+    functions:
+      - {function: UART1_RXD, peripheral: UART1, signal: RXD, class: digital, direction: in, mode: uart1_10_grp, group: uart1_10_grp, vendor: {function: uart1, power_source: LVCMOS18}}
+      - {function: GPIO49, peripheral: GPIO, signal: "49", class: gpio, mode: 0, vendor: {bank: 0, offset: 49}}
+  MIO50:
+    aliases: [GPIO50, PB1]
+    functions:
+      - {function: GPIO50, peripheral: GPIO, signal: "50", class: gpio, direction: in, mode: 0, vendor: {bank: 1, offset: 18}}
+  MIO51:
+    aliases: [GPIO51, PB2]
+    functions:
+      - {function: GPIO51, peripheral: GPIO, signal: "51", class: gpio, direction: in, mode: 0, vendor: {bank: 1, offset: 19}}

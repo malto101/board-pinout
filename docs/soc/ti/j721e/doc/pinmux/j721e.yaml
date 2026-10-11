@@ -1,0 +1,79 @@
+# Fixed per-pad mux modes for the BeagleBone AI-64 J721E header example.
+# Mode values follow the K3_PINMUX MUX_MODE values in the Zephyr board DTS.
+schema_version: "1.0"
+soc: j721e
+description: "J721E header subset used by the dense BeagleBone AI-64 sample"
+reference:
+  title: "BeagleBone AI-64 Zephyr pinctrl"
+  section: "beaglebone_ai64_j721e_main_r5f0_0-pinctrl.dtsi"
+domains:
+  VDDSHV_MAIN:
+    io_voltages: [1.8, 3.3]
+    configurable: true
+  VDDSHV_MCU:
+    io_voltages: [1.8, 3.3]
+    configurable: true
+pad_defaults:
+  type: io
+  domain: VDDSHV_MAIN
+  tolerance: {class: LVCMOS}
+pads:
+  P8_34:
+    aliases: [UART2_TXD]
+    functions:
+      - {function: UART2_TXD, peripheral: UART2, signal: TXD, class: digital, direction: out, mode: 14}
+      - {function: GPIO0_14, peripheral: GPIO0, signal: "14", class: gpio, mode: 7}
+  P8_22:
+    aliases: [UART2_RXD]
+    functions:
+      - {function: UART2_RXD, peripheral: UART2, signal: RXD, class: digital, direction: in, mode: 14}
+      - {function: GPIO0_13, peripheral: GPIO0, signal: "13", class: gpio, mode: 7}
+  P9_17:
+    aliases: [I2C6_SCL]
+    functions:
+      - {function: I2C6_SCL, peripheral: I2C6, signal: SCL, class: digital, direction: inout, mode: 2}
+      - {function: GPIO1_24, peripheral: GPIO1, signal: "24", class: gpio, mode: 7}
+  P9_18:
+    aliases: [I2C6_SDA]
+    functions:
+      - {function: I2C6_SDA, peripheral: I2C6, signal: SDA, class: digital, direction: inout, mode: 2}
+      - {function: GPIO1_25, peripheral: GPIO1, signal: "25", class: gpio, mode: 7}
+  P8_03: {aliases: [GPIO0_0], functions: [{function: GPIO0_0, peripheral: GPIO0, signal: "0", class: gpio, mode: 7}]}
+  P8_04: {aliases: [GPIO0_1], functions: [{function: GPIO0_1, peripheral: GPIO0, signal: "1", class: gpio, mode: 7}]}
+  P8_05: {aliases: [GPIO0_2], functions: [{function: GPIO0_2, peripheral: GPIO0, signal: "2", class: gpio, mode: 7}]}
+  P8_06: {aliases: [GPIO0_3], functions: [{function: GPIO0_3, peripheral: GPIO0, signal: "3", class: gpio, mode: 7}]}
+  P8_07: {aliases: [GPIO0_4], functions: [{function: GPIO0_4, peripheral: GPIO0, signal: "4", class: gpio, mode: 7}]}
+  P8_08: {aliases: [GPIO0_5], functions: [{function: GPIO0_5, peripheral: GPIO0, signal: "5", class: gpio, mode: 7}]}
+  P8_09: {aliases: [GPIO0_6], functions: [{function: GPIO0_6, peripheral: GPIO0, signal: "6", class: gpio, mode: 7}]}
+  P8_10: {aliases: [GPIO0_7], functions: [{function: GPIO0_7, peripheral: GPIO0, signal: "7", class: gpio, mode: 7}]}
+  P8_11: {aliases: [GPIO0_8], functions: [{function: GPIO0_8, peripheral: GPIO0, signal: "8", class: gpio, mode: 7}]}
+  P8_12: {aliases: [GPIO0_9], functions: [{function: GPIO0_9, peripheral: GPIO0, signal: "9", class: gpio, mode: 7}]}
+  P8_13: {aliases: [GPIO0_10], functions: [{function: GPIO0_10, peripheral: GPIO0, signal: "10", class: gpio, mode: 7}]}
+  P8_14: {aliases: [GPIO0_11], functions: [{function: GPIO0_11, peripheral: GPIO0, signal: "11", class: gpio, mode: 7}]}
+  P8_15: {aliases: [GPIO0_12], functions: [{function: GPIO0_12, peripheral: GPIO0, signal: "12", class: gpio, mode: 7}]}
+  P8_16: {aliases: [GPIO0_15], functions: [{function: GPIO0_15, peripheral: GPIO0, signal: "15", class: gpio, mode: 7}]}
+  P8_17: {aliases: [GPIO0_16], functions: [{function: GPIO0_16, peripheral: GPIO0, signal: "16", class: gpio, mode: 7}]}
+  P8_18: {aliases: [GPIO0_17], functions: [{function: GPIO0_17, peripheral: GPIO0, signal: "17", class: gpio, mode: 7}]}
+  P8_19: {aliases: [GPIO0_18], functions: [{function: GPIO0_18, peripheral: GPIO0, signal: "18", class: gpio, mode: 7}]}
+  P8_20: {aliases: [GPIO0_19], functions: [{function: GPIO0_19, peripheral: GPIO0, signal: "19", class: gpio, mode: 7}]}
+  P8_21: {aliases: [GPIO0_20], functions: [{function: GPIO0_20, peripheral: GPIO0, signal: "20", class: gpio, mode: 7}]}
+  P8_23: {aliases: [GPIO0_21], functions: [{function: GPIO0_21, peripheral: GPIO0, signal: "21", class: gpio, mode: 7}]}
+  P8_24: {aliases: [GPIO0_22], functions: [{function: GPIO0_22, peripheral: GPIO0, signal: "22", class: gpio, mode: 7}]}
+  P8_25: {aliases: [GPIO0_23], functions: [{function: GPIO0_23, peripheral: GPIO0, signal: "23", class: gpio, mode: 7}]}
+  P8_26: {aliases: [GPIO0_24], functions: [{function: GPIO0_24, peripheral: GPIO0, signal: "24", class: gpio, mode: 7}]}
+  P8_27: {aliases: [GPIO0_25], functions: [{function: GPIO0_25, peripheral: GPIO0, signal: "25", class: gpio, mode: 7}]}
+  P8_28: {aliases: [GPIO0_26], functions: [{function: GPIO0_26, peripheral: GPIO0, signal: "26", class: gpio, mode: 7}]}
+  P8_29: {aliases: [GPIO0_27], functions: [{function: GPIO0_27, peripheral: GPIO0, signal: "27", class: gpio, mode: 7}]}
+  P8_30: {aliases: [GPIO0_28], functions: [{function: GPIO0_28, peripheral: GPIO0, signal: "28", class: gpio, mode: 7}]}
+  P8_31: {aliases: [GPIO0_29], functions: [{function: GPIO0_29, peripheral: GPIO0, signal: "29", class: gpio, mode: 7}]}
+  P8_32: {aliases: [GPIO0_30], functions: [{function: GPIO0_30, peripheral: GPIO0, signal: "30", class: gpio, mode: 7}]}
+  P8_33: {aliases: [GPIO0_31], functions: [{function: GPIO0_31, peripheral: GPIO0, signal: "31", class: gpio, mode: 7}]}
+  P9_19:
+    domain: VDDSHV_MCU
+    functions: [{function: MCU_GPIO0_0, peripheral: MCU_GPIO0, signal: "0", class: gpio, mode: 7}]
+  P9_20:
+    domain: VDDSHV_MCU
+    functions: [{function: MCU_GPIO0_1, peripheral: MCU_GPIO0, signal: "1", class: gpio, mode: 7}]
+  VDD_3V3: {type: power, domain: VDDSHV_MAIN}
+  VDD_5V: {type: power, domain: VDDSHV_MAIN}
+  GND: {type: ground}

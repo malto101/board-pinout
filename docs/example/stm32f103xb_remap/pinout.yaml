@@ -1,0 +1,15 @@
+schema_version: "1.1"
+board: stm32f103xb_remap
+soc: stm32f103xb
+soc_package: LQFP100
+mux_source: soc
+faces:
+  top:
+    underlay: stm32f103_mini_blue.webp
+    children:
+      - {id: usart1_tx_pa9, kind: pin, silk: USART1_TX PA9, pad: PA9, point: [0.18, 0.30]}
+      - {id: usart1_rx_pa10, kind: pin, silk: USART1_RX PA10, pad: PA10, point: [0.18, 0.42]}
+      - {id: usart1_tx_pb6, kind: pin, silk: USART1_TX PB6, pad: PB6, point: [0.82, 0.30]}
+      - {id: usart1_rx_pb7, kind: pin, silk: USART1_RX PB7, pad: PB7, point: [0.82, 0.42]}
+      - {id: usart3_tx_pb10, kind: pin, silk: USART3_TX PB10, pad: PB10, point: [0.18, 0.70]}
+      - {id: usart3_rx_pb11, kind: pin, silk: USART3_RX PB11, pad: PB11, point: [0.82, 0.70]}

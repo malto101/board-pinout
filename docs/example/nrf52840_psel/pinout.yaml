@@ -1,0 +1,14 @@
+schema_version: "1.1"
+board: nrf52840_psel
+soc: nrf52840
+mux_source: soc
+faces:
+  top:
+    underlay: others_promicro_nrf52840.webp
+    children:
+      - {id: p0_13, kind: pin, silk: P0.13, pad: P0.13, point: [0.18, 0.28]}
+      - {id: p0_26, kind: pin, silk: P0.26, pad: P0.26, point: [0.18, 0.48]}
+      - {id: p0_27, kind: pin, silk: P0.27, pad: P0.27, point: [0.18, 0.68]}
+      - {id: p1_00, kind: pin, silk: P1.00, pad: P1.00, point: [0.82, 0.48]}
+      - {id: ain0, kind: pin, silk: AIN0, pad: P0.02, point: [0.82, 0.68]}
+      - {id: nfc1, kind: pin, silk: NFC1, pad: P0.09, point: [0.50, 0.86]}
