@@ -4,7 +4,9 @@ from __future__ import annotations
 
 from pathlib import Path
 
-__version__ = "0.1.0"
+from ._version import __version__ as __version__
+
+__all__ = ["__version__", "schema_dir", "schema_path", "static_dir", "types_dir"]
 
 _PKG = Path(__file__).resolve().parent
 # Checkout: repo/src/board_pinout → parents[2]; installed wheel: data lives under _PKG
