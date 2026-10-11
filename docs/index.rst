@@ -13,7 +13,15 @@ Try the interactive diagram
 
 The viewer supports search, marker selection, pan and zoom, hierarchical
 drill-down, and peripheral filtering when mux data is present. Try the
-controls above, or run the editor to author a board visually.
+controls above, or use the hosted editor at
+`https://malto101.github.io/board-pinout/editor/`_ to author a board visually.
+
+The editor imports and exports board ``pinout.yaml`` files. For SoC-backed boards,
+export the separate SoC pad table and place it at the consuming project's canonical
+path, such as ``soc/<vendor>/<soc>/doc/pinmux/<soc>.yaml`` in Zephyr.
+
+.. _https://malto101.github.io/board-pinout/editor/: https://malto101.github.io/board-pinout/editor/
+
 
 Build this demo locally
 -----------------------
