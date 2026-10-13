@@ -1,79 +1,1123 @@
-# Fixed per-pad mux modes for the BeagleBone AI-64 J721E header example.
-# Mode values follow the K3_PINMUX MUX_MODE values in the Zephyr board DTS.
-schema_version: "1.0"
+# J721E pads on the BeagleBone AI-64 P8/P9 headers, generated from the
+# BeagleBoard.org expansion tables. Header contacts are the pad keys; the
+# SoC balls behind each contact are listed as aliases.
+schema_version: '1.0'
 soc: j721e
-description: "J721E header subset used by the dense BeagleBone AI-64 sample"
+description: J721E pads routed to the BeagleBone AI-64 P8/P9 expansion headers
 reference:
-  title: "BeagleBone AI-64 Zephyr pinctrl"
-  section: "beaglebone_ai64_j721e_main_r5f0_0-pinctrl.dtsi"
+  title: BeagleBone AI-64 expansion headers
+  section: P8/P9 pin tables (BALL and MODE 0-14 columns)
+  url: https://docs.beagleboard.org/boards/beaglebone/ai-64/04-expansion.html
 domains:
   VDDSHV_MAIN:
-    io_voltages: [1.8, 3.3]
-    configurable: true
-  VDDSHV_MCU:
-    io_voltages: [1.8, 3.3]
-    configurable: true
+    io_voltages: [3.3]
+    configurable: false
+  VDDA_ADC:
+    io_voltages: [1.8]
+    configurable: false
 pad_defaults:
   type: io
   domain: VDDSHV_MAIN
-  tolerance: {class: LVCMOS}
+  tolerance:
+    class: LVCMOS
 pads:
-  P8_34:
-    aliases: [UART2_TXD]
+  P8_03:
+    aliases: [AH21]
     functions:
-      - {function: UART2_TXD, peripheral: UART2, signal: TXD, class: digital, direction: out, mode: 14}
-      - {function: GPIO0_14, peripheral: GPIO0, signal: "14", class: gpio, mode: 7}
+    - {function: PRG1_PRU0_GPO19, peripheral: PRG1, signal: PRU0_GPO19, class: digital, mode: 0}
+    - {function: PRG1_PRU0_GPI19, peripheral: PRG1, signal: PRU0_GPI19, class: digital, mode: 1}
+    - {function: PRG1_IEP0_EDC_SYNC_OUT0, peripheral: PRG1, signal: IEP0_EDC_SYNC_OUT0, class: digital, mode: 2}
+    - {function: PRG1_PWM0_TZ_OUT, peripheral: PRG1, signal: PWM0_TZ_OUT, class: digital, mode: 3}
+    - {function: RMII5_TXD0, peripheral: RMII5, signal: TXD0, class: digital, mode: 5}
+    - {function: MCAN6_TX, peripheral: MCAN6, signal: TX, class: digital, mode: 6}
+    - {function: GPIO0_20, peripheral: GPIO0, signal: '20', class: gpio, mode: 7}
+    - {function: VOUT0_EXTPCLKIN, peripheral: VOUT0, signal: EXTPCLKIN, class: digital, mode: 10}
+    - {function: VPFE0_PCLK, peripheral: VPFE0, signal: PCLK, class: digital, mode: 11}
+    - {function: MCASP4_AFSX, peripheral: MCASP4, signal: AFSX, class: digital, mode: 12}
+  P8_04:
+    aliases: [AC29]
+    functions:
+    - {function: PRG0_PRU0_GPO5, peripheral: PRG0, signal: PRU0_GPO5, class: digital, mode: 0}
+    - {function: PRG0_PRU0_GPI5, peripheral: PRG0, signal: PRU0_GPI5, class: digital, mode: 1}
+    - {function: PRG0_PWM3_B2, peripheral: PRG0, signal: PWM3_B2, class: digital, mode: 3}
+    - {function: RMII3_TXD0, peripheral: RMII3, signal: TXD0, class: digital, mode: 5}
+    - {function: GPIO0_48, peripheral: GPIO0, signal: '48', class: gpio, mode: 7}
+    - {function: GPMC0_AD0, peripheral: GPMC0, signal: AD0, class: digital, mode: 8}
+    - {function: MCASP0_AXR3, peripheral: MCASP0, signal: AXR3, class: digital, mode: 12}
+  P8_05:
+    aliases: [AH25]
+    functions:
+    - {function: PRG1_PRU1_GPO12, peripheral: PRG1, signal: PRU1_GPO12, class: digital, mode: 0}
+    - {function: PRG1_PRU1_GPI12, peripheral: PRG1, signal: PRU1_GPI12, class: digital, mode: 1}
+    - {function: PRG1_RGMII2_TD1, peripheral: PRG1, signal: RGMII2_TD1, class: digital, mode: 2}
+    - {function: PRG1_PWM1_A0, peripheral: PRG1, signal: PWM1_A0, class: digital, mode: 3}
+    - {function: RGMII2_TD1, peripheral: RGMII2, signal: TD1, class: digital, mode: 4}
+    - {function: MCAN7_TX, peripheral: MCAN7, signal: TX, class: digital, mode: 6}
+    - {function: GPIO0_33, peripheral: GPIO0, signal: '33', class: gpio, mode: 7}
+    - {function: RGMII8_TD1, peripheral: RGMII8, signal: TD1, class: digital, mode: 8}
+    - {function: VOUT0_DATA12, peripheral: VOUT0, signal: DATA12, class: digital, mode: 10}
+    - {function: MCASP9_AFSX, peripheral: MCASP9, signal: AFSX, class: digital, mode: 12}
+  P8_06:
+    aliases: [AG25]
+    functions:
+    - {function: PRG1_PRU1_GPO13, peripheral: PRG1, signal: PRU1_GPO13, class: digital, mode: 0}
+    - {function: PRG1_PRU1_GPI13, peripheral: PRG1, signal: PRU1_GPI13, class: digital, mode: 1}
+    - {function: PRG1_RGMII2_TD2, peripheral: PRG1, signal: RGMII2_TD2, class: digital, mode: 2}
+    - {function: PRG1_PWM1_B0, peripheral: PRG1, signal: PWM1_B0, class: digital, mode: 3}
+    - {function: RGMII2_TD2, peripheral: RGMII2, signal: TD2, class: digital, mode: 4}
+    - {function: MCAN7_RX, peripheral: MCAN7, signal: RX, class: digital, mode: 6}
+    - {function: GPIO0_34, peripheral: GPIO0, signal: '34', class: gpio, mode: 7}
+    - {function: RGMII8_TD2, peripheral: RGMII8, signal: TD2, class: digital, mode: 8}
+    - {function: VOUT0_DATA13, peripheral: VOUT0, signal: DATA13, class: digital, mode: 10}
+    - {function: VPFE0_DATA8, peripheral: VPFE0, signal: DATA8, class: digital, mode: 11}
+    - {function: MCASP9_AXR0, peripheral: MCASP9, signal: AXR0, class: digital, mode: 12}
+    - {function: MCASP4_ACLKR, peripheral: MCASP4, signal: ACLKR, class: digital, mode: 13}
+  P8_07:
+    aliases: [AD24]
+    functions:
+    - {function: PRG1_PRU0_GPO14, peripheral: PRG1, signal: PRU0_GPO14, class: digital, mode: 0}
+    - {function: PRG1_PRU0_GPI14, peripheral: PRG1, signal: PRU0_GPI14, class: digital, mode: 1}
+    - {function: PRG1_RGMII1_TD3, peripheral: PRG1, signal: RGMII1_TD3, class: digital, mode: 2}
+    - {function: PRG1_PWM0_A1, peripheral: PRG1, signal: PWM0_A1, class: digital, mode: 3}
+    - {function: RGMII1_TD3, peripheral: RGMII1, signal: TD3, class: digital, mode: 4}
+    - {function: MCAN5_RX, peripheral: MCAN5, signal: RX, class: digital, mode: 6}
+    - {function: GPIO0_15, peripheral: GPIO0, signal: '15', class: gpio, mode: 7}
+    - {function: RGMII7_TD3, peripheral: RGMII7, signal: TD3, class: digital, mode: 9}
+    - {function: VOUT0_DATA19, peripheral: VOUT0, signal: DATA19, class: digital, mode: 10}
+    - {function: VPFE0_DATA3, peripheral: VPFE0, signal: DATA3, class: digital, mode: 11}
+    - {function: MCASP7_AXR1, peripheral: MCASP7, signal: AXR1, class: digital, mode: 12}
+  P8_08:
+    aliases: [AG24]
+    functions:
+    - {function: PRG1_PRU0_GPO13, peripheral: PRG1, signal: PRU0_GPO13, class: digital, mode: 0}
+    - {function: PRG1_PRU0_GPI13, peripheral: PRG1, signal: PRU0_GPI13, class: digital, mode: 1}
+    - {function: PRG1_RGMII1_TD2, peripheral: PRG1, signal: RGMII1_TD2, class: digital, mode: 2}
+    - {function: PRG1_PWM0_B0, peripheral: PRG1, signal: PWM0_B0, class: digital, mode: 3}
+    - {function: RGMII1_TD2, peripheral: RGMII1, signal: TD2, class: digital, mode: 4}
+    - {function: MCAN5_TX, peripheral: MCAN5, signal: TX, class: digital, mode: 6}
+    - {function: GPIO0_14, peripheral: GPIO0, signal: '14', class: gpio, mode: 7}
+    - {function: RGMII7_TD2, peripheral: RGMII7, signal: TD2, class: digital, mode: 9}
+    - {function: VOUT0_DATA18, peripheral: VOUT0, signal: DATA18, class: digital, mode: 10}
+    - {function: VPFE0_DATA2, peripheral: VPFE0, signal: DATA2, class: digital, mode: 11}
+    - {function: MCASP7_AXR0, peripheral: MCASP7, signal: AXR0, class: digital, mode: 12}
+  P8_09:
+    aliases: [AE24]
+    functions:
+    - {function: PRG1_PRU0_GPO16, peripheral: PRG1, signal: PRU0_GPO16, class: digital, mode: 0}
+    - {function: PRG1_PRU0_GPI16, peripheral: PRG1, signal: PRU0_GPI16, class: digital, mode: 1}
+    - {function: PRG1_RGMII1_TXC, peripheral: PRG1, signal: RGMII1_TXC, class: digital, mode: 2}
+    - {function: PRG1_PWM0_A2, peripheral: PRG1, signal: PWM0_A2, class: digital, mode: 3}
+    - {function: RGMII1_TXC, peripheral: RGMII1, signal: TXC, class: digital, mode: 4}
+    - {function: MCAN6_RX, peripheral: MCAN6, signal: RX, class: digital, mode: 6}
+    - {function: GPIO0_17, peripheral: GPIO0, signal: '17', class: gpio, mode: 7}
+    - {function: RGMII7_TXC, peripheral: RGMII7, signal: TXC, class: digital, mode: 9}
+    - {function: VOUT0_DATA21, peripheral: VOUT0, signal: DATA21, class: digital, mode: 10}
+    - {function: VPFE0_DATA5, peripheral: VPFE0, signal: DATA5, class: digital, mode: 11}
+    - {function: MCASP7_AXR3, peripheral: MCASP7, signal: AXR3, class: digital, mode: 12}
+    - {function: MCASP7_AFSR, peripheral: MCASP7, signal: AFSR, class: digital, mode: 13}
+  P8_10:
+    aliases: [AC24]
+    functions:
+    - {function: PRG1_PRU0_GPO15, peripheral: PRG1, signal: PRU0_GPO15, class: digital, mode: 0}
+    - {function: PRG1_PRU0_GPI15, peripheral: PRG1, signal: PRU0_GPI15, class: digital, mode: 1}
+    - {function: PRG1_RGMII1_TX_CTL, peripheral: PRG1, signal: RGMII1_TX_CTL, class: digital, mode: 2}
+    - {function: PRG1_PWM0_B1, peripheral: PRG1, signal: PWM0_B1, class: digital, mode: 3}
+    - {function: RGMII1_TX_CTL, peripheral: RGMII1, signal: TX_CTL, class: digital, mode: 4}
+    - {function: MCAN6_TX, peripheral: MCAN6, signal: TX, class: digital, mode: 6}
+    - {function: GPIO0_16, peripheral: GPIO0, signal: '16', class: gpio, mode: 7}
+    - {function: RGMII7_TX_CTL, peripheral: RGMII7, signal: TX_CTL, class: digital, mode: 9}
+    - {function: VOUT0_DATA20, peripheral: VOUT0, signal: DATA20, class: digital, mode: 10}
+    - {function: VPFE0_DATA4, peripheral: VPFE0, signal: DATA4, class: digital, mode: 11}
+    - {function: MCASP7_AXR2, peripheral: MCASP7, signal: AXR2, class: digital, mode: 12}
+    - {function: MCASP7_ACLKR, peripheral: MCASP7, signal: ACLKR, class: digital, mode: 13}
+  P8_11:
+    aliases: [AB24]
+    functions:
+    - {function: PRG0_PRU0_GPO17, peripheral: PRG0, signal: PRU0_GPO17, class: digital, mode: 0}
+    - {function: PRG0_PRU0_GPI17, peripheral: PRG0, signal: PRU0_GPI17, class: digital, mode: 1}
+    - {function: PRG0_IEP0_EDC_SYNC_OUT1, peripheral: PRG0, signal: IEP0_EDC_SYNC_OUT1, class: digital, mode: 2}
+    - {function: PRG0_PWM0_B2, peripheral: PRG0, signal: PWM0_B2, class: digital, mode: 3}
+    - {function: PRG0_ECAP0_SYNC_OUT, peripheral: PRG0, signal: ECAP0_SYNC_OUT, class: digital, mode: 4}
+    - {function: GPIO0_60, peripheral: GPIO0, signal: '60', class: gpio, mode: 7}
+    - {function: GPMC0_AD5, peripheral: GPMC0, signal: AD5, class: digital, mode: 8}
+    - {function: OBSCLK1, peripheral: OBSCLK1, class: digital, mode: 9}
+    - {function: MCASP0_AXR13, peripheral: MCASP0, signal: AXR13, class: digital, mode: 12}
+  P8_12:
+    aliases: [AH28]
+    functions:
+    - {function: PRG0_PRU0_GPO16, peripheral: PRG0, signal: PRU0_GPO16, class: digital, mode: 0}
+    - {function: PRG0_PRU0_GPI16, peripheral: PRG0, signal: PRU0_GPI16, class: digital, mode: 1}
+    - {function: PRG0_RGMII1_TXC, peripheral: PRG0, signal: RGMII1_TXC, class: digital, mode: 2}
+    - {function: PRG0_PWM0_A2, peripheral: PRG0, signal: PWM0_A2, class: digital, mode: 3}
+    - {function: RGMII3_TXC, peripheral: RGMII3, signal: TXC, class: digital, mode: 4}
+    - {function: GPIO0_59, peripheral: GPIO0, signal: '59', class: gpio, mode: 7}
+    - {function: DSS_FSYNC1, peripheral: DSS_FSYNC1, class: digital, mode: 10}
+    - {function: MCASP0_AXR12, peripheral: MCASP0, signal: AXR12, class: digital, mode: 12}
+  P8_13:
+    aliases: [V27]
+    functions:
+    - {function: RGMII5_TD1, peripheral: RGMII5, signal: TD1, class: digital, mode: 0}
+    - {function: RMII7_TXD1, peripheral: RMII7, signal: TXD1, class: digital, mode: 1}
+    - {function: I2C3_SCL, peripheral: I2C3, signal: SCL, class: digital, mode: 2}
+    - {function: VOUT1_DATA4, peripheral: VOUT1, signal: DATA4, class: digital, mode: 4}
+    - {function: TRC_DATA2, peripheral: TRC_DATA2, class: digital, mode: 5}
+    - {function: EHRPWM0_B, peripheral: EHRPWM0, signal: B, class: digital, mode: 6}
+    - {function: GPIO0_89, peripheral: GPIO0, signal: '89', class: gpio, mode: 7}
+    - {function: GPMC0_A5, peripheral: GPMC0, signal: A5, class: digital, mode: 8}
+    - {function: MCASP11_ACLKX, peripheral: MCASP11, signal: ACLKX, class: digital, mode: 12}
+  P8_14:
+    aliases: [AF27]
+    functions:
+    - {function: PRG0_PRU1_GPO12, peripheral: PRG0, signal: PRU1_GPO12, class: digital, mode: 0}
+    - {function: PRG0_PRU1_GPI12, peripheral: PRG0, signal: PRU1_GPI12, class: digital, mode: 1}
+    - {function: PRG0_RGMII2_TD1, peripheral: PRG0, signal: RGMII2_TD1, class: digital, mode: 2}
+    - {function: PRG0_PWM1_A0, peripheral: PRG0, signal: PWM1_A0, class: digital, mode: 3}
+    - {function: RGMII4_TD1, peripheral: RGMII4, signal: TD1, class: digital, mode: 4}
+    - {function: GPIO0_75, peripheral: GPIO0, signal: '75', class: gpio, mode: 7}
+    - {function: MCASP1_AXR8, peripheral: MCASP1, signal: AXR8, class: digital, mode: 12}
+    - {function: UART8_CTSn, peripheral: UART8, signal: CTSn, class: digital, mode: 14}
+  P8_15:
+    aliases: [AB29]
+    functions:
+    - {function: PRG0_PRU0_GPO18, peripheral: PRG0, signal: PRU0_GPO18, class: digital, mode: 0}
+    - {function: PRG0_PRU0_GPI18, peripheral: PRG0, signal: PRU0_GPI18, class: digital, mode: 1}
+    - {function: PRG0_IEP0_EDC_LATCH_IN0, peripheral: PRG0, signal: IEP0_EDC_LATCH_IN0, class: digital, mode: 2}
+    - {function: PRG0_PWM0_TZ_IN, peripheral: PRG0, signal: PWM0_TZ_IN, class: digital, mode: 3}
+    - {function: PRG0_ECAP0_IN_APWM_OUT, peripheral: PRG0, signal: ECAP0_IN_APWM_OUT, class: digital, mode: 4}
+    - {function: GPIO0_61, peripheral: GPIO0, signal: '61', class: gpio, mode: 7}
+    - {function: GPMC0_AD6, peripheral: GPMC0, signal: AD6, class: digital, mode: 8}
+    - {function: MCASP0_AXR14, peripheral: MCASP0, signal: AXR14, class: digital, mode: 12}
+  P8_16:
+    aliases: [AB28]
+    functions:
+    - {function: PRG0_PRU0_GPO19, peripheral: PRG0, signal: PRU0_GPO19, class: digital, mode: 0}
+    - {function: PRG0_PRU0_GPI19, peripheral: PRG0, signal: PRU0_GPI19, class: digital, mode: 1}
+    - {function: PRG0_IEP0_EDC_SYNC_OUT0, peripheral: PRG0, signal: IEP0_EDC_SYNC_OUT0, class: digital, mode: 2}
+    - {function: PRG0_PWM0_TZ_OUT, peripheral: PRG0, signal: PWM0_TZ_OUT, class: digital, mode: 3}
+    - {function: GPIO0_62, peripheral: GPIO0, signal: '62', class: gpio, mode: 7}
+    - {function: GPMC0_AD7, peripheral: GPMC0, signal: AD7, class: digital, mode: 8}
+    - {function: MCASP0_AXR15, peripheral: MCASP0, signal: AXR15, class: digital, mode: 12}
+  P8_17:
+    aliases: [AF22]
+    functions:
+    - {function: PRG1_PRU0_GPO2, peripheral: PRG1, signal: PRU0_GPO2, class: digital, mode: 0}
+    - {function: PRG1_PRU0_GPI2, peripheral: PRG1, signal: PRU0_GPI2, class: digital, mode: 1}
+    - {function: PRG1_RGMII1_RD2, peripheral: PRG1, signal: RGMII1_RD2, class: digital, mode: 2}
+    - {function: PRG1_PWM2_A0, peripheral: PRG1, signal: PWM2_A0, class: digital, mode: 3}
+    - {function: RGMII1_RD2, peripheral: RGMII1, signal: RD2, class: digital, mode: 4}
+    - {function: RMII1_CRS_DV, peripheral: RMII1, signal: CRS_DV, class: digital, mode: 5}
+    - {function: GPIO0_3, peripheral: GPIO0, signal: '3', class: gpio, mode: 7}
+    - {function: GPMC0_WAIT1, peripheral: GPMC0, signal: WAIT1, class: digital, mode: 8}
+    - {function: RGMII7_RD2, peripheral: RGMII7, signal: RD2, class: digital, mode: 9}
+    - {function: MCASP6_AXR0, peripheral: MCASP6, signal: AXR0, class: digital, mode: 12}
+    - {function: UART1_RXD, peripheral: UART1, signal: RXD, class: digital, mode: 14}
+  P8_18:
+    aliases: [AJ23]
+    functions:
+    - {function: PRG1_PRU0_GPO3, peripheral: PRG1, signal: PRU0_GPO3, class: digital, mode: 0}
+    - {function: PRG1_PRU0_GPI3, peripheral: PRG1, signal: PRU0_GPI3, class: digital, mode: 1}
+    - {function: PRG1_RGMII1_RD3, peripheral: PRG1, signal: RGMII1_RD3, class: digital, mode: 2}
+    - {function: PRG1_PWM3_A2, peripheral: PRG1, signal: PWM3_A2, class: digital, mode: 3}
+    - {function: RGMII1_RD3, peripheral: RGMII1, signal: RD3, class: digital, mode: 4}
+    - {function: RMII1_RX_ER, peripheral: RMII1, signal: RX_ER, class: digital, mode: 5}
+    - {function: GPIO0_4, peripheral: GPIO0, signal: '4', class: gpio, mode: 7}
+    - {function: GPMC0_DIR, peripheral: GPMC0, signal: DIR, class: digital, mode: 8}
+    - {function: RGMII7_RD3, peripheral: RGMII7, signal: RD3, class: digital, mode: 9}
+    - {function: MCASP6_AXR1, peripheral: MCASP6, signal: AXR1, class: digital, mode: 12}
+    - {function: UART1_TXD, peripheral: UART1, signal: TXD, class: digital, mode: 14}
+  P8_19:
+    aliases: [V29]
+    functions:
+    - {function: RGMII5_TD2, peripheral: RGMII5, signal: TD2, class: digital, mode: 0}
+    - {function: UART3_TXD, peripheral: UART3, signal: TXD, class: digital, mode: 1}
+    - {function: SYNC3_OUT, peripheral: SYNC3, signal: OUT, class: digital, mode: 3}
+    - {function: VOUT1_DATA3, peripheral: VOUT1, signal: DATA3, class: digital, mode: 4}
+    - {function: TRC_DATA1, peripheral: TRC_DATA1, class: digital, mode: 5}
+    - {function: EHRPWM0_A, peripheral: EHRPWM0, signal: A, class: digital, mode: 6}
+    - {function: GPIO0_88, peripheral: GPIO0, signal: '88', class: gpio, mode: 7}
+    - {function: GPMC0_A4, peripheral: GPMC0, signal: A4, class: digital, mode: 8}
+    - {function: MCASP10_AXR1, peripheral: MCASP10, signal: AXR1, class: digital, mode: 12}
+  P8_20:
+    aliases: [AF26]
+    functions:
+    - {function: PRG0_PRU1_GPO13, peripheral: PRG0, signal: PRU1_GPO13, class: digital, mode: 0}
+    - {function: PRG0_PRU1_GPI13, peripheral: PRG0, signal: PRU1_GPI13, class: digital, mode: 1}
+    - {function: PRG0_RGMII2_TD2, peripheral: PRG0, signal: RGMII2_TD2, class: digital, mode: 2}
+    - {function: PRG0_PWM1_B0, peripheral: PRG0, signal: PWM1_B0, class: digital, mode: 3}
+    - {function: RGMII4_TD2, peripheral: RGMII4, signal: TD2, class: digital, mode: 4}
+    - {function: GPIO0_76, peripheral: GPIO0, signal: '76', class: gpio, mode: 7}
+    - {function: MCASP1_AXR9, peripheral: MCASP1, signal: AXR9, class: digital, mode: 12}
+    - {function: UART8_RTSn, peripheral: UART8, signal: RTSn, class: digital, mode: 14}
+  P8_21:
+    aliases: [AF21]
+    functions:
+    - {function: PRG1_PRU1_GPO9, peripheral: PRG1, signal: PRU1_GPO9, class: digital, mode: 0}
+    - {function: PRG1_PRU1_GPI9, peripheral: PRG1, signal: PRU1_GPI9, class: digital, mode: 1}
+    - {function: PRG1_UART0_RXD, peripheral: PRG1, signal: UART0_RXD, class: digital, mode: 2}
+    - {function: SPI6_CS3, peripheral: SPI6, signal: CS3, class: digital, mode: 4}
+    - {function: RMII6_RXD1, peripheral: RMII6, signal: RXD1, class: digital, mode: 5}
+    - {function: MCAN8_TX, peripheral: MCAN8, signal: TX, class: digital, mode: 6}
+    - {function: GPIO0_30, peripheral: GPIO0, signal: '30', class: gpio, mode: 7}
+    - {function: GPMC0_CSn0, peripheral: GPMC0, signal: CSn0, class: digital, mode: 8}
+    - {function: PRG1_IEP0_EDIO_DATA_IN_OUT30, peripheral: PRG1, signal: IEP0_EDIO_DATA_IN_OUT30, class: digital, mode: 9}
+    - {function: VOUT0_DATA9, peripheral: VOUT0, signal: DATA9, class: digital, mode: 10}
+    - {function: MCASP4_AXR3, peripheral: MCASP4, signal: AXR3, class: digital, mode: 12}
   P8_22:
-    aliases: [UART2_RXD]
+    aliases: [AH23]
     functions:
-      - {function: UART2_RXD, peripheral: UART2, signal: RXD, class: digital, direction: in, mode: 14}
-      - {function: GPIO0_13, peripheral: GPIO0, signal: "13", class: gpio, mode: 7}
+    - {function: PRG1_PRU0_GPO4, peripheral: PRG1, signal: PRU0_GPO4, class: digital, mode: 0}
+    - {function: PRG1_PRU0_GPI4, peripheral: PRG1, signal: PRU0_GPI4, class: digital, mode: 1}
+    - {function: PRG1_RGMII1_RX_CTL, peripheral: PRG1, signal: RGMII1_RX_CTL, class: digital, mode: 2}
+    - {function: PRG1_PWM2_B0, peripheral: PRG1, signal: PWM2_B0, class: digital, mode: 3}
+    - {function: RGMII1_RX_CTL, peripheral: RGMII1, signal: RX_CTL, class: digital, mode: 4}
+    - {function: RMII1_TXD0, peripheral: RMII1, signal: TXD0, class: digital, mode: 5}
+    - {function: GPIO0_5, peripheral: GPIO0, signal: '5', class: gpio, mode: 7}
+    - {function: GPMC0_CSn2, peripheral: GPMC0, signal: CSn2, class: digital, mode: 8}
+    - {function: RGMII7_RX_CTL, peripheral: RGMII7, signal: RX_CTL, class: digital, mode: 9}
+    - {function: MCASP6_AXR2, peripheral: MCASP6, signal: AXR2, class: digital, mode: 12}
+    - {function: MCASP6_ACLKR, peripheral: MCASP6, signal: ACLKR, class: digital, mode: 13}
+    - {function: UART2_RXD, peripheral: UART2, signal: RXD, class: digital, mode: 14}
+  P8_23:
+    aliases: [AB23]
+    functions:
+    - {function: PRG1_PRU1_GPO10, peripheral: PRG1, signal: PRU1_GPO10, class: digital, mode: 0}
+    - {function: PRG1_PRU1_GPI10, peripheral: PRG1, signal: PRU1_GPI10, class: digital, mode: 1}
+    - {function: PRG1_UART0_TXD, peripheral: PRG1, signal: UART0_TXD, class: digital, mode: 2}
+    - {function: PRG1_PWM2_TZ_IN, peripheral: PRG1, signal: PWM2_TZ_IN, class: digital, mode: 3}
+    - {function: RMII6_CRS_DV, peripheral: RMII6, signal: CRS_DV, class: digital, mode: 5}
+    - {function: MCAN8_RX, peripheral: MCAN8, signal: RX, class: digital, mode: 6}
+    - {function: GPIO0_31, peripheral: GPIO0, signal: '31', class: gpio, mode: 7}
+    - {function: GPMC0_CLKOUT, peripheral: GPMC0, signal: CLKOUT, class: digital, mode: 8}
+    - {function: PRG1_IEP0_EDIO_DATA_IN_OUT31, peripheral: PRG1, signal: IEP0_EDIO_DATA_IN_OUT31, class: digital, mode: 9}
+    - {function: VOUT0_DATA10, peripheral: VOUT0, signal: DATA10, class: digital, mode: 10}
+    - {function: GPMC0_FCLK_MUX, peripheral: GPMC0, signal: FCLK_MUX, class: digital, mode: 11}
+    - {function: MCASP5_ACLKX, peripheral: MCASP5, signal: ACLKX, class: digital, mode: 12}
+  P8_24:
+    aliases: [AD20]
+    functions:
+    - {function: PRG1_PRU0_GPO5, peripheral: PRG1, signal: PRU0_GPO5, class: digital, mode: 0}
+    - {function: PRG1_PRU0_GPI5, peripheral: PRG1, signal: PRU0_GPI5, class: digital, mode: 1}
+    - {function: PRG1_PWM3_B2, peripheral: PRG1, signal: PWM3_B2, class: digital, mode: 3}
+    - {function: RMII1_TX_EN, peripheral: RMII1, signal: TX_EN, class: digital, mode: 5}
+    - {function: GPIO0_6, peripheral: GPIO0, signal: '6', class: gpio, mode: 7}
+    - {function: GPMC0_WEn, peripheral: GPMC0, signal: WEn, class: digital, mode: 8}
+    - {function: MCASP3_AXR0, peripheral: MCASP3, signal: AXR0, class: digital, mode: 12}
+  P8_25:
+    aliases: [AH26]
+    functions:
+    - {function: PRG1_PRU1_GPO14, peripheral: PRG1, signal: PRU1_GPO14, class: digital, mode: 0}
+    - {function: PRG1_PRU1_GPI14, peripheral: PRG1, signal: PRU1_GPI14, class: digital, mode: 1}
+    - {function: PRG1_RGMII2_TD3, peripheral: PRG1, signal: RGMII2_TD3, class: digital, mode: 2}
+    - {function: PRG1_PWM1_A1, peripheral: PRG1, signal: PWM1_A1, class: digital, mode: 3}
+    - {function: RGMII2_TD3, peripheral: RGMII2, signal: TD3, class: digital, mode: 4}
+    - {function: MCAN8_TX, peripheral: MCAN8, signal: TX, class: digital, mode: 6}
+    - {function: GPIO0_35, peripheral: GPIO0, signal: '35', class: gpio, mode: 7}
+    - {function: RGMII8_TD3, peripheral: RGMII8, signal: TD3, class: digital, mode: 8}
+    - {function: VOUT0_DATA14, peripheral: VOUT0, signal: DATA14, class: digital, mode: 10}
+    - {function: MCASP9_AXR1, peripheral: MCASP9, signal: AXR1, class: digital, mode: 12}
+    - {function: MCASP4_AFSR, peripheral: MCASP4, signal: AFSR, class: digital, mode: 13}
+  P8_26:
+    aliases: [AC27]
+    functions:
+    - {function: PRG0_PRU0_GPO8, peripheral: PRG0, signal: PRU0_GPO8, class: digital, mode: 0}
+    - {function: PRG0_PRU0_GPI8, peripheral: PRG0, signal: PRU0_GPI8, class: digital, mode: 1}
+    - {function: PRG0_PWM2_A1, peripheral: PRG0, signal: PWM2_A1, class: digital, mode: 3}
+    - {function: MCAN9_RX, peripheral: MCAN9, signal: RX, class: digital, mode: 6}
+    - {function: GPIO0_51, peripheral: GPIO0, signal: '51', class: gpio, mode: 7}
+    - {function: GPMC0_AD2, peripheral: GPMC0, signal: AD2, class: digital, mode: 8}
+    - {function: MCASP0_AXR6, peripheral: MCASP0, signal: AXR6, class: digital, mode: 12}
+    - {function: UART6_RXD, peripheral: UART6, signal: RXD, class: digital, mode: 14}
+  P8_27:
+    aliases: [AA28]
+    functions:
+    - {function: PRG0_PRU1_GPO8, peripheral: PRG0, signal: PRU1_GPO8, class: digital, mode: 0}
+    - {function: PRG0_PRU1_GPI8, peripheral: PRG0, signal: PRU1_GPI8, class: digital, mode: 1}
+    - {function: PRG0_PWM2_TZ_OUT, peripheral: PRG0, signal: PWM2_TZ_OUT, class: digital, mode: 3}
+    - {function: MCAN11_RX, peripheral: MCAN11, signal: RX, class: digital, mode: 6}
+    - {function: GPIO0_71, peripheral: GPIO0, signal: '71', class: gpio, mode: 7}
+    - {function: GPMC0_AD10, peripheral: GPMC0, signal: AD10, class: digital, mode: 8}
+    - {function: MCASP1_AFSX, peripheral: MCASP1, signal: AFSX, class: digital, mode: 12}
+  P8_28:
+    aliases: [Y24]
+    functions:
+    - {function: PRG0_PRU1_GPO9, peripheral: PRG0, signal: PRU1_GPO9, class: digital, mode: 0}
+    - {function: PRG0_PRU1_GPI9, peripheral: PRG0, signal: PRU1_GPI9, class: digital, mode: 1}
+    - {function: PRG0_UART0_RXD, peripheral: PRG0, signal: UART0_RXD, class: digital, mode: 2}
+    - {function: SPI3_CS3, peripheral: SPI3, signal: CS3, class: digital, mode: 4}
+    - {function: PRG0_IEP0_EDIO_DATA_IN_OUT30, peripheral: PRG0, signal: IEP0_EDIO_DATA_IN_OUT30, class: digital, mode: 6}
+    - {function: GPIO0_72, peripheral: GPIO0, signal: '72', class: gpio, mode: 7}
+    - {function: GPMC0_AD11, peripheral: GPMC0, signal: AD11, class: digital, mode: 8}
+    - {function: DSS_FSYNC3, peripheral: DSS_FSYNC3, class: digital, mode: 10}
+    - {function: MCASP1_AXR5, peripheral: MCASP1, signal: AXR5, class: digital, mode: 12}
+    - {function: UART8_RXD, peripheral: UART8, signal: RXD, class: digital, mode: 14}
+  P8_29:
+    aliases: [AA25]
+    functions:
+    - {function: PRG0_PRU1_GPO10, peripheral: PRG0, signal: PRU1_GPO10, class: digital, mode: 0}
+    - {function: PRG0_PRU1_GPI10, peripheral: PRG0, signal: PRU1_GPI10, class: digital, mode: 1}
+    - {function: PRG0_UART0_TXD, peripheral: PRG0, signal: UART0_TXD, class: digital, mode: 2}
+    - {function: PRG0_PWM2_TZ_IN, peripheral: PRG0, signal: PWM2_TZ_IN, class: digital, mode: 3}
+    - {function: PRG0_IEP0_EDIO_DATA_IN_OUT31, peripheral: PRG0, signal: IEP0_EDIO_DATA_IN_OUT31, class: digital, mode: 6}
+    - {function: GPIO0_73, peripheral: GPIO0, signal: '73', class: gpio, mode: 7}
+    - {function: GPMC0_AD12, peripheral: GPMC0, signal: AD12, class: digital, mode: 8}
+    - {function: CLKOUT, peripheral: CLKOUT, class: digital, mode: 9}
+    - {function: MCASP1_AXR6, peripheral: MCASP1, signal: AXR6, class: digital, mode: 12}
+    - {function: UART8_TXD, peripheral: UART8, signal: TXD, class: digital, mode: 14}
+  P8_30:
+    aliases: [AG26]
+    functions:
+    - {function: PRG0_PRU1_GPO11, peripheral: PRG0, signal: PRU1_GPO11, class: digital, mode: 0}
+    - {function: PRG0_PRU1_GPI11, peripheral: PRG0, signal: PRU1_GPI11, class: digital, mode: 1}
+    - {function: PRG0_RGMII2_TD0, peripheral: PRG0, signal: RGMII2_TD0, class: digital, mode: 2}
+    - {function: RGMII4_TD0, peripheral: RGMII4, signal: TD0, class: digital, mode: 4}
+    - {function: RMII4_TX_EN, peripheral: RMII4, signal: TX_EN, class: digital, mode: 5}
+    - {function: GPIO0_74, peripheral: GPIO0, signal: '74', class: gpio, mode: 7}
+    - {function: GPMC0_A26, peripheral: GPMC0, signal: A26, class: digital, mode: 8}
+    - {function: MCASP1_AXR7, peripheral: MCASP1, signal: AXR7, class: digital, mode: 12}
+  P8_31:
+    aliases: [AJ25, AE29]
+    notes: Header contact wired to two SoC balls (AJ25 / AE29); configure one and leave the other as input
+    functions:
+    - {function: PRG1_PRU1_GPO11, peripheral: PRG1, signal: PRU1_GPO11, class: digital, mode: 0}
+    - {function: PRG0_PRU1_GPO0, peripheral: PRG0, signal: PRU1_GPO0, class: digital, mode: 0}
+    - {function: PRG1_PRU1_GPI11, peripheral: PRG1, signal: PRU1_GPI11, class: digital, mode: 1}
+    - {function: PRG0_PRU1_GPI0, peripheral: PRG0, signal: PRU1_GPI0, class: digital, mode: 1}
+    - {function: PRG1_RGMII2_TD0, peripheral: PRG1, signal: RGMII2_TD0, class: digital, mode: 2}
+    - {function: PRG0_RGMII2_RD0, peripheral: PRG0, signal: RGMII2_RD0, class: digital, mode: 2}
+    - {function: RGMII2_TD0, peripheral: RGMII2, signal: TD0, class: digital, mode: 4}
+    - {function: RGMII4_RD0, peripheral: RGMII4, signal: RD0, class: digital, mode: 4}
+    - {function: RMII2_TX_EN, peripheral: RMII2, signal: TX_EN, class: digital, mode: 5}
+    - {function: RMII4_RXD0, peripheral: RMII4, signal: RXD0, class: digital, mode: 5}
+    - {function: GPIO0_32, peripheral: GPIO0, signal: '32', class: gpio, mode: 7}
+    - {function: GPIO0_63, peripheral: GPIO0, signal: '63', class: gpio, mode: 7}
+    - {function: RGMII8_TD0, peripheral: RGMII8, signal: TD0, class: digital, mode: 8}
+    - {function: UART4_CTSn, peripheral: UART4, signal: CTSn, class: digital, mode: 8}
+    - {function: EQEP1_I, peripheral: EQEP1, signal: I, class: digital, mode: 9}
+    - {function: VOUT0_DATA11, peripheral: VOUT0, signal: DATA11, class: digital, mode: 10}
+    - {function: MCASP9_ACLKX, peripheral: MCASP9, signal: ACLKX, class: digital, mode: 12}
+    - {function: MCASP1_AXR0, peripheral: MCASP1, signal: AXR0, class: digital, mode: 12}
+    - {function: UART5_RXD, peripheral: UART5, signal: RXD, class: digital, mode: 14}
+  P8_32:
+    aliases: [AG21, AD28]
+    notes: Header contact wired to two SoC balls (AG21 / AD28); configure one and leave the other as input
+    functions:
+    - {function: PRG1_PRU1_GPO5, peripheral: PRG1, signal: PRU1_GPO5, class: digital, mode: 0}
+    - {function: PRG0_PRU1_GPO1, peripheral: PRG0, signal: PRU1_GPO1, class: digital, mode: 0}
+    - {function: PRG1_PRU1_GPI5, peripheral: PRG1, signal: PRU1_GPI5, class: digital, mode: 1}
+    - {function: PRG0_PRU1_GPI1, peripheral: PRG0, signal: PRU1_GPI1, class: digital, mode: 1}
+    - {function: PRG0_RGMII2_RD1, peripheral: PRG0, signal: RGMII2_RD1, class: digital, mode: 2}
+    - {function: RGMII4_RD1, peripheral: RGMII4, signal: RD1, class: digital, mode: 4}
+    - {function: RMII5_TX_EN, peripheral: RMII5, signal: TX_EN, class: digital, mode: 5}
+    - {function: RMII4_RXD1, peripheral: RMII4, signal: RXD1, class: digital, mode: 5}
+    - {function: MCAN6_RX, peripheral: MCAN6, signal: RX, class: digital, mode: 6}
+    - {function: GPIO0_26, peripheral: GPIO0, signal: '26', class: gpio, mode: 7}
+    - {function: GPIO0_64, peripheral: GPIO0, signal: '64', class: gpio, mode: 7}
+    - {function: GPMC0_WPn, peripheral: GPMC0, signal: WPn, class: digital, mode: 8}
+    - {function: UART4_RTSn, peripheral: UART4, signal: RTSn, class: digital, mode: 8}
+    - {function: EQEP1_S, peripheral: EQEP1, signal: S, class: digital, mode: 9}
+    - {function: VOUT0_DATA5, peripheral: VOUT0, signal: DATA5, class: digital, mode: 10}
+    - {function: MCASP4_AXR0, peripheral: MCASP4, signal: AXR0, class: digital, mode: 12}
+    - {function: MCASP1_AXR1, peripheral: MCASP1, signal: AXR1, class: digital, mode: 12}
+    - {function: TIMER_IO4, peripheral: TIMER_IO4, class: digital, mode: 14}
+    - {function: UART5_TXD, peripheral: UART5, signal: TXD, class: digital, mode: 14}
+  P8_33:
+    aliases: [AH24, AA2]
+    notes: Header contact wired to two SoC balls (AH24 / AA2); configure one and leave the other as input
+    functions:
+    - {function: PRG1_PRU1_GPO4, peripheral: PRG1, signal: PRU1_GPO4, class: digital, mode: 0}
+    - {function: SPI0_CS0, peripheral: SPI0, signal: CS0, class: digital, mode: 0}
+    - {function: PRG1_PRU1_GPI4, peripheral: PRG1, signal: PRU1_GPI4, class: digital, mode: 1}
+    - {function: UART0_RTSn, peripheral: UART0, signal: RTSn, class: digital, mode: 1}
+    - {function: PRG1_RGMII2_RX_CTL, peripheral: PRG1, signal: RGMII2_RX_CTL, class: digital, mode: 2}
+    - {function: PRG1_PWM2_B2, peripheral: PRG1, signal: PWM2_B2, class: digital, mode: 3}
+    - {function: RGMII2_RX_CTL, peripheral: RGMII2, signal: RX_CTL, class: digital, mode: 4}
+    - {function: RMII2_TXD0, peripheral: RMII2, signal: TXD0, class: digital, mode: 5}
+    - {function: GPIO0_25, peripheral: GPIO0, signal: '25', class: gpio, mode: 7}
+    - {function: GPIO0_111, peripheral: GPIO0, signal: '111', class: gpio, mode: 7}
+    - {function: RGMII8_RX_CTL, peripheral: RGMII8, signal: RX_CTL, class: digital, mode: 8}
+    - {function: EQEP1_B, peripheral: EQEP1, signal: B, class: digital, mode: 9}
+    - {function: VOUT0_DATA4, peripheral: VOUT0, signal: DATA4, class: digital, mode: 10}
+    - {function: VPFE0_DATA13, peripheral: VPFE0, signal: DATA13, class: digital, mode: 11}
+    - {function: MCASP8_AXR2, peripheral: MCASP8, signal: AXR2, class: digital, mode: 12}
+    - {function: MCASP8_ACLKR, peripheral: MCASP8, signal: ACLKR, class: digital, mode: 13}
+    - {function: TIMER_IO3, peripheral: TIMER_IO3, class: digital, mode: 14}
+  P8_34:
+    aliases: [AD22]
+    functions:
+    - {function: PRG1_PRU0_GPO6, peripheral: PRG1, signal: PRU0_GPO6, class: digital, mode: 0}
+    - {function: PRG1_PRU0_GPI6, peripheral: PRG1, signal: PRU0_GPI6, class: digital, mode: 1}
+    - {function: PRG1_RGMII1_RXC, peripheral: PRG1, signal: RGMII1_RXC, class: digital, mode: 2}
+    - {function: PRG1_PWM3_A1, peripheral: PRG1, signal: PWM3_A1, class: digital, mode: 3}
+    - {function: RGMII1_RXC, peripheral: RGMII1, signal: RXC, class: digital, mode: 4}
+    - {function: RMII1_TXD1, peripheral: RMII1, signal: TXD1, class: digital, mode: 5}
+    - {function: AUDIO_EXT_REFCLK0, peripheral: AUDIO_EXT_REFCLK0, class: digital, mode: 6}
+    - {function: GPIO0_7, peripheral: GPIO0, signal: '7', class: gpio, mode: 7}
+    - {function: GPMC0_CSn3, peripheral: GPMC0, signal: CSn3, class: digital, mode: 8}
+    - {function: RGMII7_RXC, peripheral: RGMII7, signal: RXC, class: digital, mode: 9}
+    - {function: MCASP6_AXR3, peripheral: MCASP6, signal: AXR3, class: digital, mode: 12}
+    - {function: MCASP6_AFSR, peripheral: MCASP6, signal: AFSR, class: digital, mode: 13}
+    - {function: UART2_TXD, peripheral: UART2, signal: TXD, class: digital, mode: 14}
+  P8_35:
+    aliases: [AD23, Y3]
+    notes: Header contact wired to two SoC balls (AD23 / Y3); configure one and leave the other as input
+    functions:
+    - {function: PRG1_PRU1_GPO3, peripheral: PRG1, signal: PRU1_GPO3, class: digital, mode: 0}
+    - {function: SPI1_CS0, peripheral: SPI1, signal: CS0, class: digital, mode: 0}
+    - {function: PRG1_PRU1_GPI3, peripheral: PRG1, signal: PRU1_GPI3, class: digital, mode: 1}
+    - {function: UART0_CTSn, peripheral: UART0, signal: CTSn, class: digital, mode: 1}
+    - {function: PRG1_RGMII2_RD3, peripheral: PRG1, signal: RGMII2_RD3, class: digital, mode: 2}
+    - {function: UART5_RXD, peripheral: UART5, signal: RXD, class: digital, mode: 3}
+    - {function: RGMII2_RD3, peripheral: RGMII2, signal: RD3, class: digital, mode: 4}
+    - {function: RMII2_RX_ER, peripheral: RMII2, signal: RX_ER, class: digital, mode: 5}
+    - {function: PRG0_IEP0_EDIO_OUTVALID, peripheral: PRG0, signal: IEP0_EDIO_OUTVALID, class: digital, mode: 6}
+    - {function: GPIO0_24, peripheral: GPIO0, signal: '24', class: gpio, mode: 7}
+    - {function: GPIO0_116, peripheral: GPIO0, signal: '116', class: gpio, mode: 7}
+    - {function: RGMII8_RD3, peripheral: RGMII8, signal: RD3, class: digital, mode: 8}
+    - {function: PRG0_IEP0_EDC_LATCH_IN0, peripheral: PRG0, signal: IEP0_EDC_LATCH_IN0, class: digital, mode: 8}
+    - {function: EQEP1_A, peripheral: EQEP1, signal: A, class: digital, mode: 9}
+    - {function: VOUT0_DATA3, peripheral: VOUT0, signal: DATA3, class: digital, mode: 10}
+    - {function: VPFE0_WEN, peripheral: VPFE0, signal: WEN, class: digital, mode: 11}
+    - {function: MCASP8_AXR1, peripheral: MCASP8, signal: AXR1, class: digital, mode: 12}
+    - {function: MCASP3_AFSR, peripheral: MCASP3, signal: AFSR, class: digital, mode: 13}
+    - {function: TIMER_IO2, peripheral: TIMER_IO2, class: digital, mode: 14}
+  P8_36:
+    aliases: [AE20]
+    functions:
+    - {function: PRG1_PRU0_GPO7, peripheral: PRG1, signal: PRU0_GPO7, class: digital, mode: 0}
+    - {function: PRG1_PRU0_GPI7, peripheral: PRG1, signal: PRU0_GPI7, class: digital, mode: 1}
+    - {function: PRG1_IEP0_EDC_LATCH_IN1, peripheral: PRG1, signal: IEP0_EDC_LATCH_IN1, class: digital, mode: 2}
+    - {function: PRG1_PWM3_B1, peripheral: PRG1, signal: PWM3_B1, class: digital, mode: 3}
+    - {function: AUDIO_EXT_REFCLK1, peripheral: AUDIO_EXT_REFCLK1, class: digital, mode: 5}
+    - {function: MCAN4_TX, peripheral: MCAN4, signal: TX, class: digital, mode: 6}
+    - {function: GPIO0_8, peripheral: GPIO0, signal: '8', class: gpio, mode: 7}
+    - {function: MCASP3_AXR1, peripheral: MCASP3, signal: AXR1, class: digital, mode: 12}
+  P8_37:
+    aliases: [Y27, AD21]
+    notes: Header contact wired to two SoC balls (Y27 / AD21); configure one and leave the other as input
+    functions:
+    - {function: RGMII6_RD2, peripheral: RGMII6, signal: RD2, class: digital, mode: 0}
+    - {function: PRG1_PRU0_GPO10, peripheral: PRG1, signal: PRU0_GPO10, class: digital, mode: 0}
+    - {function: UART4_RTSn, peripheral: UART4, signal: RTSn, class: digital, mode: 1}
+    - {function: PRG1_PRU0_GPI10, peripheral: PRG1, signal: PRU0_GPI10, class: digital, mode: 1}
+    - {function: PRG1_UART0_RTSn, peripheral: PRG1, signal: UART0_RTSn, class: digital, mode: 2}
+    - {function: UART5_TXD, peripheral: UART5, signal: TXD, class: digital, mode: 3}
+    - {function: PRG1_PWM2_B1, peripheral: PRG1, signal: PWM2_B1, class: digital, mode: 3}
+    - {function: SPI6_CS2, peripheral: SPI6, signal: CS2, class: digital, mode: 4}
+    - {function: TRC_DATA19, peripheral: TRC_DATA19, class: digital, mode: 5}
+    - {function: RMII5_CRS_DV, peripheral: RMII5, signal: CRS_DV, class: digital, mode: 5}
+    - {function: EHRPWM5_A, peripheral: EHRPWM5, signal: A, class: digital, mode: 6}
+    - {function: GPIO0_106, peripheral: GPIO0, signal: '106', class: gpio, mode: 7}
+    - {function: GPIO0_11, peripheral: GPIO0, signal: '11', class: gpio, mode: 7}
+    - {function: GPMC0_A22, peripheral: GPMC0, signal: A22, class: digital, mode: 8}
+    - {function: GPMC0_BE0n_CLE, peripheral: GPMC0, signal: BE0n_CLE, class: digital, mode: 8}
+    - {function: PRG1_IEP0_EDIO_DATA_IN_OUT29, peripheral: PRG1, signal: IEP0_EDIO_DATA_IN_OUT29, class: digital, mode: 9}
+    - {function: OBSCLK2, peripheral: OBSCLK2, class: digital, mode: 10}
+    - {function: MCASP11_AXR5, peripheral: MCASP11, signal: AXR5, class: digital, mode: 12}
+    - {function: MCASP3_AFSX, peripheral: MCASP3, signal: AFSX, class: digital, mode: 12}
+  P8_38:
+    aliases: [Y29, AJ20]
+    notes: Header contact wired to two SoC balls (Y29 / AJ20); configure one and leave the other as input
+    functions:
+    - {function: RGMII6_RD3, peripheral: RGMII6, signal: RD3, class: digital, mode: 0}
+    - {function: PRG1_PRU0_GPO8, peripheral: PRG1, signal: PRU0_GPO8, class: digital, mode: 0}
+    - {function: UART4_CTSn, peripheral: UART4, signal: CTSn, class: digital, mode: 1}
+    - {function: PRG1_PRU0_GPI8, peripheral: PRG1, signal: PRU0_GPI8, class: digital, mode: 1}
+    - {function: UART5_RXD, peripheral: UART5, signal: RXD, class: digital, mode: 3}
+    - {function: PRG1_PWM2_A1, peripheral: PRG1, signal: PWM2_A1, class: digital, mode: 3}
+    - {function: CLKOUT, peripheral: CLKOUT, class: digital, mode: 4}
+    - {function: TRC_DATA18, peripheral: TRC_DATA18, class: digital, mode: 5}
+    - {function: RMII5_RXD0, peripheral: RMII5, signal: RXD0, class: digital, mode: 5}
+    - {function: EHRPWM_TZn_IN4, peripheral: EHRPWM_TZn_IN4, class: digital, mode: 6}
+    - {function: MCAN4_RX, peripheral: MCAN4, signal: RX, class: digital, mode: 6}
+    - {function: GPIO0_105, peripheral: GPIO0, signal: '105', class: gpio, mode: 7}
+    - {function: GPIO0_9, peripheral: GPIO0, signal: '9', class: gpio, mode: 7}
+    - {function: GPMC0_A21, peripheral: GPMC0, signal: A21, class: digital, mode: 8}
+    - {function: GPMC0_OEn_REn, peripheral: GPMC0, signal: OEn_REn, class: digital, mode: 8}
+    - {function: VOUT0_DATA22, peripheral: VOUT0, signal: DATA22, class: digital, mode: 10}
+    - {function: MCASP11_AXR4, peripheral: MCASP11, signal: AXR4, class: digital, mode: 12}
+    - {function: MCASP3_AXR2, peripheral: MCASP3, signal: AXR2, class: digital, mode: 12}
+  P8_39:
+    aliases: [AC26]
+    functions:
+    - {function: PRG0_PRU1_GPO6, peripheral: PRG0, signal: PRU1_GPO6, class: digital, mode: 0}
+    - {function: PRG0_PRU1_GPI6, peripheral: PRG0, signal: PRU1_GPI6, class: digital, mode: 1}
+    - {function: PRG0_RGMII2_RXC, peripheral: PRG0, signal: RGMII2_RXC, class: digital, mode: 2}
+    - {function: RGMII4_RXC, peripheral: RGMII4, signal: RXC, class: digital, mode: 4}
+    - {function: RMII4_TXD0, peripheral: RMII4, signal: TXD0, class: digital, mode: 5}
+    - {function: GPIO0_69, peripheral: GPIO0, signal: '69', class: gpio, mode: 7}
+    - {function: GPMC0_A25, peripheral: GPMC0, signal: A25, class: digital, mode: 8}
+    - {function: MCASP1_AXR3, peripheral: MCASP1, signal: AXR3, class: digital, mode: 12}
+  P8_40:
+    aliases: [AA24]
+    functions:
+    - {function: PRG0_PRU1_GPO7, peripheral: PRG0, signal: PRU1_GPO7, class: digital, mode: 0}
+    - {function: PRG0_PRU1_GPI7, peripheral: PRG0, signal: PRU1_GPI7, class: digital, mode: 1}
+    - {function: PRG0_IEP1_EDC_LATCH_IN1, peripheral: PRG0, signal: IEP1_EDC_LATCH_IN1, class: digital, mode: 2}
+    - {function: SPI3_CS0, peripheral: SPI3, signal: CS0, class: digital, mode: 4}
+    - {function: MCAN11_TX, peripheral: MCAN11, signal: TX, class: digital, mode: 6}
+    - {function: GPIO0_70, peripheral: GPIO0, signal: '70', class: gpio, mode: 7}
+    - {function: GPMC0_AD9, peripheral: GPMC0, signal: AD9, class: digital, mode: 8}
+    - {function: MCASP1_AXR4, peripheral: MCASP1, signal: AXR4, class: digital, mode: 12}
+    - {function: UART2_TXD, peripheral: UART2, signal: TXD, class: digital, mode: 14}
+  P8_41:
+    aliases: [AD29]
+    functions:
+    - {function: PRG0_PRU1_GPO4, peripheral: PRG0, signal: PRU1_GPO4, class: digital, mode: 0}
+    - {function: PRG0_PRU1_GPI4, peripheral: PRG0, signal: PRU1_GPI4, class: digital, mode: 1}
+    - {function: PRG0_RGMII2_RX_CTL, peripheral: PRG0, signal: RGMII2_RX_CTL, class: digital, mode: 2}
+    - {function: PRG0_PWM2_B2, peripheral: PRG0, signal: PWM2_B2, class: digital, mode: 3}
+    - {function: RGMII4_RX_CTL, peripheral: RGMII4, signal: RX_CTL, class: digital, mode: 4}
+    - {function: RMII4_TXD1, peripheral: RMII4, signal: TXD1, class: digital, mode: 5}
+    - {function: GPIO0_67, peripheral: GPIO0, signal: '67', class: gpio, mode: 7}
+    - {function: GPMC0_A24, peripheral: GPMC0, signal: A24, class: digital, mode: 8}
+    - {function: MCASP1_AXR2, peripheral: MCASP1, signal: AXR2, class: digital, mode: 12}
+  P8_42:
+    aliases: [AB27]
+    functions:
+    - {function: PRG0_PRU1_GPO5, peripheral: PRG0, signal: PRU1_GPO5, class: digital, mode: 0}
+    - {function: PRG0_PRU1_GPI5, peripheral: PRG0, signal: PRU1_GPI5, class: digital, mode: 1}
+    - {function: GPIO0_68, peripheral: GPIO0, signal: '68', class: gpio, mode: 7}
+    - {function: GPMC0_AD8, peripheral: GPMC0, signal: AD8, class: digital, mode: 8}
+    - {function: MCASP1_ACLKX, peripheral: MCASP1, signal: ACLKX, class: digital, mode: 12}
+  P8_43:
+    aliases: [AD27]
+    functions:
+    - {function: PRG0_PRU1_GPO2, peripheral: PRG0, signal: PRU1_GPO2, class: digital, mode: 0}
+    - {function: PRG0_PRU1_GPI2, peripheral: PRG0, signal: PRU1_GPI2, class: digital, mode: 1}
+    - {function: PRG0_RGMII2_RD2, peripheral: PRG0, signal: RGMII2_RD2, class: digital, mode: 2}
+    - {function: PRG0_PWM2_A2, peripheral: PRG0, signal: PWM2_A2, class: digital, mode: 3}
+    - {function: RGMII4_RD2, peripheral: RGMII4, signal: RD2, class: digital, mode: 4}
+    - {function: RMII4_CRS_DV, peripheral: RMII4, signal: CRS_DV, class: digital, mode: 5}
+    - {function: GPIO0_65, peripheral: GPIO0, signal: '65', class: gpio, mode: 7}
+    - {function: GPMC0_A23, peripheral: GPMC0, signal: A23, class: digital, mode: 8}
+    - {function: MCASP1_ACLKR, peripheral: MCASP1, signal: ACLKR, class: digital, mode: 12}
+    - {function: MCASP1_AXR10, peripheral: MCASP1, signal: AXR10, class: digital, mode: 13}
+  P8_44:
+    aliases: [AC25]
+    functions:
+    - {function: PRG0_PRU1_GPO3, peripheral: PRG0, signal: PRU1_GPO3, class: digital, mode: 0}
+    - {function: PRG0_PRU1_GPI3, peripheral: PRG0, signal: PRU1_GPI3, class: digital, mode: 1}
+    - {function: PRG0_RGMII2_RD3, peripheral: PRG0, signal: RGMII2_RD3, class: digital, mode: 2}
+    - {function: RGMII4_RD3, peripheral: RGMII4, signal: RD3, class: digital, mode: 4}
+    - {function: RMII4_RX_ER, peripheral: RMII4, signal: RX_ER, class: digital, mode: 5}
+    - {function: GPIO0_66, peripheral: GPIO0, signal: '66', class: gpio, mode: 7}
+    - {function: MCASP1_AFSR, peripheral: MCASP1, signal: AFSR, class: digital, mode: 12}
+    - {function: MCASP1_AXR11, peripheral: MCASP1, signal: AXR11, class: digital, mode: 13}
+  P8_45:
+    aliases: [AG29]
+    functions:
+    - {function: PRG0_PRU1_GPO16, peripheral: PRG0, signal: PRU1_GPO16, class: digital, mode: 0}
+    - {function: PRG0_PRU1_GPI16, peripheral: PRG0, signal: PRU1_GPI16, class: digital, mode: 1}
+    - {function: PRG0_RGMII2_TXC, peripheral: PRG0, signal: RGMII2_TXC, class: digital, mode: 2}
+    - {function: PRG0_PWM1_A2, peripheral: PRG0, signal: PWM1_A2, class: digital, mode: 3}
+    - {function: RGMII4_TXC, peripheral: RGMII4, signal: TXC, class: digital, mode: 4}
+    - {function: GPIO0_79, peripheral: GPIO0, signal: '79', class: gpio, mode: 7}
+    - {function: MCASP2_AXR2, peripheral: MCASP2, signal: AXR2, class: digital, mode: 12}
+  P8_46:
+    aliases: [Y25]
+    functions:
+    - {function: PRG0_PRU1_GPO17, peripheral: PRG0, signal: PRU1_GPO17, class: digital, mode: 0}
+    - {function: PRG0_PRU1_GPI17, peripheral: PRG0, signal: PRU1_GPI17, class: digital, mode: 1}
+    - {function: PRG0_IEP1_EDC_SYNC_OUT1, peripheral: PRG0, signal: IEP1_EDC_SYNC_OUT1, class: digital, mode: 2}
+    - {function: PRG0_PWM1_B2, peripheral: PRG0, signal: PWM1_B2, class: digital, mode: 3}
+    - {function: SPI3_CLK, peripheral: SPI3, signal: CLK, class: digital, mode: 4}
+    - {function: GPIO0_80, peripheral: GPIO0, signal: '80', class: gpio, mode: 7}
+    - {function: GPMC0_AD13, peripheral: GPMC0, signal: AD13, class: digital, mode: 8}
+    - {function: MCASP2_AXR3, peripheral: MCASP2, signal: AXR3, class: digital, mode: 12}
+  P9_11:
+    aliases: [AC23]
+    functions:
+    - {function: PRG1_PRU0_GPO0, peripheral: PRG1, signal: PRU0_GPO0, class: digital, mode: 0}
+    - {function: PRG1_PRU0_GPI0, peripheral: PRG1, signal: PRU0_GPI0, class: digital, mode: 1}
+    - {function: PRG1_RGMII1_RD0, peripheral: PRG1, signal: RGMII1_RD0, class: digital, mode: 2}
+    - {function: PRG1_PWM3_A0, peripheral: PRG1, signal: PWM3_A0, class: digital, mode: 3}
+    - {function: RGMII1_RD0, peripheral: RGMII1, signal: RD0, class: digital, mode: 4}
+    - {function: RMII1_RXD0, peripheral: RMII1, signal: RXD0, class: digital, mode: 5}
+    - {function: GPIO0_1, peripheral: GPIO0, signal: '1', class: gpio, mode: 7}
+    - {function: GPMC0_BE1n, peripheral: GPMC0, signal: BE1n, class: digital, mode: 8}
+    - {function: RGMII7_RD0, peripheral: RGMII7, signal: RD0, class: digital, mode: 9}
+    - {function: MCASP6_ACLKX, peripheral: MCASP6, signal: ACLKX, class: digital, mode: 12}
+    - {function: UART0_RXD, peripheral: UART0, signal: RXD, class: digital, mode: 14}
+  P9_12:
+    aliases: [AE27]
+    functions:
+    - {function: PRG0_PRU0_GPO2, peripheral: PRG0, signal: PRU0_GPO2, class: digital, mode: 0}
+    - {function: PRG0_PRU0_GPI2, peripheral: PRG0, signal: PRU0_GPI2, class: digital, mode: 1}
+    - {function: PRG0_RGMII1_RD2, peripheral: PRG0, signal: RGMII1_RD2, class: digital, mode: 2}
+    - {function: PRG0_PWM2_A0, peripheral: PRG0, signal: PWM2_A0, class: digital, mode: 3}
+    - {function: RGMII3_RD2, peripheral: RGMII3, signal: RD2, class: digital, mode: 4}
+    - {function: RMII3_CRS_DV, peripheral: RMII3, signal: CRS_DV, class: digital, mode: 5}
+    - {function: GPIO0_45, peripheral: GPIO0, signal: '45', class: gpio, mode: 7}
+    - {function: UART3_RXD, peripheral: UART3, signal: RXD, class: digital, mode: 8}
+    - {function: MCASP0_ACLKR, peripheral: MCASP0, signal: ACLKR, class: digital, mode: 12}
+  P9_13:
+    aliases: [AG22]
+    functions:
+    - {function: PRG1_PRU0_GPO1, peripheral: PRG1, signal: PRU0_GPO1, class: digital, mode: 0}
+    - {function: PRG1_PRU0_GPI1, peripheral: PRG1, signal: PRU0_GPI1, class: digital, mode: 1}
+    - {function: PRG1_RGMII1_RD1, peripheral: PRG1, signal: RGMII1_RD1, class: digital, mode: 2}
+    - {function: PRG1_PWM3_B0, peripheral: PRG1, signal: PWM3_B0, class: digital, mode: 3}
+    - {function: RGMII1_RD1, peripheral: RGMII1, signal: RD1, class: digital, mode: 4}
+    - {function: RMII1_RXD1, peripheral: RMII1, signal: RXD1, class: digital, mode: 5}
+    - {function: GPIO0_2, peripheral: GPIO0, signal: '2', class: gpio, mode: 7}
+    - {function: GPMC0_WAIT0, peripheral: GPMC0, signal: WAIT0, class: digital, mode: 8}
+    - {function: RGMII7_RD1, peripheral: RGMII7, signal: RD1, class: digital, mode: 9}
+    - {function: MCASP6_AFSX, peripheral: MCASP6, signal: AFSX, class: digital, mode: 12}
+    - {function: UART0_TXD, peripheral: UART0, signal: TXD, class: digital, mode: 14}
+  P9_14:
+    aliases: [U27]
+    functions:
+    - {function: RGMII5_RD3, peripheral: RGMII5, signal: RD3, class: digital, mode: 0}
+    - {function: UART3_CTSn, peripheral: UART3, signal: CTSn, class: digital, mode: 1}
+    - {function: UART6_RXD, peripheral: UART6, signal: RXD, class: digital, mode: 3}
+    - {function: VOUT1_DATA8, peripheral: VOUT1, signal: DATA8, class: digital, mode: 4}
+    - {function: TRC_DATA6, peripheral: TRC_DATA6, class: digital, mode: 5}
+    - {function: EHRPWM2_A, peripheral: EHRPWM2, signal: A, class: digital, mode: 6}
+    - {function: GPIO0_93, peripheral: GPIO0, signal: '93', class: gpio, mode: 7}
+    - {function: GPMC0_A9, peripheral: GPMC0, signal: A9, class: digital, mode: 8}
+    - {function: MCASP11_AXR0, peripheral: MCASP11, signal: AXR0, class: digital, mode: 12}
+  P9_15:
+    aliases: [AD25]
+    functions:
+    - {function: PRG0_PRU0_GPO4, peripheral: PRG0, signal: PRU0_GPO4, class: digital, mode: 0}
+    - {function: PRG0_PRU0_GPI4, peripheral: PRG0, signal: PRU0_GPI4, class: digital, mode: 1}
+    - {function: PRG0_RGMII1_RX_CTL, peripheral: PRG0, signal: RGMII1_RX_CTL, class: digital, mode: 2}
+    - {function: PRG0_PWM2_B0, peripheral: PRG0, signal: PWM2_B0, class: digital, mode: 3}
+    - {function: RGMII3_RX_CTL, peripheral: RGMII3, signal: RX_CTL, class: digital, mode: 4}
+    - {function: RMII3_TXD1, peripheral: RMII3, signal: TXD1, class: digital, mode: 5}
+    - {function: GPIO0_47, peripheral: GPIO0, signal: '47', class: gpio, mode: 7}
+    - {function: MCASP0_AXR2, peripheral: MCASP0, signal: AXR2, class: digital, mode: 12}
+  P9_16:
+    aliases: [U24]
+    functions:
+    - {function: RGMII5_RD2, peripheral: RGMII5, signal: RD2, class: digital, mode: 0}
+    - {function: UART3_RTSn, peripheral: UART3, signal: RTSn, class: digital, mode: 1}
+    - {function: UART6_TXD, peripheral: UART6, signal: TXD, class: digital, mode: 3}
+    - {function: VOUT1_DATA9, peripheral: VOUT1, signal: DATA9, class: digital, mode: 4}
+    - {function: TRC_DATA7, peripheral: TRC_DATA7, class: digital, mode: 5}
+    - {function: EHRPWM2_B, peripheral: EHRPWM2, signal: B, class: digital, mode: 6}
+    - {function: GPIO0_94, peripheral: GPIO0, signal: '94', class: gpio, mode: 7}
+    - {function: GPMC0_A10, peripheral: GPMC0, signal: A10, class: digital, mode: 8}
+    - {function: MCASP11_AXR1, peripheral: MCASP11, signal: AXR1, class: digital, mode: 12}
   P9_17:
-    aliases: [I2C6_SCL]
+    aliases: [AC21, AA3]
+    notes: Header contact wired to two SoC balls (AC21 / AA3); configure one and leave the other as input
     functions:
-      - {function: I2C6_SCL, peripheral: I2C6, signal: SCL, class: digital, direction: inout, mode: 2}
-      - {function: GPIO1_24, peripheral: GPIO1, signal: "24", class: gpio, mode: 7}
+    - {function: PRG1_PRU1_GPO7, peripheral: PRG1, signal: PRU1_GPO7, class: digital, mode: 0}
+    - {function: SPI0_D1, peripheral: SPI0, signal: D1, class: digital, mode: 0}
+    - {function: PRG1_PRU1_GPI7, peripheral: PRG1, signal: PRU1_GPI7, class: digital, mode: 1}
+    - {function: PRG1_IEP1_EDC_LATCH_IN1, peripheral: PRG1, signal: IEP1_EDC_LATCH_IN1, class: digital, mode: 2}
+    - {function: I2C6_SCL, peripheral: I2C6, signal: SCL, class: digital, mode: 2}
+    - {function: SPI6_CS0, peripheral: SPI6, signal: CS0, class: digital, mode: 4}
+    - {function: RMII6_RX_ER, peripheral: RMII6, signal: RX_ER, class: digital, mode: 5}
+    - {function: MCAN7_TX, peripheral: MCAN7, signal: TX, class: digital, mode: 6}
+    - {function: GPIO0_28, peripheral: GPIO0, signal: '28', class: gpio, mode: 7}
+    - {function: GPIO0_115, peripheral: GPIO0, signal: '115', class: gpio, mode: 7}
+    - {function: VOUT0_DATA7, peripheral: VOUT0, signal: DATA7, class: digital, mode: 10}
+    - {function: VPFE0_DATA15, peripheral: VPFE0, signal: DATA15, class: digital, mode: 11}
+    - {function: MCASP4_AXR1, peripheral: MCASP4, signal: AXR1, class: digital, mode: 12}
+    - {function: UART3_TXD, peripheral: UART3, signal: TXD, class: digital, mode: 14}
   P9_18:
-    aliases: [I2C6_SDA]
+    aliases: [AH22, Y2]
+    notes: Header contact wired to two SoC balls (AH22 / Y2); configure one and leave the other as input
     functions:
-      - {function: I2C6_SDA, peripheral: I2C6, signal: SDA, class: digital, direction: inout, mode: 2}
-      - {function: GPIO1_25, peripheral: GPIO1, signal: "25", class: gpio, mode: 7}
-  P8_03: {aliases: [GPIO0_0], functions: [{function: GPIO0_0, peripheral: GPIO0, signal: "0", class: gpio, mode: 7}]}
-  P8_04: {aliases: [GPIO0_1], functions: [{function: GPIO0_1, peripheral: GPIO0, signal: "1", class: gpio, mode: 7}]}
-  P8_05: {aliases: [GPIO0_2], functions: [{function: GPIO0_2, peripheral: GPIO0, signal: "2", class: gpio, mode: 7}]}
-  P8_06: {aliases: [GPIO0_3], functions: [{function: GPIO0_3, peripheral: GPIO0, signal: "3", class: gpio, mode: 7}]}
-  P8_07: {aliases: [GPIO0_4], functions: [{function: GPIO0_4, peripheral: GPIO0, signal: "4", class: gpio, mode: 7}]}
-  P8_08: {aliases: [GPIO0_5], functions: [{function: GPIO0_5, peripheral: GPIO0, signal: "5", class: gpio, mode: 7}]}
-  P8_09: {aliases: [GPIO0_6], functions: [{function: GPIO0_6, peripheral: GPIO0, signal: "6", class: gpio, mode: 7}]}
-  P8_10: {aliases: [GPIO0_7], functions: [{function: GPIO0_7, peripheral: GPIO0, signal: "7", class: gpio, mode: 7}]}
-  P8_11: {aliases: [GPIO0_8], functions: [{function: GPIO0_8, peripheral: GPIO0, signal: "8", class: gpio, mode: 7}]}
-  P8_12: {aliases: [GPIO0_9], functions: [{function: GPIO0_9, peripheral: GPIO0, signal: "9", class: gpio, mode: 7}]}
-  P8_13: {aliases: [GPIO0_10], functions: [{function: GPIO0_10, peripheral: GPIO0, signal: "10", class: gpio, mode: 7}]}
-  P8_14: {aliases: [GPIO0_11], functions: [{function: GPIO0_11, peripheral: GPIO0, signal: "11", class: gpio, mode: 7}]}
-  P8_15: {aliases: [GPIO0_12], functions: [{function: GPIO0_12, peripheral: GPIO0, signal: "12", class: gpio, mode: 7}]}
-  P8_16: {aliases: [GPIO0_15], functions: [{function: GPIO0_15, peripheral: GPIO0, signal: "15", class: gpio, mode: 7}]}
-  P8_17: {aliases: [GPIO0_16], functions: [{function: GPIO0_16, peripheral: GPIO0, signal: "16", class: gpio, mode: 7}]}
-  P8_18: {aliases: [GPIO0_17], functions: [{function: GPIO0_17, peripheral: GPIO0, signal: "17", class: gpio, mode: 7}]}
-  P8_19: {aliases: [GPIO0_18], functions: [{function: GPIO0_18, peripheral: GPIO0, signal: "18", class: gpio, mode: 7}]}
-  P8_20: {aliases: [GPIO0_19], functions: [{function: GPIO0_19, peripheral: GPIO0, signal: "19", class: gpio, mode: 7}]}
-  P8_21: {aliases: [GPIO0_20], functions: [{function: GPIO0_20, peripheral: GPIO0, signal: "20", class: gpio, mode: 7}]}
-  P8_23: {aliases: [GPIO0_21], functions: [{function: GPIO0_21, peripheral: GPIO0, signal: "21", class: gpio, mode: 7}]}
-  P8_24: {aliases: [GPIO0_22], functions: [{function: GPIO0_22, peripheral: GPIO0, signal: "22", class: gpio, mode: 7}]}
-  P8_25: {aliases: [GPIO0_23], functions: [{function: GPIO0_23, peripheral: GPIO0, signal: "23", class: gpio, mode: 7}]}
-  P8_26: {aliases: [GPIO0_24], functions: [{function: GPIO0_24, peripheral: GPIO0, signal: "24", class: gpio, mode: 7}]}
-  P8_27: {aliases: [GPIO0_25], functions: [{function: GPIO0_25, peripheral: GPIO0, signal: "25", class: gpio, mode: 7}]}
-  P8_28: {aliases: [GPIO0_26], functions: [{function: GPIO0_26, peripheral: GPIO0, signal: "26", class: gpio, mode: 7}]}
-  P8_29: {aliases: [GPIO0_27], functions: [{function: GPIO0_27, peripheral: GPIO0, signal: "27", class: gpio, mode: 7}]}
-  P8_30: {aliases: [GPIO0_28], functions: [{function: GPIO0_28, peripheral: GPIO0, signal: "28", class: gpio, mode: 7}]}
-  P8_31: {aliases: [GPIO0_29], functions: [{function: GPIO0_29, peripheral: GPIO0, signal: "29", class: gpio, mode: 7}]}
-  P8_32: {aliases: [GPIO0_30], functions: [{function: GPIO0_30, peripheral: GPIO0, signal: "30", class: gpio, mode: 7}]}
-  P8_33: {aliases: [GPIO0_31], functions: [{function: GPIO0_31, peripheral: GPIO0, signal: "31", class: gpio, mode: 7}]}
+    - {function: PRG1_PRU1_GPO19, peripheral: PRG1, signal: PRU1_GPO19, class: digital, mode: 0}
+    - {function: SPI1_D1, peripheral: SPI1, signal: D1, class: digital, mode: 0}
+    - {function: PRG1_PRU1_GPI19, peripheral: PRG1, signal: PRU1_GPI19, class: digital, mode: 1}
+    - {function: PRG1_IEP1_EDC_SYNC_OUT0, peripheral: PRG1, signal: IEP1_EDC_SYNC_OUT0, class: digital, mode: 2}
+    - {function: I2C6_SDA, peripheral: I2C6, signal: SDA, class: digital, mode: 2}
+    - {function: PRG1_PWM1_TZ_OUT, peripheral: PRG1, signal: PWM1_TZ_OUT, class: digital, mode: 3}
+    - {function: SPI6_D1, peripheral: SPI6, signal: D1, class: digital, mode: 4}
+    - {function: RMII6_TXD1, peripheral: RMII6, signal: TXD1, class: digital, mode: 5}
+    - {function: PRG1_ECAP0_IN_APWM_OUT, peripheral: PRG1, signal: ECAP0_IN_APWM_OUT, class: digital, mode: 6}
+    - {function: GPIO0_40, peripheral: GPIO0, signal: '40', class: gpio, mode: 7}
+    - {function: GPIO0_120, peripheral: GPIO0, signal: '120', class: gpio, mode: 7}
+    - {function: PRG0_IEP1_EDC_SYNC_OUT0, peripheral: PRG0, signal: IEP1_EDC_SYNC_OUT0, class: digital, mode: 8}
+    - {function: VOUT0_PCLK, peripheral: VOUT0, signal: PCLK, class: digital, mode: 10}
+    - {function: MCASP5_AXR1, peripheral: MCASP5, signal: AXR1, class: digital, mode: 12}
   P9_19:
-    domain: VDDSHV_MCU
-    functions: [{function: MCU_GPIO0_0, peripheral: MCU_GPIO0, signal: "0", class: gpio, mode: 7}]
+    aliases: [W5, AF29]
+    notes: Header contact wired to two SoC balls (W5 / AF29); configure one and leave the other as input
+    functions:
+    - {function: MCAN0_RX, peripheral: MCAN0, signal: RX, class: digital, mode: 0}
+    - {function: PRG0_PRU1_GPO15, peripheral: PRG0, signal: PRU1_GPO15, class: digital, mode: 0}
+    - {function: PRG0_PRU1_GPI15, peripheral: PRG0, signal: PRU1_GPI15, class: digital, mode: 1}
+    - {function: PRG0_RGMII2_TX_CTL, peripheral: PRG0, signal: RGMII2_TX_CTL, class: digital, mode: 2}
+    - {function: PRG0_PWM1_B1, peripheral: PRG0, signal: PWM1_B1, class: digital, mode: 3}
+    - {function: I2C2_SCL, peripheral: I2C2, signal: SCL, class: digital, mode: 4}
+    - {function: RGMII4_TX_CTL, peripheral: RGMII4, signal: TX_CTL, class: digital, mode: 4}
+    - {function: GPIO1_1, peripheral: GPIO1, signal: '1', class: gpio, mode: 7}
+    - {function: GPIO0_78, peripheral: GPIO0, signal: '78', class: gpio, mode: 7}
+    - {function: MCASP2_AXR1, peripheral: MCASP2, signal: AXR1, class: digital, mode: 12}
+    - {function: UART2_RTSn, peripheral: UART2, signal: RTSn, class: digital, mode: 14}
   P9_20:
-    domain: VDDSHV_MCU
-    functions: [{function: MCU_GPIO0_1, peripheral: MCU_GPIO0, signal: "1", class: gpio, mode: 7}]
-  VDD_3V3: {type: power, domain: VDDSHV_MAIN}
-  VDD_5V: {type: power, domain: VDDSHV_MAIN}
-  GND: {type: ground}
+    aliases: [W6, AE25]
+    notes: Header contact wired to two SoC balls (W6 / AE25); configure one and leave the other as input
+    functions:
+    - {function: MCAN0_TX, peripheral: MCAN0, signal: TX, class: digital, mode: 0}
+    - {function: PRG0_PRU1_GPO14, peripheral: PRG0, signal: PRU1_GPO14, class: digital, mode: 0}
+    - {function: PRG0_PRU1_GPI14, peripheral: PRG0, signal: PRU1_GPI14, class: digital, mode: 1}
+    - {function: PRG0_RGMII2_TD3, peripheral: PRG0, signal: RGMII2_TD3, class: digital, mode: 2}
+    - {function: PRG0_PWM1_A1, peripheral: PRG0, signal: PWM1_A1, class: digital, mode: 3}
+    - {function: I2C2_SDA, peripheral: I2C2, signal: SDA, class: digital, mode: 4}
+    - {function: RGMII4_TD3, peripheral: RGMII4, signal: TD3, class: digital, mode: 4}
+    - {function: GPIO1_2, peripheral: GPIO1, signal: '2', class: gpio, mode: 7}
+    - {function: GPIO0_77, peripheral: GPIO0, signal: '77', class: gpio, mode: 7}
+    - {function: MCASP2_AXR0, peripheral: MCASP2, signal: AXR0, class: digital, mode: 12}
+    - {function: UART2_CTSn, peripheral: UART2, signal: CTSn, class: digital, mode: 14}
+  P9_21:
+    aliases: [AJ22, U28]
+    notes: Header contact wired to two SoC balls (AJ22 / U28); configure one and leave the other as input
+    functions:
+    - {function: PRG1_PRU1_GPO18, peripheral: PRG1, signal: PRU1_GPO18, class: digital, mode: 0}
+    - {function: RGMII5_TD0, peripheral: RGMII5, signal: TD0, class: digital, mode: 0}
+    - {function: PRG1_PRU1_GPI18, peripheral: PRG1, signal: PRU1_GPI18, class: digital, mode: 1}
+    - {function: RMII7_TXD0, peripheral: RMII7, signal: TXD0, class: digital, mode: 1}
+    - {function: PRG1_IEP1_EDC_LATCH_IN0, peripheral: PRG1, signal: IEP1_EDC_LATCH_IN0, class: digital, mode: 2}
+    - {function: I2C3_SDA, peripheral: I2C3, signal: SDA, class: digital, mode: 2}
+    - {function: PRG1_PWM1_TZ_IN, peripheral: PRG1, signal: PWM1_TZ_IN, class: digital, mode: 3}
+    - {function: SPI6_D0, peripheral: SPI6, signal: D0, class: digital, mode: 4}
+    - {function: VOUT1_DATA5, peripheral: VOUT1, signal: DATA5, class: digital, mode: 4}
+    - {function: RMII6_TXD0, peripheral: RMII6, signal: TXD0, class: digital, mode: 5}
+    - {function: TRC_DATA3, peripheral: TRC_DATA3, class: digital, mode: 5}
+    - {function: PRG1_ECAP0_SYNC_IN, peripheral: PRG1, signal: ECAP0_SYNC_IN, class: digital, mode: 6}
+    - {function: EHRPWM1_A, peripheral: EHRPWM1, signal: A, class: digital, mode: 6}
+    - {function: GPIO0_39, peripheral: GPIO0, signal: '39', class: gpio, mode: 7}
+    - {function: GPIO0_90, peripheral: GPIO0, signal: '90', class: gpio, mode: 7}
+    - {function: GPMC0_A6, peripheral: GPMC0, signal: A6, class: digital, mode: 8}
+    - {function: VOUT0_VP2_VSYNC, peripheral: VOUT0, signal: VP2_VSYNC, class: digital, mode: 9}
+    - {function: VOUT0_VSYNC, peripheral: VOUT0, signal: VSYNC, class: digital, mode: 10}
+    - {function: MCASP5_AXR0, peripheral: MCASP5, signal: AXR0, class: digital, mode: 12}
+    - {function: MCASP11_AFSX, peripheral: MCASP11, signal: AFSX, class: digital, mode: 12}
+    - {function: VOUT0_VP0_VSYNC, peripheral: VOUT0, signal: VP0_VSYNC, class: digital, mode: 14}
+  P9_22:
+    aliases: [AC22, U29]
+    notes: Header contact wired to two SoC balls (AC22 / U29); configure one and leave the other as input
+    functions:
+    - {function: PRG1_PRU1_GPO17, peripheral: PRG1, signal: PRU1_GPO17, class: digital, mode: 0}
+    - {function: RGMII5_TXC, peripheral: RGMII5, signal: TXC, class: digital, mode: 0}
+    - {function: PRG1_PRU1_GPI17, peripheral: PRG1, signal: PRU1_GPI17, class: digital, mode: 1}
+    - {function: RMII7_TX_EN, peripheral: RMII7, signal: TX_EN, class: digital, mode: 1}
+    - {function: PRG1_IEP1_EDC_SYNC_OUT1, peripheral: PRG1, signal: IEP1_EDC_SYNC_OUT1, class: digital, mode: 2}
+    - {function: I2C6_SCL, peripheral: I2C6, signal: SCL, class: digital, mode: 2}
+    - {function: PRG1_PWM1_B2, peripheral: PRG1, signal: PWM1_B2, class: digital, mode: 3}
+    - {function: SPI6_CLK, peripheral: SPI6, signal: CLK, class: digital, mode: 4}
+    - {function: VOUT1_DATA6, peripheral: VOUT1, signal: DATA6, class: digital, mode: 4}
+    - {function: RMII6_TX_EN, peripheral: RMII6, signal: TX_EN, class: digital, mode: 5}
+    - {function: TRC_DATA4, peripheral: TRC_DATA4, class: digital, mode: 5}
+    - {function: PRG1_ECAP0_SYNC_OUT, peripheral: PRG1, signal: ECAP0_SYNC_OUT, class: digital, mode: 6}
+    - {function: EHRPWM1_B, peripheral: EHRPWM1, signal: B, class: digital, mode: 6}
+    - {function: GPIO0_38, peripheral: GPIO0, signal: '38', class: gpio, mode: 7}
+    - {function: GPIO0_91, peripheral: GPIO0, signal: '91', class: gpio, mode: 7}
+    - {function: GPMC0_A7, peripheral: GPMC0, signal: A7, class: digital, mode: 8}
+    - {function: VOUT0_VP2_DE, peripheral: VOUT0, signal: VP2_DE, class: digital, mode: 9}
+    - {function: VOUT0_DE, peripheral: VOUT0, signal: DE, class: digital, mode: 10}
+    - {function: VPFE0_DATA10, peripheral: VPFE0, signal: DATA10, class: digital, mode: 11}
+    - {function: MCASP5_AFSX, peripheral: MCASP5, signal: AFSX, class: digital, mode: 12}
+    - {function: MCASP10_AXR2, peripheral: MCASP10, signal: AXR2, class: digital, mode: 12}
+    - {function: VOUT0_VP0_DE, peripheral: VOUT0, signal: VP0_DE, class: digital, mode: 14}
+  P9_23:
+    aliases: [AG20]
+    functions:
+    - {function: PRG1_PRU0_GPO9, peripheral: PRG1, signal: PRU0_GPO9, class: digital, mode: 0}
+    - {function: PRG1_PRU0_GPI9, peripheral: PRG1, signal: PRU0_GPI9, class: digital, mode: 1}
+    - {function: PRG1_UART0_CTSn, peripheral: PRG1, signal: UART0_CTSn, class: digital, mode: 2}
+    - {function: PRG1_PWM3_TZ_IN, peripheral: PRG1, signal: PWM3_TZ_IN, class: digital, mode: 3}
+    - {function: SPI6_CS1, peripheral: SPI6, signal: CS1, class: digital, mode: 4}
+    - {function: RMII5_RXD1, peripheral: RMII5, signal: RXD1, class: digital, mode: 5}
+    - {function: GPIO0_10, peripheral: GPIO0, signal: '10', class: gpio, mode: 7}
+    - {function: GPMC0_ADVn_ALE, peripheral: GPMC0, signal: ADVn_ALE, class: digital, mode: 8}
+    - {function: PRG1_IEP0_EDIO_DATA_IN_OUT28, peripheral: PRG1, signal: IEP0_EDIO_DATA_IN_OUT28, class: digital, mode: 9}
+    - {function: VOUT0_DATA23, peripheral: VOUT0, signal: DATA23, class: digital, mode: 10}
+    - {function: MCASP3_ACLKX, peripheral: MCASP3, signal: ACLKX, class: digital, mode: 12}
+  P9_24:
+    aliases: [Y5, AJ24]
+    notes: Header contact wired to two SoC balls (Y5 / AJ24); configure one and leave the other as input
+    functions:
+    - {function: SPI1_D0, peripheral: SPI1, signal: D0, class: digital, mode: 0}
+    - {function: PRG1_PRU0_GPO12, peripheral: PRG1, signal: PRU0_GPO12, class: digital, mode: 0}
+    - {function: UART5_RTSn, peripheral: UART5, signal: RTSn, class: digital, mode: 1}
+    - {function: PRG1_PRU0_GPI12, peripheral: PRG1, signal: PRU0_GPI12, class: digital, mode: 1}
+    - {function: I2C4_SCL, peripheral: I2C4, signal: SCL, class: digital, mode: 2}
+    - {function: PRG1_RGMII1_TD1, peripheral: PRG1, signal: RGMII1_TD1, class: digital, mode: 2}
+    - {function: UART2_TXD, peripheral: UART2, signal: TXD, class: digital, mode: 3}
+    - {function: PRG1_PWM0_A0, peripheral: PRG1, signal: PWM0_A0, class: digital, mode: 3}
+    - {function: RGMII1_TD1, peripheral: RGMII1, signal: TD1, class: digital, mode: 4}
+    - {function: MCAN4_RX, peripheral: MCAN4, signal: RX, class: digital, mode: 6}
+    - {function: GPIO0_119, peripheral: GPIO0, signal: '119', class: gpio, mode: 7}
+    - {function: GPIO0_13, peripheral: GPIO0, signal: '13', class: gpio, mode: 7}
+    - {function: PRG0_IEP1_EDC_LATCH_IN0, peripheral: PRG0, signal: IEP1_EDC_LATCH_IN0, class: digital, mode: 8}
+    - {function: RGMII7_TD1, peripheral: RGMII7, signal: TD1, class: digital, mode: 9}
+    - {function: VOUT0_DATA17, peripheral: VOUT0, signal: DATA17, class: digital, mode: 10}
+    - {function: VPFE0_DATA1, peripheral: VPFE0, signal: DATA1, class: digital, mode: 11}
+    - {function: MCASP7_AFSX, peripheral: MCASP7, signal: AFSX, class: digital, mode: 12}
+  P9_25:
+    aliases: [AC4, W26]
+    notes: Header contact wired to two SoC balls (AC4 / W26); configure one and leave the other as input
+    functions:
+    - {function: UART1_CTSn, peripheral: UART1, signal: CTSn, class: digital, mode: 0}
+    - {function: RGMII6_RXC, peripheral: RGMII6, signal: RXC, class: digital, mode: 0}
+    - {function: MCAN3_RX, peripheral: MCAN3, signal: RX, class: digital, mode: 1}
+    - {function: AUDIO_EXT_REFCLK2, peripheral: AUDIO_EXT_REFCLK2, class: digital, mode: 3}
+    - {function: SPI2_D0, peripheral: SPI2, signal: D0, class: digital, mode: 4}
+    - {function: VOUT1_DE, peripheral: VOUT1, signal: DE, class: digital, mode: 4}
+    - {function: EQEP0_S, peripheral: EQEP0, signal: S, class: digital, mode: 5}
+    - {function: TRC_DATA17, peripheral: TRC_DATA17, class: digital, mode: 5}
+    - {function: EHRPWM4_B, peripheral: EHRPWM4, signal: B, class: digital, mode: 6}
+    - {function: GPIO0_127, peripheral: GPIO0, signal: '127', class: gpio, mode: 7}
+    - {function: GPIO0_104, peripheral: GPIO0, signal: '104', class: gpio, mode: 7}
+    - {function: GPMC0_A20, peripheral: GPMC0, signal: A20, class: digital, mode: 8}
+    - {function: VOUT1_VP0_DE, peripheral: VOUT1, signal: VP0_DE, class: digital, mode: 9}
+    - {function: MCASP10_AXR7, peripheral: MCASP10, signal: AXR7, class: digital, mode: 12}
+  P9_26:
+    aliases: [Y1, AF24]
+    notes: Header contact wired to two SoC balls (Y1 / AF24); configure one and leave the other as input
+    functions:
+    - {function: SPI1_CLK, peripheral: SPI1, signal: CLK, class: digital, mode: 0}
+    - {function: PRG1_PRU0_GPO11, peripheral: PRG1, signal: PRU0_GPO11, class: digital, mode: 0}
+    - {function: UART5_CTSn, peripheral: UART5, signal: CTSn, class: digital, mode: 1}
+    - {function: PRG1_PRU0_GPI11, peripheral: PRG1, signal: PRU0_GPI11, class: digital, mode: 1}
+    - {function: I2C4_SDA, peripheral: I2C4, signal: SDA, class: digital, mode: 2}
+    - {function: PRG1_RGMII1_TD0, peripheral: PRG1, signal: RGMII1_TD0, class: digital, mode: 2}
+    - {function: UART2_RXD, peripheral: UART2, signal: RXD, class: digital, mode: 3}
+    - {function: PRG1_PWM3_TZ_OUT, peripheral: PRG1, signal: PWM3_TZ_OUT, class: digital, mode: 3}
+    - {function: RGMII1_TD0, peripheral: RGMII1, signal: TD0, class: digital, mode: 4}
+    - {function: MCAN4_TX, peripheral: MCAN4, signal: TX, class: digital, mode: 6}
+    - {function: GPIO0_118, peripheral: GPIO0, signal: '118', class: gpio, mode: 7}
+    - {function: GPIO0_12, peripheral: GPIO0, signal: '12', class: gpio, mode: 7}
+    - {function: PRG0_IEP0_EDC_SYNC_OUT0, peripheral: PRG0, signal: IEP0_EDC_SYNC_OUT0, class: digital, mode: 8}
+    - {function: RGMII7_TD0, peripheral: RGMII7, signal: TD0, class: digital, mode: 9}
+    - {function: VOUT0_DATA16, peripheral: VOUT0, signal: DATA16, class: digital, mode: 10}
+    - {function: VPFE0_DATA0, peripheral: VPFE0, signal: DATA0, class: digital, mode: 11}
+    - {function: MCASP7_ACLKX, peripheral: MCASP7, signal: ACLKX, class: digital, mode: 12}
+  P9_27:
+    aliases: [AD26, AB1]
+    notes: Header contact wired to two SoC balls (AD26 / AB1); configure one and leave the other as input
+    functions:
+    - {function: PRG0_PRU0_GPO3, peripheral: PRG0, signal: PRU0_GPO3, class: digital, mode: 0}
+    - {function: UART0_RTSn, peripheral: UART0, signal: RTSn, class: digital, mode: 0}
+    - {function: PRG0_PRU0_GPI3, peripheral: PRG0, signal: PRU0_GPI3, class: digital, mode: 1}
+    - {function: TIMER_IO7, peripheral: TIMER_IO7, class: digital, mode: 1}
+    - {function: PRG0_RGMII1_RD3, peripheral: PRG0, signal: RGMII1_RD3, class: digital, mode: 2}
+    - {function: SPI0_CS3, peripheral: SPI0, signal: CS3, class: digital, mode: 2}
+    - {function: PRG0_PWM3_A2, peripheral: PRG0, signal: PWM3_A2, class: digital, mode: 3}
+    - {function: MCAN2_TX, peripheral: MCAN2, signal: TX, class: digital, mode: 3}
+    - {function: RGMII3_RD3, peripheral: RGMII3, signal: RD3, class: digital, mode: 4}
+    - {function: SPI2_CLK, peripheral: SPI2, signal: CLK, class: digital, mode: 4}
+    - {function: RMII3_RX_ER, peripheral: RMII3, signal: RX_ER, class: digital, mode: 5}
+    - {function: EQEP0_B, peripheral: EQEP0, signal: B, class: digital, mode: 5}
+    - {function: GPIO0_46, peripheral: GPIO0, signal: '46', class: gpio, mode: 7}
+    - {function: GPIO0_124, peripheral: GPIO0, signal: '124', class: gpio, mode: 7}
+    - {function: UART3_TXD, peripheral: UART3, signal: TXD, class: digital, mode: 8}
+    - {function: MCASP0_AFSR, peripheral: MCASP0, signal: AFSR, class: digital, mode: 12}
+  P9_28:
+    aliases: [U2, AF28]
+    notes: Header contact wired to two SoC balls (U2 / AF28); configure one and leave the other as input
+    functions:
+    - {function: ECAP0_IN_APWM_OUT, peripheral: ECAP0, signal: IN_APWM_OUT, class: digital, mode: 0}
+    - {function: PRG0_PRU0_GPO0, peripheral: PRG0, signal: PRU0_GPO0, class: digital, mode: 0}
+    - {function: SYNC0_OUT, peripheral: SYNC0, signal: OUT, class: digital, mode: 1}
+    - {function: PRG0_PRU0_GPI0, peripheral: PRG0, signal: PRU0_GPI0, class: digital, mode: 1}
+    - {function: CPTS0_RFT_CLK, peripheral: CPTS0, signal: RFT_CLK, class: digital, mode: 2}
+    - {function: PRG0_RGMII1_RD0, peripheral: PRG0, signal: RGMII1_RD0, class: digital, mode: 2}
+    - {function: PRG0_PWM3_A0, peripheral: PRG0, signal: PWM3_A0, class: digital, mode: 3}
+    - {function: SPI2_CS3, peripheral: SPI2, signal: CS3, class: digital, mode: 4}
+    - {function: RGMII3_RD0, peripheral: RGMII3, signal: RD0, class: digital, mode: 4}
+    - {function: I3C0_SDAPULLEN, peripheral: I3C0, signal: SDAPULLEN, class: digital, mode: 5}
+    - {function: RMII3_RXD1, peripheral: RMII3, signal: RXD1, class: digital, mode: 5}
+    - {function: SPI7_CS0, peripheral: SPI7, signal: CS0, class: digital, mode: 6}
+    - {function: GPIO1_11, peripheral: GPIO1, signal: '11', class: gpio, mode: 7}
+    - {function: GPIO0_43, peripheral: GPIO0, signal: '43', class: gpio, mode: 7}
+    - {function: MCASP0_AXR0, peripheral: MCASP0, signal: AXR0, class: digital, mode: 12}
+  P9_29:
+    aliases: [V5, AB25]
+    notes: Header contact wired to two SoC balls (V5 / AB25); configure one and leave the other as input
+    functions:
+    - {function: TIMER_IO1, peripheral: TIMER_IO1, class: digital, mode: 0}
+    - {function: PRG0_PRU0_GPO10, peripheral: PRG0, signal: PRU0_GPO10, class: digital, mode: 0}
+    - {function: ECAP2_IN_APWM_OUT, peripheral: ECAP2, signal: IN_APWM_OUT, class: digital, mode: 1}
+    - {function: PRG0_PRU0_GPI10, peripheral: PRG0, signal: PRU0_GPI10, class: digital, mode: 1}
+    - {function: OBSCLK0, peripheral: OBSCLK0, class: digital, mode: 2}
+    - {function: PRG0_UART0_RTSn, peripheral: PRG0, signal: UART0_RTSn, class: digital, mode: 2}
+    - {function: PRG0_PWM2_B1, peripheral: PRG0, signal: PWM2_B1, class: digital, mode: 3}
+    - {function: SPI3_CS2, peripheral: SPI3, signal: CS2, class: digital, mode: 4}
+    - {function: PRG0_IEP0_EDIO_DATA_IN_OUT29, peripheral: PRG0, signal: IEP0_EDIO_DATA_IN_OUT29, class: digital, mode: 5}
+    - {function: SPI7_D1, peripheral: SPI7, signal: D1, class: digital, mode: 6}
+    - {function: MCAN10_RX, peripheral: MCAN10, signal: RX, class: digital, mode: 6}
+    - {function: GPIO1_14, peripheral: GPIO1, signal: '14', class: gpio, mode: 7}
+    - {function: GPIO0_53, peripheral: GPIO0, signal: '53', class: gpio, mode: 7}
+    - {function: GPMC0_AD4, peripheral: GPMC0, signal: AD4, class: digital, mode: 8}
+    - {function: MCASP0_AFSX, peripheral: MCASP0, signal: AFSX, class: digital, mode: 12}
+  P9_30:
+    aliases: [V6, AE28]
+    notes: Header contact wired to two SoC balls (V6 / AE28); configure one and leave the other as input
+    functions:
+    - {function: TIMER_IO0, peripheral: TIMER_IO0, class: digital, mode: 0}
+    - {function: PRG0_PRU0_GPO1, peripheral: PRG0, signal: PRU0_GPO1, class: digital, mode: 0}
+    - {function: ECAP1_IN_APWM_OUT, peripheral: ECAP1, signal: IN_APWM_OUT, class: digital, mode: 1}
+    - {function: PRG0_PRU0_GPI1, peripheral: PRG0, signal: PRU0_GPI1, class: digital, mode: 1}
+    - {function: SYSCLKOUT0, peripheral: SYSCLKOUT0, class: digital, mode: 2}
+    - {function: PRG0_RGMII1_RD1, peripheral: PRG0, signal: RGMII1_RD1, class: digital, mode: 2}
+    - {function: PRG0_PWM3_B0, peripheral: PRG0, signal: PWM3_B0, class: digital, mode: 3}
+    - {function: RGMII3_RD1, peripheral: RGMII3, signal: RD1, class: digital, mode: 4}
+    - {function: RMII3_RXD0, peripheral: RMII3, signal: RXD0, class: digital, mode: 5}
+    - {function: SPI7_D0, peripheral: SPI7, signal: D0, class: digital, mode: 6}
+    - {function: GPIO1_13, peripheral: GPIO1, signal: '13', class: gpio, mode: 7}
+    - {function: GPIO0_44, peripheral: GPIO0, signal: '44', class: gpio, mode: 7}
+    - {function: MCASP0_AXR1, peripheral: MCASP0, signal: AXR1, class: digital, mode: 12}
+  P9_31:
+    aliases: [U3, AB26]
+    notes: Header contact wired to two SoC balls (U3 / AB26); configure one and leave the other as input
+    functions:
+    - {function: EXT_REFCLK1, peripheral: EXT_REFCLK1, class: digital, mode: 0}
+    - {function: PRG0_PRU0_GPO9, peripheral: PRG0, signal: PRU0_GPO9, class: digital, mode: 0}
+    - {function: SYNC1_OUT, peripheral: SYNC1, signal: OUT, class: digital, mode: 1}
+    - {function: PRG0_PRU0_GPI9, peripheral: PRG0, signal: PRU0_GPI9, class: digital, mode: 1}
+    - {function: PRG0_UART0_CTSn, peripheral: PRG0, signal: UART0_CTSn, class: digital, mode: 2}
+    - {function: PRG0_PWM3_TZ_IN, peripheral: PRG0, signal: PWM3_TZ_IN, class: digital, mode: 3}
+    - {function: SPI3_CS1, peripheral: SPI3, signal: CS1, class: digital, mode: 4}
+    - {function: PRG0_IEP0_EDIO_DATA_IN_OUT28, peripheral: PRG0, signal: IEP0_EDIO_DATA_IN_OUT28, class: digital, mode: 5}
+    - {function: SPI7_CLK, peripheral: SPI7, signal: CLK, class: digital, mode: 6}
+    - {function: MCAN10_TX, peripheral: MCAN10, signal: TX, class: digital, mode: 6}
+    - {function: GPIO1_12, peripheral: GPIO1, signal: '12', class: gpio, mode: 7}
+    - {function: GPIO0_52, peripheral: GPIO0, signal: '52', class: gpio, mode: 7}
+    - {function: GPMC0_AD3, peripheral: GPMC0, signal: AD3, class: digital, mode: 8}
+    - {function: MCASP0_ACLKX, peripheral: MCASP0, signal: ACLKX, class: digital, mode: 12}
+    - {function: UART6_TXD, peripheral: UART6, signal: TXD, class: digital, mode: 14}
+  P9_33:
+    aliases: [K24, AC28]
+    type: analog_only
+    domain: VDDA_ADC
+    notes: Header contact wired to two SoC balls (K24 / AC28); configure one and leave the other as input
+    functions:
+    - {function: MCU_ADC0_AIN4, peripheral: MCU_ADC0, signal: AIN4, class: analog, mode: 0}
+    - {function: PRG0_PRU0_GPO7, peripheral: PRG0, signal: PRU0_GPO7, class: digital, mode: 0}
+    - {function: PRG0_PRU0_GPI7, peripheral: PRG0, signal: PRU0_GPI7, class: digital, mode: 1}
+    - {function: PRG0_IEP0_EDC_LATCH_IN1, peripheral: PRG0, signal: IEP0_EDC_LATCH_IN1, class: digital, mode: 2}
+    - {function: PRG0_PWM3_B1, peripheral: PRG0, signal: PWM3_B1, class: digital, mode: 3}
+    - {function: PRG0_ECAP0_SYNC_IN, peripheral: PRG0, signal: ECAP0_SYNC_IN, class: digital, mode: 4}
+    - {function: MCAN9_TX, peripheral: MCAN9, signal: TX, class: digital, mode: 6}
+    - {function: GPIO0_50, peripheral: GPIO0, signal: '50', class: gpio, mode: 7}
+    - {function: GPMC0_AD1, peripheral: GPMC0, signal: AD1, class: digital, mode: 8}
+    - {function: MCASP0_AXR5, peripheral: MCASP0, signal: AXR5, class: digital, mode: 12}
+  P9_35:
+    aliases: [K29, AH27]
+    type: analog_only
+    domain: VDDA_ADC
+    notes: Header contact wired to two SoC balls (K29 / AH27); configure one and leave the other as input
+    functions:
+    - {function: MCU_ADC0_AIN6, peripheral: MCU_ADC0, signal: AIN6, class: analog, mode: 0}
+    - {function: PRG0_PRU0_GPO12, peripheral: PRG0, signal: PRU0_GPO12, class: digital, mode: 0}
+    - {function: PRG0_PRU0_GPI12, peripheral: PRG0, signal: PRU0_GPI12, class: digital, mode: 1}
+    - {function: PRG0_RGMII1_TD1, peripheral: PRG0, signal: RGMII1_TD1, class: digital, mode: 2}
+    - {function: PRG0_PWM0_A0, peripheral: PRG0, signal: PWM0_A0, class: digital, mode: 3}
+    - {function: RGMII3_TD1, peripheral: RGMII3, signal: TD1, class: digital, mode: 4}
+    - {function: GPIO0_55, peripheral: GPIO0, signal: '55', class: gpio, mode: 7}
+    - {function: DSS_FSYNC0, peripheral: DSS_FSYNC0, class: digital, mode: 10}
+    - {function: MCASP0_AXR8, peripheral: MCASP0, signal: AXR8, class: digital, mode: 12}
+  P9_36:
+    aliases: [K27, AH29]
+    type: analog_only
+    domain: VDDA_ADC
+    notes: Header contact wired to two SoC balls (K27 / AH29); configure one and leave the other as input
+    functions:
+    - {function: MCU_ADC0_AIN5, peripheral: MCU_ADC0, signal: AIN5, class: analog, mode: 0}
+    - {function: PRG0_PRU0_GPO13, peripheral: PRG0, signal: PRU0_GPO13, class: digital, mode: 0}
+    - {function: PRG0_PRU0_GPI13, peripheral: PRG0, signal: PRU0_GPI13, class: digital, mode: 1}
+    - {function: PRG0_RGMII1_TD2, peripheral: PRG0, signal: RGMII1_TD2, class: digital, mode: 2}
+    - {function: PRG0_PWM0_B0, peripheral: PRG0, signal: PWM0_B0, class: digital, mode: 3}
+    - {function: RGMII3_TD2, peripheral: RGMII3, signal: TD2, class: digital, mode: 4}
+    - {function: GPIO0_56, peripheral: GPIO0, signal: '56', class: gpio, mode: 7}
+    - {function: DSS_FSYNC2, peripheral: DSS_FSYNC2, class: digital, mode: 10}
+    - {function: MCASP0_AXR9, peripheral: MCASP0, signal: AXR9, class: digital, mode: 12}
+  P9_37:
+    aliases: [K28, AG28]
+    type: analog_only
+    domain: VDDA_ADC
+    notes: Header contact wired to two SoC balls (K28 / AG28); configure one and leave the other as input
+    functions:
+    - {function: MCU_ADC0_AIN2, peripheral: MCU_ADC0, signal: AIN2, class: analog, mode: 0}
+    - {function: PRG0_PRU0_GPO14, peripheral: PRG0, signal: PRU0_GPO14, class: digital, mode: 0}
+    - {function: PRG0_PRU0_GPI14, peripheral: PRG0, signal: PRU0_GPI14, class: digital, mode: 1}
+    - {function: PRG0_RGMII1_TD3, peripheral: PRG0, signal: RGMII1_TD3, class: digital, mode: 2}
+    - {function: PRG0_PWM0_A1, peripheral: PRG0, signal: PWM0_A1, class: digital, mode: 3}
+    - {function: RGMII3_TD3, peripheral: RGMII3, signal: TD3, class: digital, mode: 4}
+    - {function: GPIO0_57, peripheral: GPIO0, signal: '57', class: gpio, mode: 7}
+    - {function: UART4_RXD, peripheral: UART4, signal: RXD, class: digital, mode: 8}
+    - {function: MCASP0_AXR10, peripheral: MCASP0, signal: AXR10, class: digital, mode: 12}
+  P9_38:
+    aliases: [L28, AG27]
+    type: analog_only
+    domain: VDDA_ADC
+    notes: Header contact wired to two SoC balls (L28 / AG27); configure one and leave the other as input
+    functions:
+    - {function: MCU_ADC0_AIN3, peripheral: MCU_ADC0, signal: AIN3, class: analog, mode: 0}
+    - {function: PRG0_PRU0_GPO15, peripheral: PRG0, signal: PRU0_GPO15, class: digital, mode: 0}
+    - {function: PRG0_PRU0_GPI15, peripheral: PRG0, signal: PRU0_GPI15, class: digital, mode: 1}
+    - {function: PRG0_RGMII1_TX_CTL, peripheral: PRG0, signal: RGMII1_TX_CTL, class: digital, mode: 2}
+    - {function: PRG0_PWM0_B1, peripheral: PRG0, signal: PWM0_B1, class: digital, mode: 3}
+    - {function: RGMII3_TX_CTL, peripheral: RGMII3, signal: TX_CTL, class: digital, mode: 4}
+    - {function: GPIO0_58, peripheral: GPIO0, signal: '58', class: gpio, mode: 7}
+    - {function: UART4_TXD, peripheral: UART4, signal: TXD, class: digital, mode: 8}
+    - {function: DSS_FSYNC3, peripheral: DSS_FSYNC3, class: digital, mode: 10}
+    - {function: MCASP0_AXR11, peripheral: MCASP0, signal: AXR11, class: digital, mode: 12}
+  P9_39:
+    aliases: [K25, AJ28]
+    type: analog_only
+    domain: VDDA_ADC
+    notes: Header contact wired to two SoC balls (K25 / AJ28); configure one and leave the other as input
+    functions:
+    - {function: MCU_ADC0_AIN0, peripheral: MCU_ADC0, signal: AIN0, class: analog, mode: 0}
+    - {function: PRG0_PRU0_GPO11, peripheral: PRG0, signal: PRU0_GPO11, class: digital, mode: 0}
+    - {function: PRG0_PRU0_GPI11, peripheral: PRG0, signal: PRU0_GPI11, class: digital, mode: 1}
+    - {function: PRG0_RGMII1_TD0, peripheral: PRG0, signal: RGMII1_TD0, class: digital, mode: 2}
+    - {function: PRG0_PWM3_TZ_OUT, peripheral: PRG0, signal: PWM3_TZ_OUT, class: digital, mode: 3}
+    - {function: RGMII3_TD0, peripheral: RGMII3, signal: TD0, class: digital, mode: 4}
+    - {function: GPIO0_54, peripheral: GPIO0, signal: '54', class: gpio, mode: 7}
+    - {function: CLKOUT, peripheral: CLKOUT, class: digital, mode: 9}
+    - {function: MCASP0_AXR7, peripheral: MCASP0, signal: AXR7, class: digital, mode: 12}
+  P9_40:
+    aliases: [K26, AA26]
+    type: analog_only
+    domain: VDDA_ADC
+    notes: Header contact wired to two SoC balls (K26 / AA26); configure one and leave the other as input
+    functions:
+    - {function: MCU_ADC0_AIN1, peripheral: MCU_ADC0, signal: AIN1, class: analog, mode: 0}
+    - {function: PRG0_PRU1_GPO18, peripheral: PRG0, signal: PRU1_GPO18, class: digital, mode: 0}
+    - {function: PRG0_PRU1_GPI18, peripheral: PRG0, signal: PRU1_GPI18, class: digital, mode: 1}
+    - {function: PRG0_IEP1_EDC_LATCH_IN0, peripheral: PRG0, signal: IEP1_EDC_LATCH_IN0, class: digital, mode: 2}
+    - {function: PRG0_PWM1_TZ_IN, peripheral: PRG0, signal: PWM1_TZ_IN, class: digital, mode: 3}
+    - {function: SPI3_D0, peripheral: SPI3, signal: D0, class: digital, mode: 4}
+    - {function: MCAN12_TX, peripheral: MCAN12, signal: TX, class: digital, mode: 6}
+    - {function: GPIO0_81, peripheral: GPIO0, signal: '81', class: gpio, mode: 7}
+    - {function: GPMC0_AD14, peripheral: GPMC0, signal: AD14, class: digital, mode: 8}
+    - {function: MCASP2_AFSX, peripheral: MCASP2, signal: AFSX, class: digital, mode: 12}
+    - {function: UART2_RXD, peripheral: UART2, signal: RXD, class: digital, mode: 14}
+  P9_41:
+    aliases: [AD5]
+    functions:
+    - {function: UART1_RTSn, peripheral: UART1, signal: RTSn, class: digital, mode: 0}
+    - {function: MCAN3_TX, peripheral: MCAN3, signal: TX, class: digital, mode: 1}
+    - {function: SPI2_D1, peripheral: SPI2, signal: D1, class: digital, mode: 4}
+    - {function: EQEP0_I, peripheral: EQEP0, signal: I, class: digital, mode: 5}
+    - {function: GPIO1_0, peripheral: GPIO1, signal: '0', class: gpio, mode: 7}
+  P9_42:
+    aliases: [AC2, AJ21]
+    notes: Header contact wired to two SoC balls (AC2 / AJ21); configure one and leave the other as input
+    functions:
+    - {function: UART0_CTSn, peripheral: UART0, signal: CTSn, class: digital, mode: 0}
+    - {function: PRG1_PRU0_GPO17, peripheral: PRG1, signal: PRU0_GPO17, class: digital, mode: 0}
+    - {function: TIMER_IO6, peripheral: TIMER_IO6, class: digital, mode: 1}
+    - {function: PRG1_PRU0_GPI17, peripheral: PRG1, signal: PRU0_GPI17, class: digital, mode: 1}
+    - {function: SPI0_CS2, peripheral: SPI0, signal: CS2, class: digital, mode: 2}
+    - {function: PRG1_IEP0_EDC_SYNC_OUT1, peripheral: PRG1, signal: IEP0_EDC_SYNC_OUT1, class: digital, mode: 2}
+    - {function: MCAN2_RX, peripheral: MCAN2, signal: RX, class: digital, mode: 3}
+    - {function: PRG1_PWM0_B2, peripheral: PRG1, signal: PWM0_B2, class: digital, mode: 3}
+    - {function: SPI2_CS0, peripheral: SPI2, signal: CS0, class: digital, mode: 4}
+    - {function: EQEP0_A, peripheral: EQEP0, signal: A, class: digital, mode: 5}
+    - {function: RMII5_TXD1, peripheral: RMII5, signal: TXD1, class: digital, mode: 5}
+    - {function: MCAN5_TX, peripheral: MCAN5, signal: TX, class: digital, mode: 6}
+    - {function: GPIO0_123, peripheral: GPIO0, signal: '123', class: gpio, mode: 7}
+    - {function: GPIO0_18, peripheral: GPIO0, signal: '18', class: gpio, mode: 7}
+    - {function: VPFE0_DATA6, peripheral: VPFE0, signal: DATA6, class: digital, mode: 11}
+    - {function: MCASP3_AXR3, peripheral: MCASP3, signal: AXR3, class: digital, mode: 12}

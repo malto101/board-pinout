@@ -1,55 +1,121 @@
-schema_version: "1.1"
+schema_version: '1.1'
 board: beaglebone_ai64_fixed_mux
 soc: j721e
 mux_source: soc
+software:
+  zephyr:
+    name: Zephyr
+    kind: rtos
+    runs_on: [main_r5f0_0]
 faces:
   top:
-    underlay: beaglebone_ai_64.webp
+    underlay: front.png
     children:
-      - id: j14
-        kind: pin_array
-        silk: J14 GPIO / HAT header
-        rows: 2
-        cols: 20
-        point: [0.64, 0.70]
-        children:
-          - {id: j14_01, kind: pin, contact: "1", silk: 3V3, net: {role: power_out, rail: 3V3, nominal_v: 3.3}, point: [0.43, 0.22]}
-          - {id: j14_02, kind: pin, contact: "2", silk: 5V, net: {role: power_bidir, rail: 5V0, nominal_v: 5.0}, point: [0.57, 0.22]}
-          - {id: j14_03, kind: pin, contact: "3", silk: I2C6_SDA, pad: P9_18, point: [0.43, 0.28]}
-          - {id: j14_04, kind: pin, contact: "4", silk: 5V, net: {role: power_bidir, rail: 5V0, nominal_v: 5.0}, point: [0.57, 0.28]}
-          - {id: j14_05, kind: pin, contact: "5", silk: I2C6_SCL, pad: P9_17, point: [0.43, 0.34]}
-          - {id: j14_06, kind: pin, contact: "6", silk: GND, net: {role: ground}, point: [0.57, 0.34]}
-          - {id: j14_07, kind: pin, contact: "7", silk: GPIO0_0, pad: P8_03, point: [0.43, 0.40]}
-          - {id: j14_08, kind: pin, contact: "8", silk: GPIO0_1, pad: P8_04, point: [0.57, 0.40]}
-          - {id: j14_09, kind: pin, contact: "9", silk: GPIO0_2, pad: P8_05, point: [0.43, 0.46]}
-          - {id: j14_10, kind: pin, contact: "10", silk: GPIO0_3, pad: P8_06, point: [0.57, 0.46]}
-          - {id: j14_11, kind: pin, contact: "11", silk: GPIO0_4, pad: P8_07, point: [0.43, 0.52]}
-          - {id: j14_12, kind: pin, contact: "12", silk: GPIO0_5, pad: P8_08, point: [0.57, 0.52]}
-          - {id: j14_13, kind: pin, contact: "13", silk: GPIO0_6, pad: P8_09, point: [0.43, 0.58]}
-          - {id: j14_14, kind: pin, contact: "14", silk: GPIO0_7, pad: P8_10, point: [0.57, 0.58]}
-          - {id: j14_15, kind: pin, contact: "15", silk: GPIO0_8, pad: P8_11, point: [0.43, 0.64]}
-          - {id: j14_16, kind: pin, contact: "16", silk: GPIO0_9, pad: P8_12, point: [0.57, 0.64]}
-          - {id: j14_17, kind: pin, contact: "17", silk: GPIO0_10, pad: P8_13, point: [0.43, 0.70]}
-          - {id: j14_18, kind: pin, contact: "18", silk: GPIO0_11, pad: P8_14, point: [0.57, 0.70]}
-          - {id: j14_19, kind: pin, contact: "19", silk: GPIO0_12, pad: P8_15, point: [0.43, 0.76]}
-          - {id: j14_20, kind: pin, contact: "20", silk: GPIO0_15, pad: P8_16, point: [0.57, 0.76]}
-          - {id: j14_21, kind: pin, contact: "21", silk: GPIO0_16, pad: P8_17, point: [0.43, 0.82]}
-          - {id: j14_22, kind: pin, contact: "22", silk: UART2_RXD, pad: P8_22, point: [0.57, 0.82]}
-          - {id: j14_23, kind: pin, contact: "23", silk: GPIO0_21, pad: P8_23, point: [0.43, 0.88]}
-          - {id: j14_24, kind: pin, contact: "24", silk: GPIO0_22, pad: P8_24, point: [0.57, 0.88]}
-          - {id: j14_25, kind: pin, contact: "25", silk: GPIO0_23, pad: P8_25, point: [0.43, 0.94]}
-          - {id: j14_26, kind: pin, contact: "26", silk: GPIO0_24, pad: P8_26, point: [0.57, 0.94]}
-          - {id: j14_27, kind: pin, contact: "27", silk: GPIO0_25, pad: P8_27, point: [0.43, 0.98]}
-          - {id: j14_28, kind: pin, contact: "28", silk: GPIO0_26, pad: P8_28, point: [0.57, 0.98]}
-          - {id: j14_29, kind: pin, contact: "29", silk: GPIO0_27, pad: P8_29, point: [0.43, 0.99]}
-          - {id: j14_30, kind: pin, contact: "30", silk: GPIO0_28, pad: P8_30, point: [0.57, 0.99]}
-          - {id: j14_31, kind: pin, contact: "31", silk: GPIO0_29, pad: P8_31, point: [0.43, 0.995]}
-          - {id: j14_32, kind: pin, contact: "32", silk: GPIO0_30, pad: P8_32, point: [0.57, 0.995]}
-          - {id: j14_33, kind: pin, contact: "33", silk: GPIO0_31, pad: P8_33, point: [0.43, 0.997]}
-          - {id: j14_34, kind: pin, contact: "34", silk: GND, net: {role: ground}, point: [0.57, 0.997]}
-          - {id: j14_35, kind: pin, contact: "35", silk: UART2_TXD, pad: P8_34, point: [0.43, 0.999]}
-          - {id: j14_36, kind: pin, contact: "36", silk: GPIO0_17, pad: P8_18, point: [0.57, 0.999]}
-          - {id: j14_37, kind: pin, contact: "37", silk: GPIO0_18, pad: P8_19, point: [0.43, 0.999]}
-          - {id: j14_38, kind: pin, contact: "38", silk: GPIO0_19, pad: P8_20, point: [0.57, 0.999]}
-          - {id: j14_39, kind: pin, contact: "39", silk: GPIO0_20, pad: P8_21, point: [0.43, 0.999]}
-          - {id: j14_40, kind: pin, contact: "40", silk: GND, net: {role: ground}, point: [0.57, 0.999]}
+    - id: p8
+      kind: pin_array
+      silk: P8 expansion header
+      rows: 2
+      cols: 23
+      notes: Pin 1 is the lower-left contact; odd pins on the lower row, even pins on the upper row
+      point: [0.6231, 0.039]
+      children:
+      - {id: p8_01, kind: pin, contact: '1', silk: GND, net: {role: ground}, point: [0.3429, 0.0543], node_scale: 0.8, label_scale: 0.75, label_offset: [0, 0.0443], label_rotation: -90}
+      - {id: p8_02, kind: pin, contact: '2', silk: GND, net: {role: ground}, point: [0.3429, 0.0236], node_scale: 0.8, label_scale: 0.75, label_offset: [0, 0.2473], leader_vertices: [[0.3556, 0.039], [0.3556, 0.2459]], label_rotation: -90}
+      - {id: p8_03, kind: pin, contact: '3', silk: GPIO0_20, pad: P8_03, point: [0.3683, 0.0543], node_scale: 0.8, label_scale: 0.75, label_offset: [0, 0.0818], label_rotation: -90}
+      - {id: p8_04, kind: pin, contact: '4', silk: GPIO0_48, pad: P8_04, point: [0.3683, 0.0236], node_scale: 0.8, label_scale: 0.75, label_offset: [0, 0.2848], leader_vertices: [[0.3811, 0.039], [0.3811, 0.2459]], label_rotation: -90}
+      - {id: p8_05, kind: pin, contact: '5', silk: GPIO0_33, pad: P8_05, point: [0.3938, 0.0543], node_scale: 0.8, label_scale: 0.75, label_offset: [0, 0.0818], label_rotation: -90}
+      - {id: p8_06, kind: pin, contact: '6', silk: GPIO0_34, pad: P8_06, point: [0.3938, 0.0236], node_scale: 0.8, label_scale: 0.75, label_offset: [0, 0.2848], leader_vertices: [[0.4066, 0.039], [0.4066, 0.2459]], label_rotation: -90}
+      - {id: p8_07, kind: pin, contact: '7', silk: GPIO0_15, pad: P8_07, point: [0.4193, 0.0543], node_scale: 0.8, label_scale: 0.75, label_offset: [0, 0.0818], label_rotation: -90}
+      - {id: p8_08, kind: pin, contact: '8', silk: GPIO0_14, pad: P8_08, point: [0.4193, 0.0236], node_scale: 0.8, label_scale: 0.75, label_offset: [0, 0.2848], leader_vertices: [[0.432, 0.039], [0.432, 0.2459]], label_rotation: -90}
+      - {id: p8_09, kind: pin, contact: '9', silk: GPIO0_17, pad: P8_09, point: [0.4448, 0.0543], node_scale: 0.8, label_scale: 0.75, label_offset: [0, 0.0818], label_rotation: -90}
+      - {id: p8_10, kind: pin, contact: '10', silk: GPIO0_16, pad: P8_10, point: [0.4448, 0.0236], node_scale: 0.8, label_scale: 0.75, label_offset: [0, 0.2848], leader_vertices: [[0.4575, 0.039], [0.4575, 0.2459]], label_rotation: -90}
+      - {id: p8_11, kind: pin, contact: '11', silk: GPIO0_60, pad: P8_11, point: [0.4703, 0.0543], node_scale: 0.8, label_scale: 0.75, label_offset: [0, 0.0818], label_rotation: -90}
+      - {id: p8_12, kind: pin, contact: '12', silk: GPIO0_59, pad: P8_12, point: [0.4703, 0.0236], node_scale: 0.8, label_scale: 0.75, label_offset: [0, 0.2848], leader_vertices: [[0.483, 0.039], [0.483, 0.2459]], label_rotation: -90}
+      - {id: p8_13, kind: pin, contact: '13', silk: GPIO0_89, pad: P8_13, point: [0.4957, 0.0543], node_scale: 0.8, label_scale: 0.75, label_offset: [0, 0.0818], label_rotation: -90}
+      - {id: p8_14, kind: pin, contact: '14', silk: GPIO0_75, pad: P8_14, point: [0.4957, 0.0236], node_scale: 0.8, label_scale: 0.75, label_offset: [0, 0.2848], leader_vertices: [[0.5085, 0.039], [0.5085, 0.2459]], label_rotation: -90}
+      - {id: p8_15, kind: pin, contact: '15', silk: GPIO0_61, pad: P8_15, point: [0.5212, 0.0543], node_scale: 0.8, label_scale: 0.75, label_offset: [0, 0.0818], label_rotation: -90}
+      - {id: p8_16, kind: pin, contact: '16', silk: GPIO0_62, pad: P8_16, point: [0.5212, 0.0236], node_scale: 0.8, label_scale: 0.75, label_offset: [0, 0.2848], leader_vertices: [[0.5339, 0.039], [0.5339, 0.2459]], label_rotation: -90}
+      - {id: p8_17, kind: pin, contact: '17', silk: GPIO0_3, pad: P8_17, point: [0.5467, 0.0543], node_scale: 0.8, label_scale: 0.75, label_offset: [0, 0.0743], label_rotation: -90}
+      - {id: p8_18, kind: pin, contact: '18', silk: GPIO0_4, pad: P8_18, point: [0.5467, 0.0236], node_scale: 0.8, label_scale: 0.75, label_offset: [0, 0.2773], leader_vertices: [[0.5594, 0.039], [0.5594, 0.2459]], label_rotation: -90}
+      - {id: p8_19, kind: pin, contact: '19', silk: GPIO0_88, pad: P8_19, point: [0.5722, 0.0543], node_scale: 0.8, label_scale: 0.75, label_offset: [0, 0.0818], label_rotation: -90}
+      - {id: p8_20, kind: pin, contact: '20', silk: GPIO0_76, pad: P8_20, point: [0.5722, 0.0236], node_scale: 0.8, label_scale: 0.75, label_offset: [0, 0.2848], leader_vertices: [[0.5849, 0.039], [0.5849, 0.2459]], label_rotation: -90}
+      - {id: p8_21, kind: pin, contact: '21', silk: GPIO0_30, pad: P8_21, point: [0.5976, 0.0543], node_scale: 0.8, label_scale: 0.75, label_offset: [0, 0.0818], label_rotation: -90}
+      - {id: p8_22, kind: pin, contact: '22', silk: UART2_RXD, pad: P8_22, assignments: [{function: UART2_RXD, owner: uart2, role: RXD, status: enabled, config: {pinctrl: uart2_rx_default}}], point: [0.5976, 0.0236], node_scale: 0.8, label_scale: 0.75, label_offset: [0, 0.2923], leader_vertices: [[0.6104, 0.039], [0.6104, 0.2459]], label_rotation: -90}
+      - {id: p8_23, kind: pin, contact: '23', silk: GPIO0_31, pad: P8_23, point: [0.6231, 0.0543], node_scale: 0.8, label_scale: 0.75, label_offset: [0, 0.0818], label_rotation: -90}
+      - {id: p8_24, kind: pin, contact: '24', silk: GPIO0_6, pad: P8_24, point: [0.6231, 0.0236], node_scale: 0.8, label_scale: 0.75, label_offset: [0, 0.2773], leader_vertices: [[0.6359, 0.039], [0.6359, 0.2459]], label_rotation: -90}
+      - {id: p8_25, kind: pin, contact: '25', silk: GPIO0_35, pad: P8_25, point: [0.6486, 0.0543], node_scale: 0.8, label_scale: 0.75, label_offset: [0, 0.0818], label_rotation: -90}
+      - {id: p8_26, kind: pin, contact: '26', silk: GPIO0_51, pad: P8_26, point: [0.6486, 0.0236], node_scale: 0.8, label_scale: 0.75, label_offset: [0, 0.2848], leader_vertices: [[0.6613, 0.039], [0.6613, 0.2459]], label_rotation: -90}
+      - {id: p8_27, kind: pin, contact: '27', silk: GPIO0_71, pad: P8_27, point: [0.6741, 0.0543], node_scale: 0.8, label_scale: 0.75, label_offset: [0, 0.0818], label_rotation: -90}
+      - {id: p8_28, kind: pin, contact: '28', silk: GPIO0_72, pad: P8_28, point: [0.6741, 0.0236], node_scale: 0.8, label_scale: 0.75, label_offset: [0, 0.2848], leader_vertices: [[0.6868, 0.039], [0.6868, 0.2459]], label_rotation: -90}
+      - {id: p8_29, kind: pin, contact: '29', silk: GPIO0_73, pad: P8_29, point: [0.6995, 0.0543], node_scale: 0.8, label_scale: 0.75, label_offset: [0, 0.0818], label_rotation: -90}
+      - {id: p8_30, kind: pin, contact: '30', silk: GPIO0_74, pad: P8_30, point: [0.6995, 0.0236], node_scale: 0.8, label_scale: 0.75, label_offset: [0, 0.2848], leader_vertices: [[0.7123, 0.039], [0.7123, 0.2459]], label_rotation: -90}
+      - {id: p8_31, kind: pin, contact: '31', silk: GPIO0_32, pad: P8_31, point: [0.725, 0.0543], node_scale: 0.8, label_scale: 0.75, label_offset: [0, 0.0818], label_rotation: -90}
+      - {id: p8_32, kind: pin, contact: '32', silk: GPIO0_26, pad: P8_32, point: [0.725, 0.0236], node_scale: 0.8, label_scale: 0.75, label_offset: [0, 0.2848], leader_vertices: [[0.7378, 0.039], [0.7378, 0.2459]], label_rotation: -90}
+      - {id: p8_33, kind: pin, contact: '33', silk: GPIO0_25, pad: P8_33, point: [0.7505, 0.0543], node_scale: 0.8, label_scale: 0.75, label_offset: [0, 0.0818], label_rotation: -90}
+      - {id: p8_34, kind: pin, contact: '34', silk: UART2_TXD, pad: P8_34, assignments: [{function: UART2_TXD, owner: uart2, role: TXD, status: enabled, config: {pinctrl: uart2_tx_default}}], point: [0.7505, 0.0236], node_scale: 0.8, label_scale: 0.75, label_offset: [0, 0.2923], leader_vertices: [[0.7632, 0.039], [0.7632, 0.2459]], label_rotation: -90}
+      - {id: p8_35, kind: pin, contact: '35', silk: GPIO0_24, pad: P8_35, point: [0.776, 0.0543], node_scale: 0.8, label_scale: 0.75, label_offset: [0, 0.0818], label_rotation: -90}
+      - {id: p8_36, kind: pin, contact: '36', silk: GPIO0_8, pad: P8_36, point: [0.776, 0.0236], node_scale: 0.8, label_scale: 0.75, label_offset: [0, 0.2773], leader_vertices: [[0.7887, 0.039], [0.7887, 0.2459]], label_rotation: -90}
+      - {id: p8_37, kind: pin, contact: '37', silk: GPIO0_106, pad: P8_37, point: [0.8015, 0.0543], node_scale: 0.8, label_scale: 0.75, label_offset: [0, 0.0893], label_rotation: -90}
+      - {id: p8_38, kind: pin, contact: '38', silk: GPIO0_105, pad: P8_38, point: [0.8015, 0.0236], node_scale: 0.8, label_scale: 0.75, label_offset: [0, 0.2923], leader_vertices: [[0.8142, 0.039], [0.8142, 0.2459]], label_rotation: -90}
+      - {id: p8_39, kind: pin, contact: '39', silk: GPIO0_69, pad: P8_39, point: [0.8269, 0.0543], node_scale: 0.8, label_scale: 0.75, label_offset: [0, 0.0818], label_rotation: -90}
+      - {id: p8_40, kind: pin, contact: '40', silk: GPIO0_70, pad: P8_40, point: [0.8269, 0.0236], node_scale: 0.8, label_scale: 0.75, label_offset: [0, 0.2848], leader_vertices: [[0.8397, 0.039], [0.8397, 0.2459]], label_rotation: -90}
+      - {id: p8_41, kind: pin, contact: '41', silk: GPIO0_67, pad: P8_41, point: [0.8524, 0.0543], node_scale: 0.8, label_scale: 0.75, label_offset: [0, 0.0818], label_rotation: -90}
+      - {id: p8_42, kind: pin, contact: '42', silk: GPIO0_68, pad: P8_42, point: [0.8524, 0.0236], node_scale: 0.8, label_scale: 0.75, label_offset: [0, 0.2848], leader_vertices: [[0.8651, 0.039], [0.8651, 0.2459]], label_rotation: -90}
+      - {id: p8_43, kind: pin, contact: '43', silk: GPIO0_65, pad: P8_43, point: [0.8779, 0.0543], node_scale: 0.8, label_scale: 0.75, label_offset: [0, 0.0818], label_rotation: -90}
+      - {id: p8_44, kind: pin, contact: '44', silk: GPIO0_66, pad: P8_44, point: [0.8779, 0.0236], node_scale: 0.8, label_scale: 0.75, label_offset: [0, 0.2848], leader_vertices: [[0.8906, 0.039], [0.8906, 0.2459]], label_rotation: -90}
+      - {id: p8_45, kind: pin, contact: '45', silk: GPIO0_79, pad: P8_45, point: [0.9034, 0.0543], node_scale: 0.8, label_scale: 0.75, label_offset: [0, 0.0818], label_rotation: -90}
+      - {id: p8_46, kind: pin, contact: '46', silk: GPIO0_80, pad: P8_46, point: [0.9034, 0.0236], node_scale: 0.8, label_scale: 0.75, label_offset: [0, 0.2848], leader_vertices: [[0.9161, 0.039], [0.9161, 0.2459]], label_rotation: -90}
+    - id: p9
+      kind: pin_array
+      silk: P9 expansion header
+      rows: 2
+      cols: 23
+      notes: Pin 1 is the lower-left contact right of the E1-E4 pads; odd pins on the lower row
+      point: [0.6227, 0.6202]
+      children:
+      - {id: p9_01, kind: pin, contact: '1', silk: GND, net: {role: ground}, point: [0.3424, 0.6356], node_scale: 0.8, label_scale: 0.75, label_offset: [0, 0.0443], label_rotation: -90}
+      - {id: p9_02, kind: pin, contact: '2', silk: GND, net: {role: ground}, point: [0.3424, 0.6048], node_scale: 0.8, label_scale: 0.75, label_offset: [0, -0.0443], label_rotation: -90}
+      - {id: p9_03, kind: pin, contact: '3', silk: 3V3, net: {role: power_out, rail: VOUT_3V3, nominal_v: 3.3}, point: [0.3679, 0.6356], node_scale: 0.8, label_scale: 0.75, label_offset: [0, 0.0443], label_rotation: -90}
+      - {id: p9_04, kind: pin, contact: '4', silk: 3V3, net: {role: power_out, rail: VOUT_3V3, nominal_v: 3.3}, point: [0.3679, 0.6048], node_scale: 0.8, label_scale: 0.75, label_offset: [0, -0.0443], label_rotation: -90}
+      - {id: p9_05, kind: pin, contact: '5', silk: VIN, net: {role: power_in, rail: VIN}, point: [0.3934, 0.6356], node_scale: 0.8, label_scale: 0.75, label_offset: [0, 0.0443], label_rotation: -90}
+      - {id: p9_06, kind: pin, contact: '6', silk: VIN, net: {role: power_in, rail: VIN}, point: [0.3934, 0.6048], node_scale: 0.8, label_scale: 0.75, label_offset: [0, -0.0443], label_rotation: -90}
+      - {id: p9_07, kind: pin, contact: '7', silk: VOUT_SYS, net: {role: power_out, rail: VOUT_SYS}, point: [0.4188, 0.6356], node_scale: 0.8, label_scale: 0.75, label_offset: [0, 0.0818], label_rotation: -90}
+      - {id: p9_08, kind: pin, contact: '8', silk: VOUT_SYS, net: {role: power_out, rail: VOUT_SYS}, point: [0.4188, 0.6048], node_scale: 0.8, label_scale: 0.75, label_offset: [0, -0.0818], label_rotation: -90}
+      - {id: p9_09, kind: pin, contact: '9', silk: RESET#, net: {role: reset, active_level: low}, point: [0.4443, 0.6356], node_scale: 0.8, label_scale: 0.75, label_offset: [0, 0.0668], label_rotation: -90}
+      - {id: p9_10, kind: pin, contact: '10', silk: RESET#, net: {role: reset, active_level: low}, point: [0.4443, 0.6048], node_scale: 0.8, label_scale: 0.75, label_offset: [0, -0.0668], label_rotation: -90}
+      - {id: p9_11, kind: pin, contact: '11', silk: GPIO0_1, pad: P9_11, point: [0.4698, 0.6356], node_scale: 0.8, label_scale: 0.75, label_offset: [0, 0.0743], label_rotation: -90}
+      - {id: p9_12, kind: pin, contact: '12', silk: GPIO0_45, pad: P9_12, point: [0.4698, 0.6048], node_scale: 0.8, label_scale: 0.75, label_offset: [0, -0.0818], label_rotation: -90}
+      - {id: p9_13, kind: pin, contact: '13', silk: GPIO0_2, pad: P9_13, point: [0.4953, 0.6356], node_scale: 0.8, label_scale: 0.75, label_offset: [0, 0.0743], label_rotation: -90}
+      - {id: p9_14, kind: pin, contact: '14', silk: GPIO0_93, pad: P9_14, point: [0.4953, 0.6048], node_scale: 0.8, label_scale: 0.75, label_offset: [0, -0.0818], label_rotation: -90}
+      - {id: p9_15, kind: pin, contact: '15', silk: GPIO0_47, pad: P9_15, point: [0.5208, 0.6356], node_scale: 0.8, label_scale: 0.75, label_offset: [0, 0.0818], label_rotation: -90}
+      - {id: p9_16, kind: pin, contact: '16', silk: GPIO0_94, pad: P9_16, point: [0.5208, 0.6048], node_scale: 0.8, label_scale: 0.75, label_offset: [0, -0.0818], label_rotation: -90}
+      - {id: p9_17, kind: pin, contact: '17', silk: I2C6_SCL, pad: P9_17, assignments: [{function: I2C6_SCL, owner: i2c6, role: SCL, status: enabled, config: {pinctrl: i2c6_scl_default}}], point: [0.5462, 0.6356], node_scale: 0.8, label_scale: 0.75, label_offset: [0, 0.0818], label_rotation: -90}
+      - {id: p9_18, kind: pin, contact: '18', silk: I2C6_SDA, pad: P9_18, assignments: [{function: I2C6_SDA, owner: i2c6, role: SDA, status: enabled, config: {pinctrl: i2c6_sda_default}}], point: [0.5462, 0.6048], node_scale: 0.8, label_scale: 0.75, label_offset: [0, -0.0818], label_rotation: -90}
+      - {id: p9_19, kind: pin, contact: '19', silk: GPIO1_1, pad: P9_19, point: [0.5717, 0.6356], node_scale: 0.8, label_scale: 0.75, label_offset: [0, 0.0743], label_rotation: -90}
+      - {id: p9_20, kind: pin, contact: '20', silk: GPIO1_2, pad: P9_20, point: [0.5717, 0.6048], node_scale: 0.8, label_scale: 0.75, label_offset: [0, -0.0743], label_rotation: -90}
+      - {id: p9_21, kind: pin, contact: '21', silk: GPIO0_39, pad: P9_21, point: [0.5972, 0.6356], node_scale: 0.8, label_scale: 0.75, label_offset: [0, 0.0818], label_rotation: -90}
+      - {id: p9_22, kind: pin, contact: '22', silk: GPIO0_38, pad: P9_22, point: [0.5972, 0.6048], node_scale: 0.8, label_scale: 0.75, label_offset: [0, -0.0818], label_rotation: -90}
+      - {id: p9_23, kind: pin, contact: '23', silk: GPIO0_10, pad: P9_23, point: [0.6227, 0.6356], node_scale: 0.8, label_scale: 0.75, label_offset: [0, 0.0818], label_rotation: -90}
+      - {id: p9_24, kind: pin, contact: '24', silk: GPIO0_119, pad: P9_24, point: [0.6227, 0.6048], node_scale: 0.8, label_scale: 0.75, label_offset: [0, -0.0893], label_rotation: -90}
+      - {id: p9_25, kind: pin, contact: '25', silk: GPIO0_127, pad: P9_25, point: [0.6481, 0.6356], node_scale: 0.8, label_scale: 0.75, label_offset: [0, 0.0893], label_rotation: -90}
+      - {id: p9_26, kind: pin, contact: '26', silk: GPIO0_118, pad: P9_26, point: [0.6481, 0.6048], node_scale: 0.8, label_scale: 0.75, label_offset: [0, -0.0893], label_rotation: -90}
+      - {id: p9_27, kind: pin, contact: '27', silk: GPIO0_46, pad: P9_27, point: [0.6736, 0.6356], node_scale: 0.8, label_scale: 0.75, label_offset: [0, 0.0818], label_rotation: -90}
+      - {id: p9_28, kind: pin, contact: '28', silk: GPIO1_11, pad: P9_28, point: [0.6736, 0.6048], node_scale: 0.8, label_scale: 0.75, label_offset: [0, -0.0818], label_rotation: -90}
+      - {id: p9_29, kind: pin, contact: '29', silk: GPIO1_14, pad: P9_29, point: [0.6991, 0.6356], node_scale: 0.8, label_scale: 0.75, label_offset: [0, 0.0818], label_rotation: -90}
+      - {id: p9_30, kind: pin, contact: '30', silk: GPIO1_13, pad: P9_30, point: [0.6991, 0.6048], node_scale: 0.8, label_scale: 0.75, label_offset: [0, -0.0818], label_rotation: -90}
+      - {id: p9_31, kind: pin, contact: '31', silk: GPIO1_12, pad: P9_31, point: [0.7246, 0.6356], node_scale: 0.8, label_scale: 0.75, label_offset: [0, 0.0818], label_rotation: -90}
+      - {id: p9_32, kind: pin, contact: '32', silk: VDD_ADC, net: {role: ref, rail: VDD_ADC}, point: [0.7246, 0.6048], node_scale: 0.8, label_scale: 0.75, label_offset: [0, -0.0743], label_rotation: -90}
+      - {id: p9_33, kind: pin, contact: '33', silk: GPIO0_50, pad: P9_33, point: [0.75, 0.6356], node_scale: 0.8, label_scale: 0.75, label_offset: [0, 0.0818], label_rotation: -90}
+      - {id: p9_34, kind: pin, contact: '34', silk: GND, net: {role: ground}, point: [0.75, 0.6048], node_scale: 0.8, label_scale: 0.75, label_offset: [0, -0.0443], label_rotation: -90}
+      - {id: p9_35, kind: pin, contact: '35', silk: GPIO0_55, pad: P9_35, point: [0.7755, 0.6356], node_scale: 0.8, label_scale: 0.75, label_offset: [0, 0.0818], label_rotation: -90}
+      - {id: p9_36, kind: pin, contact: '36', silk: GPIO0_56, pad: P9_36, point: [0.7755, 0.6048], node_scale: 0.8, label_scale: 0.75, label_offset: [0, -0.0818], label_rotation: -90}
+      - {id: p9_37, kind: pin, contact: '37', silk: GPIO0_57, pad: P9_37, point: [0.801, 0.6356], node_scale: 0.8, label_scale: 0.75, label_offset: [0, 0.0818], label_rotation: -90}
+      - {id: p9_38, kind: pin, contact: '38', silk: GPIO0_58, pad: P9_38, point: [0.801, 0.6048], node_scale: 0.8, label_scale: 0.75, label_offset: [0, -0.0818], label_rotation: -90}
+      - {id: p9_39, kind: pin, contact: '39', silk: GPIO0_54, pad: P9_39, point: [0.8265, 0.6356], node_scale: 0.8, label_scale: 0.75, label_offset: [0, 0.0818], label_rotation: -90}
+      - {id: p9_40, kind: pin, contact: '40', silk: GPIO0_81, pad: P9_40, point: [0.8265, 0.6048], node_scale: 0.8, label_scale: 0.75, label_offset: [0, -0.0818], label_rotation: -90}
+      - {id: p9_41, kind: pin, contact: '41', silk: GPIO1_0, pad: P9_41, point: [0.852, 0.6356], node_scale: 0.8, label_scale: 0.75, label_offset: [0, 0.0743], label_rotation: -90}
+      - {id: p9_42, kind: pin, contact: '42', silk: GPIO0_123, pad: P9_42, point: [0.852, 0.6048], node_scale: 0.8, label_scale: 0.75, label_offset: [0, -0.0893], label_rotation: -90}
+      - {id: p9_43, kind: pin, contact: '43', silk: GND, net: {role: ground}, point: [0.8774, 0.6356], node_scale: 0.8, label_scale: 0.75, label_offset: [0, 0.0443], label_rotation: -90}
+      - {id: p9_44, kind: pin, contact: '44', silk: GND, net: {role: ground}, point: [0.8774, 0.6048], node_scale: 0.8, label_scale: 0.75, label_offset: [0, -0.0443], label_rotation: -90}
+      - {id: p9_45, kind: pin, contact: '45', silk: GND, net: {role: ground}, point: [0.9029, 0.6356], node_scale: 0.8, label_scale: 0.75, label_offset: [0, 0.0443], label_rotation: -90}
+      - {id: p9_46, kind: pin, contact: '46', silk: GND, net: {role: ground}, point: [0.9029, 0.6048], node_scale: 0.8, label_scale: 0.75, label_offset: [0, -0.0443], label_rotation: -90}

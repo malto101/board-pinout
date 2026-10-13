@@ -83,6 +83,28 @@ def test_fixed_mode_sample_preserves_j721e_modes() -> None:
     )
     assert {entry["mode"] for entry in _part(resolved, "P8_34")["mux"]} >= {7, 14}
     assert {entry["mode"] for entry in _part(resolved, "P9_18")["mux"]} >= {2, 7}
+    assert "UART2_RXD" in _functions(_part(resolved, "P8_22"))
+    assert "I2C6_SCL" in _functions(_part(resolved, "P9_17"))
+
+
+def test_ai64_headers_follow_photographed_contacts() -> None:
+    """P8/P9 contacts sit on the measured 2x23 socket grid of front.png."""
+    document = load_yaml(_sample_path("beaglebone_ai64_fixed_mux"))
+    headers = {part["id"]: part for part in document["faces"]["top"]["children"]}
+    for name, (even_y, odd_y) in {"p8": (0.0236, 0.0543), "p9": (0.6048, 0.6356)}.items():
+        pins = headers[name]["children"]
+        assert [pin["contact"] for pin in pins] == [str(n) for n in range(1, 47)]
+        for pin in pins:
+            contact = int(pin["contact"])
+            assert pin["point"][1] == pytest.approx(odd_y if contact % 2 else even_y, abs=0.002)
+        xs = [pin["point"][0] for pin in pins[::2]]
+        assert xs == sorted(xs)
+        assert xs[-1] - xs[0] == pytest.approx(22 * 56.1 / 2202, abs=0.002)
+    contacts = {pin["id"]: pin for pin in headers["p8"]["children"] + headers["p9"]["children"]}
+    assert contacts["p8_01"]["net"]["role"] == "ground"
+    assert contacts["p9_03"]["net"]["rail"] == "VOUT_3V3"
+    assert contacts["p8_22"]["silk"] == "UART2_RXD"
+    assert contacts["p9_18"]["silk"] == "I2C6_SDA"
 
 
 def test_alt_daisy_sample_preserves_input_select() -> None:
@@ -193,7 +215,7 @@ def test_documentation_build_copies_all_zephyr_underlays(tmp_path: Path) -> None
         assert 'class="board-pinout"' in sample_html.read_text(encoding="utf-8")
 
     expected_assets = {
-        "example/beaglebone_ai64_fixed_mux/beaglebone_ai_64.webp",
+        "example/beaglebone_ai64_fixed_mux/front.png",
         "example/mimxrt1062_alt_daisy/mimxrt1062_fmurt6.webp",
         "example/npcx9m6f_signal_select/npcx9m6f_evb.webp",
         "example/nrf52840_psel/others_promicro_nrf52840.webp",

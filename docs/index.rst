@@ -33,9 +33,9 @@ source YAML and the full-size interactive view.
 BeagleBone AI-64 — dense fixed per-pad modes
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The J721E sample uses the real BeagleBone AI-64 underlay and a dense 2x20
-header. Fixed ``mode`` values are shown for UART2 and I2C6 alongside many
-neighboring GPIO pads.
+The J721E sample places all 92 P8/P9 contacts on the front-facing BeagleBone
+AI-64 photograph. Every header pad carries its fixed MODE 0-14 functions, with
+the Zephyr UART2 console and I2C6 assignments marked.
 
 .. board-pinout:: beaglebone_ai64_fixed_mux
    :face: top
