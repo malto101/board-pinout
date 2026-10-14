@@ -745,10 +745,10 @@
     switch (visual.key) {
       case "gnd":
         shape = `
-        <circle class="marker-gnd-backdrop" cx="${cx}" cy="${cy + 1}" r="8" fill="#fff" stroke="${stroke}" stroke-width="1.4"/>
-        <line x1="${cx - 6}" y1="${cy - 2}" x2="${cx + 6}" y2="${cy - 2}" stroke="${c}" stroke-width="1.7" stroke-linecap="round"/>
-        <line x1="${cx - 4}" y1="${cy + 1}" x2="${cx + 4}" y2="${cy + 1}" stroke="${c}" stroke-width="1.45" stroke-linecap="round"/>
-        <line x1="${cx - 2}" y1="${cy + 4}" x2="${cx + 2}" y2="${cy + 4}" stroke="${c}" stroke-width="1.25" stroke-linecap="round"/>`;
+        <circle class="marker-gnd-backdrop" cx="${cx}" cy="${cy}" r="5.5" fill="#fff" stroke="${stroke}" stroke-width="1.4"/>
+        <line x1="${cx - 4.8}" y1="${cy - 2}" x2="${cx + 4.8}" y2="${cy - 2}" stroke="${c}" stroke-width="1.7" stroke-linecap="round"/>
+        <line x1="${cx - 3.2}" y1="${cy + 1}" x2="${cx + 3.2}" y2="${cy + 1}" stroke="${c}" stroke-width="1.45" stroke-linecap="round"/>
+        <line x1="${cx - 1.6}" y1="${cy + 4}" x2="${cx + 1.6}" y2="${cy + 4}" stroke="${c}" stroke-width="1.25" stroke-linecap="round"/>`;
         break;
       case "power":
         shape = `
