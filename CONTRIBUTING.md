@@ -47,6 +47,7 @@ build directories, `node_modules`, or local documentation output.
 ## Releases
 
 The canonical version is in `src/board_pinout/_version.py`. Update it and the
-changelog together, then use a matching `v<version>` tag. Releases are built
-once, checked, and published to TestPyPI before production PyPI; see the
-release workflow and `CHANGELOG.md`.
+changelog together, then publish a GitHub release using the matching
+`v<version>` tag. The `pypi-publish.yml` workflow builds and validates the
+distributions before publishing to PyPI. It can also be run manually to publish
+to TestPyPI.
