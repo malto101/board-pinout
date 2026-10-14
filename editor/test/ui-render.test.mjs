@@ -30,8 +30,11 @@ test("shared visual contract classifies semantic parts and renders symbols", () 
     assert.match(markup, new RegExp(`data-sym="${key}"`));
     assert.match(markup, /class="marker-point"/);
   }
-  assert.match(markerSymbolMarkup(10, 20, { key: "gnd", ...PART_SYMBOLS.gnd }), /marker-gnd-backdrop/);
-  assert.match(markerSymbolMarkup(10, 20, { key: "gnd", ...PART_SYMBOLS.gnd }), /fill="#fff"/);
+  const gnd = markerSymbolMarkup(10, 20, { key: "gnd", ...PART_SYMBOLS.gnd });
+  assert.match(gnd, /marker-gnd-backdrop/);
+  assert.match(gnd, /cx="10" cy="20" r="5\.5"/);
+  assert.match(gnd, /x1="5\.2" y1="18" x2="14\.8" y2="18"/);
+  assert.match(gnd, /fill="#fff"/);
   assert.match(markerSymbolMarkup(10, 20, { key: "gnd", ...PART_SYMBOLS.gnd }), /stroke="#0c0e13"/);
   assert.match(
     markerSymbolMarkup(10, 20, { key: "gnd", ...PART_SYMBOLS.gnd }, { active: true, primary: true }),

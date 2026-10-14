@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 from pathlib import Path
 
 import pytest
@@ -14,22 +15,33 @@ from board_pinout.resolve import load_type_library, resolve_board
 from board_pinout.soc_pads import find_soc_tables, load_soc_index, validate_soc_file
 from board_pinout.validate import iter_parts, load_yaml, validate_file
 
+_BOARD_DIRECTIVE = re.compile(r"^\s*\.\.\s+board-pinout::\s+(\S+)", re.MULTILINE)
 ROOT = Path(__file__).resolve().parents[1]
 DOCS = ROOT / "docs"
-SAMPLE_NAMES = (
-    "beaglebone_ai64_fixed_mux",
-    "mimxrt1062_alt_daisy",
-    "stm32f103xb_remap",
-    "npcx9m6f_signal_select",
-    "nrf52840_psel",
-    "pocketbeagle2_am6254",
-    "beagley_ai_j722s",
-    "zedboard_zynq7000",
-)
 
 
 def _sample_path(name: str) -> Path:
     return DOCS / "example" / name / "pinout.yaml"
+
+
+def _sample_paths() -> list[Path]:
+    return sorted((DOCS / "example").glob("*/pinout.yaml"))
+
+
+def _soc_sample_paths() -> list[Path]:
+    return [path for path in _sample_paths() if load_yaml(path).get("mux_source") == "soc"]
+
+
+def _board_paths() -> dict[str, Path]:
+    return {load_yaml(path)["board"]: path for path in _sample_paths()}
+
+
+def _directive_boards(path: Path) -> list[str]:
+    return _BOARD_DIRECTIVE.findall(path.read_text(encoding="utf-8"))
+
+
+def _directive_pages() -> list[Path]:
+    return sorted(path for path in DOCS.rglob("*.rst") if _directive_boards(path))
 
 
 def _parts(resolved: dict) -> list[dict]:
@@ -50,29 +62,47 @@ def _functions(part: dict) -> set[str]:
 def test_documentation_samples_validate_and_resolve() -> None:
     """Every checked-in sample must use the public board/SoC join path."""
     table_paths = find_soc_tables(DOCS, ["soc/**/doc/pinmux/*.yaml"])
-    assert {path.stem for path in table_paths} >= {
-        "j721e",
-        "mimxrt1062",
-        "npcx9m6f",
-        "nrf52840",
-        "stm32f103xb",
-        "am6254",
-        "j722s",
-        "xc7z020",
-    }
+    assert table_paths
     for path in table_paths:
         result = validate_soc_file(path)
         assert result.ok, f"{path}: {result.errors}"
 
     index = load_soc_index(table_paths)
     types = load_type_library(types_dir())
-    for name in SAMPLE_NAMES:
-        board_path = _sample_path(name)
+    for board_path in _sample_paths():
+        document = load_yaml(board_path)
         result = validate_file(board_path)
         assert result.ok, f"{board_path}: {result.errors}"
-        resolved = resolve_board(load_yaml(board_path), types, soc_index=index)
+        resolved = resolve_board(document, types, soc_index=index)
         assert resolved["resolved"] is True
-        assert all("pad_info" in part for part in _parts(resolved) if part.get("pad"))
+        if document.get("mux_source") == "soc":
+            assert all("pad_info" in part for part in _parts(resolved) if part.get("pad"))
+
+    assert {load_yaml(path)["soc"] for path in _soc_sample_paths()} <= set(index.ids())
+
+
+def test_sample_layouts_use_image_aligned_points() -> None:
+    for board_path in _sample_paths():
+        document = load_yaml(board_path)
+        parts = iter_parts(document["faces"]["top"]["children"])
+        assert all(0 <= value <= 1 for _path, part in parts for value in part.get("point", []))
+
+
+def test_sample_soc_references_match_available_tables() -> None:
+    table_paths = find_soc_tables(DOCS, ["soc/**/doc/pinmux/*.yaml"])
+    table_ids = {load_yaml(path)["soc"] for path in table_paths}
+    assert table_ids
+    for board_path in _soc_sample_paths():
+        document = load_yaml(board_path)
+        assert document["soc"] in table_ids
+        assert document.get("mux_source") == "soc"
+
+
+def test_sample_directives_reference_known_boards() -> None:
+    board_paths = _board_paths()
+    directives = [board for path in _directive_pages() for board in _directive_boards(path)]
+    assert directives
+    assert set(directives) <= set(board_paths)
 
 
 def test_fixed_mode_sample_preserves_j721e_modes() -> None:
@@ -207,21 +237,36 @@ def test_documentation_build_copies_all_zephyr_underlays(tmp_path: Path) -> None
     )
     app.build(force_all=True)
 
-    index_html = (out / "index.html").read_text(encoding="utf-8")
-    for name in SAMPLE_NAMES:
-        assert f'data-board="{name}"' in index_html
-        sample_html = out / "example" / name / "index.html"
-        assert sample_html.is_file()
-        assert 'class="board-pinout"' in sample_html.read_text(encoding="utf-8")
+    board_paths = _board_paths()
+    directive_pages = _directive_pages()
+    rendered_boards: set[str] = set()
+    for source_page in directive_pages:
+        page_rel = source_page.relative_to(DOCS).with_suffix(".html")
+        output_page = out / page_rel
+        assert output_page.is_file()
+        page_text = output_page.read_text(encoding="utf-8")
+        boards = _directive_boards(source_page)
+        assert boards
+        for board in boards:
+            rendered_boards.add(board)
+            assert f'data-board="{board}"' in page_text
+            assert 'class="board-pinout"' in page_text
 
-    expected_assets = {
-        "example/beaglebone_ai64_fixed_mux/front.png",
-        "example/mimxrt1062_alt_daisy/mimxrt1062_fmurt6.webp",
-        "example/npcx9m6f_signal_select/npcx9m6f_evb.webp",
-        "example/nrf52840_psel/others_promicro_nrf52840.webp",
-        "example/stm32f103xb_remap/stm32f103_mini_blue.webp",
-        "example/pocketbeagle2_am6254/pocketbeagle_2.webp",
-        "example/beagley_ai_j722s/assets/beagley_ai_top.webp",
-        "example/zedboard_zynq7000/zedboard.webp",
-    }
-    assert all((out / asset).is_file() for asset in expected_assets)
+            document = load_yaml(board_paths[board])
+            underlay = Path(document["faces"]["top"]["underlay"])
+            source_asset = board_paths[board].parent / underlay
+            output_asset = output_page.parent / underlay
+            assert source_asset.is_file(), source_asset
+            assert output_asset.is_file(), output_asset
+            assert output_asset.read_bytes() == source_asset.read_bytes()
+
+    # The landing page intentionally embeds only its featured boards; the
+    # remaining samples are rendered on the hidden-toctree example pages.
+    index_html = (out / "index.html").read_text(encoding="utf-8")
+    assert rendered_boards >= set(_directive_boards(DOCS / "index.rst"))
+    assert set(_directive_boards(DOCS / "index.rst")) <= set(board_paths)
+    assert 'class="board-pinout"' in index_html
+
+    assert rendered_boards == set(
+        board for page in directive_pages for board in _directive_boards(page)
+    )
