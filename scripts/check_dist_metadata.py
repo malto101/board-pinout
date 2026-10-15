@@ -13,6 +13,9 @@ from pathlib import Path
 
 _PROJECT_NAME = "board-pinout"
 _FILENAME_NAME = "board_pinout"
+_SUPPORTED_METADATA_VERSIONS = frozenset(
+    {"1.0", "1.1", "1.2", "2.0", "2.1", "2.2", "2.3"}
+)
 _VERSION_RE = re.compile(r'^__version__ = "([^"]+)"$', re.MULTILINE)
 
 
@@ -30,8 +33,13 @@ def _check_metadata(raw: bytes, archive: Path, member: str, expected: str) -> No
     metadata = Parser().parsestr(raw.decode("utf-8"))
     actual_name = metadata.get("Name")
     actual_version = metadata.get("Version")
-    if not metadata.get("Metadata-Version"):
-        raise ValueError(f"{archive}: {member} is missing Metadata-Version")
+    metadata_version = metadata.get("Metadata-Version")
+    if metadata_version not in _SUPPORTED_METADATA_VERSIONS:
+        raise ValueError(
+            f"{archive}: {member} has unsupported Metadata-Version "
+            f"{metadata_version!r}; expected one of "
+            f"{sorted(_SUPPORTED_METADATA_VERSIONS)!r}"
+        )
     if actual_name != _PROJECT_NAME:
         raise ValueError(f"{archive}: {member} has Name {actual_name!r}")
     if actual_version != expected:

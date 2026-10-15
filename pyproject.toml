@@ -48,11 +48,17 @@ board_pinout = "board_pinout.sphinx_ext"
 path = "src/board_pinout/_version.py"
 
 # src/board_pinout is discovered automatically by hatchling.
+[tool.hatch.build.targets.wheel]
+# Keep compatibility with the publisher's bundled twine/pkginfo versions.
+core-metadata-version = "2.3"
+
 [tool.hatch.build.targets.wheel.force-include]
 "schema" = "board_pinout/schema"
 "types" = "board_pinout/types"
 
 [tool.hatch.build.targets.sdist]
+# Keep compatibility with the publisher's bundled twine/pkginfo versions.
+core-metadata-version = "2.3"
 include = [
   "/src/board_pinout",
   "/schema",
