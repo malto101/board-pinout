@@ -267,6 +267,6 @@ def test_documentation_build_copies_all_zephyr_underlays(tmp_path: Path) -> None
     assert set(_directive_boards(DOCS / "index.rst")) <= set(board_paths)
     assert 'class="board-pinout"' in index_html
 
-    assert rendered_boards == set(
+    assert rendered_boards == {
         board for page in directive_pages for board in _directive_boards(page)
-    )
+    }
